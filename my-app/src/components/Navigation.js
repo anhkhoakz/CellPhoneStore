@@ -20,7 +20,7 @@ const Navigation = () => {
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
-        <div className="search-container"> 
+          <div className="search-container">
             <Form className="search-form">
               <Form.Control
                 type="search"
@@ -31,9 +31,12 @@ const Navigation = () => {
             </Form>
           </div>
           <Nav className="ms-auto">
-            <Nav.Link as={Link} to="/orderManagement">Order Management</Nav.Link>
-            <Nav.Link as={Link} to="/cart">Cart</Nav.Link>
-            <Nav.Link as={Link} to="/login">Login</Nav.Link>
+            <Nav.Link as={Link} to="/orderManagement">
+              <i class="bi bi-box-seam m-1"></i>Orders</Nav.Link>
+            <Nav.Link as={Link} to="/cart">
+              <i className="bi bi-cart"></i> Cart</Nav.Link>
+            <Nav.Link as={Link} to="/login">
+              <i class="bi bi-person-circle m-1"></i>Login</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

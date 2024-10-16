@@ -11,7 +11,10 @@ const ProductCard = ({ product }) => {
                         <p className="card-text">${product.price}</p>
                         <div className="button-container">
                             <div>
-                                <button className="btn btn-primary addBtn">Add to Cart</button>
+                                <button type="button" className="btn btn-primary addBtn shadow-0">
+                                    <i className="bi bi-cart"></i> Add to cart
+                                </button>
+                                
                             </div>
                             <div>
                                 <button className="btn btn-success buyBtn">Buy Now</button>

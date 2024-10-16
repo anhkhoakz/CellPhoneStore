@@ -10,6 +10,9 @@ import RegisterPage from './pages/RegisterPage'
 import './App.css';
 import LoginPage from './pages/LoginPage';
 import ProductDetail from './pages/ProductDetailPage';
+import OrderSuccessPage from './pages/OrderSuccessPage';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+
 
 
 // Data test
@@ -48,6 +51,9 @@ function App() {
 
             {/* Test trang chi tiết sản phẩm */}
             <Route path="/product/:id" element={<ProductDetail products={yourProductsArray} />} /> 
+          
+            <Route path="/success" element={<OrderSuccessPage />} />
+
           </Routes>
         </main>
         <Footer />
