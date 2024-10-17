@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const Summary = ({ subtotal, total, shipping, setShipping }) => {
     // Thêm state cho tên, số điện thoại, địa chỉ
-    const [name, setName] = useState('');
-    const [phone, setPhone] = useState('');
-    const [address, setAddress] = useState('');
+    const [name, setName] = useState("");
+    const [phone, setPhone] = useState("");
+    const [address, setAddress] = useState("");
 
     const handleSubmit = () => {
         // Xử lý dữ liệu khi người dùng nhấn nút Register
-        console.log('Customer Information:', { name, phone, address });
-        console.log('Shipping:', shipping);
-        console.log('Total Price:', total);
+        console.log("Customer Information:", { name, phone, address });
+        console.log("Shipping:", shipping);
+        console.log("Total Price:", total);
     };
 
     return (
@@ -50,7 +50,7 @@ const Summary = ({ subtotal, total, shipping, setShipping }) => {
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                     placeholder="Shipping Address"
-                    style={{ height: '100px' }}
+                    style={{ height: "100px" }}
                     required
                 ></textarea>
                 <label htmlFor="floatingAddress">Shipping Address</label>
@@ -90,7 +90,7 @@ const Summary = ({ subtotal, total, shipping, setShipping }) => {
             <button
                 type="button"
                 className="btn btn-success btn-lg"
-                style={{ fontWeight: 'bold', width: '100%' }}
+                style={{ fontWeight: "bold", width: "100%" }}
                 onClick={handleSubmit}
             >
                 Register

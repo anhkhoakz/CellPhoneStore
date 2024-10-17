@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const CartItem = ({ item, onQuantityChange, onRemoveItem }) => {
     const handleInputChange = (e) => {
@@ -24,7 +24,11 @@ const CartItem = ({ item, onQuantityChange, onRemoveItem }) => {
             <div className="col-md-3 col-lg-3 col-xl-2 d-flex">
                 <button
                     className="btn btn-link px-2"
-                    style={{ border: '1px solid #ddd', padding: '5px', cursor: 'pointer' }}
+                    style={{
+                        border: "1px solid #ddd",
+                        padding: "5px",
+                        cursor: "pointer",
+                    }}
                     onClick={() => onQuantityChange(item.id, -1)}
                 >
                     <i className="bi bi-dash"></i>
@@ -37,12 +41,20 @@ const CartItem = ({ item, onQuantityChange, onRemoveItem }) => {
                     type="number"
                     className="form-control form-control-sm"
                     onChange={handleInputChange}
-                    style={{ textAlign: 'center', width: '50px', margin: '0 5px' }}
+                    style={{
+                        textAlign: "center",
+                        width: "50px",
+                        margin: "0 5px",
+                    }}
                 />
 
                 <button
                     className="btn btn-link px-2"
-                    style={{ border: '1px solid #ddd', padding: '5px', cursor: 'pointer' }}
+                    style={{
+                        border: "1px solid #ddd",
+                        padding: "5px",
+                        cursor: "pointer",
+                    }}
                     onClick={() => onQuantityChange(item.id, 1)}
                 >
                     <i className="bi bi-plus"></i>
@@ -52,7 +64,11 @@ const CartItem = ({ item, onQuantityChange, onRemoveItem }) => {
                 <h6 className="mb-0">$ {item.price}</h6>
             </div>
             <div className="col-md-1 col-lg-1 col-xl-1 text-end">
-                <a href="#!" className="text-muted" onClick={() => onRemoveItem(item.id)}>
+                <a
+                    href="#!"
+                    className="text-muted"
+                    onClick={() => onRemoveItem(item.id)}
+                >
                     <i className="bi bi-x-lg"></i>
                 </a>
             </div>

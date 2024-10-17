@@ -1,4 +1,4 @@
-const Product = require('~v1/models/Product');
+const Product = require('~/apis/v1/models/Product');
 
 class HomeController {
     async getHomePage(req, res) {
