@@ -1,7 +1,7 @@
-import React from 'react';
-import ProductCard from './ProductCard'; // Import ProductCard
+import React from "react";
+import ProductCard from "./ProductCard"; // Import ProductCard
 
-const ProductList = ({title, products }) => {
+const ProductList = ({ title, products }) => {
     return (
         <div className="product-list-container">
             <h3>{title}</h3>
@@ -14,6 +14,6 @@ const ProductList = ({title, products }) => {
             </div>
         </div>
     );
-}
+};
 
 export default ProductList;

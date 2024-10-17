@@ -5,13 +5,13 @@ async function connect() {
         await mongoose.connect(process.env.DB_URL);
         console.log('Connected to MongoDB successfully!!!');
     } catch (error) {
-        console.log('Connect failure!!!', error);
+        console.error('Connect failure!!!', error);
         process.exit(1);
     }
 }
 
 mongoose.connection.on('error', (error) => {
-    console.log('MongoDB connection error:', error);
+    console.error('MongoDB connection error:', error);
 });
 
 mongoose.connection.on('connected', () => {
@@ -28,7 +28,7 @@ process.on('SIGINT', async () => {
         console.log('MongoDB connection closed due to application termination');
         process.exit(0);
     } catch (error) {
-        console.log('Error closing MongoDB connection:', error);
+        console.error('Error closing MongoDB connection:', error);
         process.exit(1);
     }
 });

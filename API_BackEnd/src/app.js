@@ -1,9 +1,9 @@
 const express = require('express');
 const helmet = require('helmet');
-const configViewEngine = require('~/config/viewEngine');
+const configViewEngine = require('~/configs/viewEngine');
 const apiRouter = require('~/routes');
 const morgan = require('morgan');
-const database = require('~/config/database');
+const database = require('~/configs/database');
 
 const createError = require('http-errors');
 
