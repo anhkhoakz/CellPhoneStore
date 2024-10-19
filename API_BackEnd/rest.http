@@ -1,1 +1,50 @@
+<<<<<<< HEAD
+
+GET http://localhost:8080/api/v1/
+# Authorization: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImtoYW5obWgyMDA0QGdtYWlsLmNvbSIsInVzZXJJZCI6IjY3MGYwZjEzNzgwNTU4YjQyNWJjMGRlMiIsImlhdCI6MTcyOTA5MzkyMywiZXhwIjoxNzI5MDk3NTIzfQ.PNiflH1kxnSBIPf5NTufdS2xExtVRjL5vI4fewhfQcIKq8bzSLjN4zOiU05K0Rrw-o8QnKYw42RRAoU0xtfs5Bf__NrfOO4OkHHwi06I1UC7AYt-Ff8hFjBs6ZTa2go8Y4CKmhF28QRsJIqrOi85SfsH5-DSZkCE1utsEW_GbFaFLkKGF5aAQHFcu0dfZwnpGAz5S7RHpR_HqetRdX7Yf8E22jsRkj52BDUZ0gxiPc42BaLyaU-XFIsV4nq5ZKCsnwCaeNtD-7kJ63Hr70D6K99f0Ujt1ATcsutxH2zQ9USeQSsmrNzJgj9hgkeRD8EEv5-3_X9gLL8mOZlrRrlvPqsMQE5jljVNt3gi8sRMRPS95kehb2l5Wk__M6XjmXQLcRc6NdachqB-uKh5BMeIU0xjNJJv_flMcR_4IVWWvTB5emrOvGArn94D00nJXaaRaI5WWt7cbA3VFUth25D_wIC4r5ynZGK77GmbLZGWh2bp3g_Ubc0djkgMq1dQREVHNTo6HdEV51KOUwAggviuLm62Vke98mCETt_7MdwZyOwSnKAtIMzd8szH2SLU7lSuNsOD1BE50VcWPi5CHgXL1M6M8_vyziQL8EA1Ap_Ml4YE-emYnmnVYzn9Ljmg7DWGJ7cqlmdxNJc36uui76_PAeSKBreo8or0arr1gGyt0TM
+
+### register
+POST http://localhost:8080/api/v1/users/register
+Content-Type: application/json
+
+{
+    "email": "khanhmh2004@gmail.com",
+    "password": "123456",
+    "username": "khanh"
+}
+
+
+### verify otp
+POST http://localhost:8080/api/v1/users/verify-otp
+Content-Type: application/json
+
+{
+    "email": "khanhmh2004@gmail.com",
+    "otp": "386815"
+}
+
+
+### login
+POST http://localhost:8080/api/v1/users/login
+Content-Type: application/json
+
+{
+    "email": "khanhmh2004@gmail.com",
+    "password": "123456"
+}
+
+### 
+POST http://localhost:8080/api/v1/users/refresh-token
+Content-Type: application/json
+
+{
+    "refreshToken": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImtoYW5obWgyMDA0QGdtYWlsLmNvbSIsInVzZXJJZCI6IjY3MTI3MGJjYWY4YTA5MzgwNTVlYzg1NyIsImlhdCI6MTcyOTM1MDA0MiwiZXhwIjoxNzYwOTA3NjQyfQ.i4-UYp2ntz7jkvDWHmLaVaSYulFC-QjumBTVFQuIcdfyuj3AFDsUOleQS_THWTcYfHNLbiUCthFkqZnF-cs7mhmKcCA994o3FCuHO-19fDiIh9E486k-EnP_LwhdhAqixWTI_D3xHVcrqJj7xjYzfk82v-p4AjvnUv_Y_PJmAXiPYKkwkFZBT6M61k3sxFQqvAcXVBxCymj84PotYUap6CDQZlZ0Sz6DGBNbQ7Ed0S4onG6Nja_35bZv8yVjJKgFsryhHV-_bYvyjFeiknjS4WaHMkT2XiN_YTaN5VOjGIE8cpdSC-0zbmDq_C8-o6Mkbob4Sk_u07D7XmtEbxnz8eJ3t-6H5XloLo97CrCFnmqqu9F8o7XkyEoW4Eo3UPjXAymbuehVoF0gcGmsaBktpbehkcsSqLCkQwng5NZxIhW8X7YSjTGRanynUpV9ADmYD4VxqtyokyLZUPisKMlxrEvuxCQ5E1HKP27T_ZsvPGjuOZ6OD7RAUI1_fNXyJ11XSDKHNCBgBSY9Hna9cx-xUygRKs0eRNX5kjQWV6UE6cpmivU2S2xuUO3Oc_46RGcn8lMZT5abEBdURia8KjEqK3bh3_VXMmDLdIPL_eo8wE1qOHaLbbrHOPuPpFgn0k4bASmox7u6nqlGomrT65TUW4KlKA6Fl4vcJ9TQC6DVA1c"
+}
+
+
+### logout
+DELETE http://localhost:8080/api/v1/users/logout
+Content-Type: application/json
+=======
 GET http://localhost:8080/a
+>>>>>>> 4469d3e85fcb1b7ad9ebb430f8d7d39720dbe161
