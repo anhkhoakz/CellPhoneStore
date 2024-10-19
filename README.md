@@ -1,10 +1,6 @@
 # CellPhoneStore
 
-
-
 ## Key Features
-
-
 
 ## Installation
 

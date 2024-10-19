@@ -1,0 +1,184 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+* {
+    scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+    display: none;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+header,
+footer {
+    background-color: #ffffff;
+    color: rgb(23, 36, 93);
+    padding: 5px 0;
+    text-align: center;
+}
+
+/* Css Navbar */
+.custom-navbar {
+    margin-bottom: 20px;
+}
+
+.search-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.search-form {
+    width: 60%;
+}
+
+.search-form input:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.me-2 {
+    width: 100%;
+}
+
+/* Css login page */
+.login-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 90vh;
+    background-color: #f4f4f4;
+}
+
+.login-form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 30%;
+    min-width: 400px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+    text-align: left;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+.google-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 30px;
+    background-color: transparent;
+    border: none;
+    border-radius: 5px;
+    color: rgb(0, 0, 0);
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.google-login .google-logo {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+.google-login:hover {
+    background-color: transparent;
+}
+
+.divider {
+    margin: 20px 0;
+    font-weight: bold;
+    text-align: center;
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.register-link {
+    margin-top: 15px;
+}
+
+.register-link a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
+
+/* Css ProductList */
+.product-list-container {
+    margin: auto;
+    max-width: 60%;
+}
+
+/* Css ProductCard */
+.product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.button-container div {
+    margin-bottom: 10px;
+}
+
+.addBtn,
+.buyBtn {
+    width: 100%;
+}
+
+.card-title:hover {
+    color: rgb(74, 207, 241);
+    cursor: pointer;
+}
+
+/* Css ProductDetail */
