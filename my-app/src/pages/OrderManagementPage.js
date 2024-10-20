@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Container, Row, Col } from 'react-bootstrap';
 import OrderCard from "../components/OrderCard";
 import SearchBar from "../components/SearchBar";
+import OrderEmpty from "../components/OrderEmpty";
 
 const OrderManagementPage = () => {
     const [orders] = useState([
@@ -67,23 +68,52 @@ const OrderManagementPage = () => {
         statusFilter === 'All' || order.status === statusFilter
     );
 
+    const inTransitOrders = filteredByStatus.filter(order => order.status === 'In Transit');
+    const deliveredOrders = filteredByStatus.filter(order => order.status === 'Delivered');
+
     return (
         <Container>
             <h2 className="text-center my-4">Order Management</h2>
-            {/* Thêm SearchBar */}
             <SearchBar onSearch={handleSearch} onStatusChange={handleStatusChange} />
 
-            <Row>
-                <Col>
-                    {filteredByStatus.length > 0 ? (
-                        filteredByStatus.map(order => (
-                            <OrderCard key={order.id} order={order} />
-                        ))
-                    ) : (
-                        <p>No orders found.</p>
+            {/* Kiểm tra nếu cả 2 danh sách đều trống, hiển thị OrderEmpty */}
+            {inTransitOrders.length === 0 && deliveredOrders.length === 0 ? (
+                <OrderEmpty />
+            ) : (
+                <>
+                    {/* Phần "In Transit Orders" - chỉ hiển thị khi không lọc "Delivered" */}
+                    {(statusFilter === 'All' || statusFilter === 'In Transit') && (
+                        <Row>
+                            <Col>
+                                <h4 className="mb-3">In Transit Orders</h4>
+                                {inTransitOrders.length > 0 ? (
+                                    inTransitOrders.map(order => (
+                                        <OrderCard key={order.id} order={order} />
+                                    ))
+                                ) : (
+                                    <h3 className="text-center">No orders in transit.</h3>
+                                )}
+                            </Col>
+                        </Row>
                     )}
-                </Col>
-            </Row>
+
+                    {/* Phần "Delivered Orders" - chỉ hiển thị khi không lọc "In Transit" */}
+                    {(statusFilter === 'All' || statusFilter === 'Delivered') && (
+                        <Row style={{marginTop: '6vh'}}>
+                            <Col>
+                                <h4 className="mb-3">Delivered Orders</h4>
+                                {deliveredOrders.length > 0 ? (
+                                    deliveredOrders.map(order => (
+                                        <OrderCard key={order.id} order={order} />
+                                    ))
+                                ) : (
+                                    <h3 className="text-center">No delivered orders.</h3>
+                                )}
+                            </Col>
+                        </Row>
+                    )}
+                </>
+            )}
         </Container>
     );
 };
