@@ -7,7 +7,7 @@ class ProductController {
             const products = await productService.getProducts();
             res.json(products);
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 }

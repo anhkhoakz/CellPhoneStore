@@ -13,13 +13,6 @@ const otpSchema = new Schema({
         type: String,
     },
 
-    // temporarily store the username and password
-    username: {
-        type: String,
-    },
-    password: {
-        type: String,
-    },
     createdAt: {
         type: Date,
         default: Date.now,

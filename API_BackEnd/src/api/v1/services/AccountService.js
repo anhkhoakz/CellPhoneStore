@@ -1,6 +1,7 @@
 const _user = require('~v1/models/Account');
-const _otp = require('~v1/models/OTP');
-const _otpService = require('~v1/services/otpService');
+const _preUser = require('~v1/models/preUser');
+const _preUserService = require('~v1/services/preUserService');
+const mongoSanitize = require('express-mongo-sanitize');
 
 const {
     Verification_Email_Template,
@@ -8,11 +9,6 @@ const {
 
 const sendEmail = require('~v1/services/sendEmail');
 
-// const {
-//     siginToken,
-//     refreshToken,
-//     verifyRefreshToken,
-// } = require('~v1/helpers/JWT');
 
 const { signAccessToken } = require('~v1/auth/authUtils');
 
@@ -24,23 +20,23 @@ const {
 const { delAsync, getAsync } = require('~/config/redis');
 
 module.exports = {
-    verifyOtp: async (data) => {
+    verifyAccount: async (data) => {
         try {
-            const otp = await _otp.find({
+            const preUsers = await _preUser.find({
                 email: data.email,
             });
-            if (otp.length === 0) {
+            if (preUsers.length === 0) {
                 return {
                     code: 404,
                     message: 'Expired OTP!',
                 };
             }
 
-            const lastOtp = otp[otp.length - 1];
+            const lastPreUser = preUsers[preUsers.length - 1];
 
-            const isvalid = await _otpService.validOtp({
+            const isvalid = await _preUserService.validVerifyAccount({
                 otp: data.otp,
-                hashOtp: lastOtp.otp,
+                hashOtp: lastPreUser.otp,
             });
 
             if (!isvalid) {
@@ -51,9 +47,9 @@ module.exports = {
             }
 
             const user = await _user.create({
-                username: lastOtp.username,
+                username: lastPreUser.username,
                 email: data.email,
-                password: lastOtp.password,
+                password: lastPreUser.password,
             });
 
             if (!user) {
@@ -63,7 +59,7 @@ module.exports = {
                 };
             }
 
-            await _otp.deleteMany({ email: data.email });
+            await _preUser.deleteMany({ email: data.email });
 
             return {
                 code: 201,
@@ -90,36 +86,36 @@ module.exports = {
                 };
             }
 
-            const otpCreationResult = await _otpService.CreateOtp({
+            const createPreUser = await _preUserService.CreatePreUser({
                 email: data.email,
                 username: data.username,
                 password: data.password,
             });
 
-            if (otpCreationResult.code === 500) {
+            if (createPreUser.code === 500) {
                 return {
                     code: 500,
-                    message: otpCreationResult.message,
+                    message: createPreUser.message,
                 };
             }
 
-            if (otpCreationResult.code === 400) {
+            if (createPreUser.code === 400) {
                 return {
-                    code: otpCreationResult.code,
-                    message: otpCreationResult.message,
+                    code: createPreUser.code,
+                    message: createPreUser.message,
                 };
             }
 
             const emailTemplate = Verification_Email_Template.replace(
                 '{verificationCode}',
-                otpCreationResult.getOpt,
+                createPreUser.message,
             ).replace('{email}', data.email);
 
             await sendEmail(data.email, 'Email Verification', emailTemplate);
 
             return {
                 code: 201,
-                message: 'OTP created successfully. Please verify your email.',
+                message: 'please check your email to verify!',
             };
         } catch (error) {
             console.error(error);
@@ -132,6 +128,13 @@ module.exports = {
 
     login: async (data) => {
         try {
+            if (mongoSanitize.has(data)) {
+                return {
+                    code: 400,
+                    message: 'Invalid input',
+                };
+            }
+
             const user = await _user.findOne({
                 email: data.email,
             });

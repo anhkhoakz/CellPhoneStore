@@ -25,14 +25,6 @@ const createRefreshToken = async (payload) => {
     }
 };
 
-// get token from redis
-const getRefreshToken = async (userId) => {
-    try {
-        return await getAsync(userId.toString());
-    } catch (error) {
-        return CreateError.InternalServerError(error.message);
-    }
-};
 
 // Verify refresh token
 const verifyAndRefreshToken = async (token) => {

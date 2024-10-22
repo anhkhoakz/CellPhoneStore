@@ -1,6 +1,6 @@
 const {
     register,
-    verifyOtp,
+    verifyAccount,
     login,
     refreshToken,
     logout,
@@ -10,7 +10,7 @@ require('dotenv').config();
 const CreateError = require('http-errors');
 
 module.exports = {
-    verifyOtp: async (req, res, next) => {
+    verifyAccount: async (req, res, next) => {
         try {
             console.log(req.body.otp);
             const { email, otp } = req.body;
@@ -20,7 +20,7 @@ module.exports = {
                     .status(400)
                     .json({ message: 'Email and OTP are required' });
             }
-            const { code, message, elements } = await verifyOtp(req.body);
+            const { code, message, elements } = await verifyAccount(req.body);
             return res.status(code).json({
                 code,
                 message,
@@ -70,7 +70,7 @@ module.exports = {
                 const { accessToken, userId } = elements;
 
                 res.cookie('accessToken', accessToken, {
-                    maxage: process.env.COOKIE_TOKEN_EXPIRY,
+                    maxAge: process.env.COOKIE_TOKEN_EXPIRY,
                     httpOnly: true,
                     // secure: true,
                     sameSite: 'lax',
@@ -127,7 +127,7 @@ module.exports = {
             const { accessToken, userId } = elements;
 
             res.cookie('accessToken', accessToken, {
-                maxage: process.env.COOKIE_TOKEN_EXPIRY,
+                maxAge: process.env.COOKIE_TOKEN_EXPIRY,
                 httpOnly: true,
                 // secure: true,
                 sameSite: 'lax',
