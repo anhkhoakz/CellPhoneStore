@@ -4,6 +4,7 @@ Các trang đã làm:
     - Product Detail 
     - Product Not Found 
     - Mua hang thanh cong
+    - Tìm kiếm/Quản lý đơn hàng
 Chưa làm: 
     - Kết quả tìm kiếm
-    - Tìm kiếm/Quản lý đơn hàng
+
