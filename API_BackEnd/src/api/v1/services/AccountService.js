@@ -5,10 +5,10 @@ const mongoSanitize = require('express-mongo-sanitize');
 
 const {
     Verification_Email_Template,
+    Forgot_Password_Template,
 } = require('~/public/templates/emailTemplate');
 
 const sendEmail = require('~v1/services/sendEmail');
-
 
 const { signAccessToken } = require('~v1/auth/authUtils');
 
@@ -19,7 +19,16 @@ const {
 
 const { delAsync, getAsync } = require('~/config/redis');
 
+const hashPassword = require('~v1/helpers/hashPassword');
+
+const generatePassword = require('~v1/helpers/passwordGenerator');
+const generateResetToken = require('~v1/helpers/generateKey');
+
+require('dotenv').config();
+
 module.exports = {
+    verifyGoogleAccount: async (data) => {},
+
     verifyAccount: async (data) => {
         try {
             const preUsers = await _preUser.find({
@@ -190,8 +199,9 @@ module.exports = {
             const userId = req.cookies['userId'];
             const refreshToken = await getAsync(userId.toString());
 
-            const { success, decoded, error } =
-                await verifyAndRefreshToken(refreshToken);
+            const { success, decoded, error } = await verifyAndRefreshToken(
+                refreshToken,
+            );
 
             if (!success || !decoded) {
                 return {
@@ -242,6 +252,134 @@ module.exports = {
                     refreshToken: _refreshToken,
                     userId: decoded.userId,
                 },
+            };
+        } catch (error) {
+            console.error(error);
+            return {
+                code: 500,
+                message: 'Internal server error',
+            };
+        }
+    },
+
+    update: async (data) => {
+        try {
+            const user = await _user.findOne({ email: data.email });
+
+            if (!user) {
+                return {
+                    code: 404,
+                    message: 'User not found',
+                };
+            }
+
+            const { _id, email, ...updateData } = data;
+
+            if (updateData.password) {
+                if (!updateData.oldPassword) {
+                    return {
+                        code: 400,
+                        message:
+                            'Old password is required to update the password',
+                    };
+                }
+
+                // Validate old password
+                const isPasswordValid = await user.comparePassword(
+                    updateData.oldPassword,
+                );
+                if (!isPasswordValid) {
+                    return {
+                        code: 400,
+                        message: 'Old password is incorrect',
+                    };
+                }
+
+                updateData.password = await hashPassword(updateData.password);
+            }
+
+            const updatedUser = await _user.findOneAndUpdate(
+                { _id: user._id },
+                updateData,
+                { new: true },
+            );
+
+            return {
+                code: 200,
+                message: 'User updated successfully!',
+                elements: updatedUser,
+            };
+        } catch (error) {
+            console.error(error);
+            return {
+                code: 500,
+                message: 'Internal server error',
+            };
+        }
+    },
+    forgotPassword: async (data) => {
+        try {
+            const user = await _user.findOne({ email: data.email });
+
+            if (!user) {
+                return {
+                    code: 404,
+                    message: 'User not found',
+                };
+            }
+
+            const resetToken = generateResetToken();
+            const resetTokenExpiry = Date.now() + 15 * 60 * 1000;
+
+            // Save the reset token and expiry to the user's document in the database
+            await _user.updateOne(
+                { _id: user._id },
+                { resetToken, resetTokenExpiry },
+            );
+
+            const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+
+            const emailTemplate = Forgot_Password_Template.replaceAll(
+                '{resetLink}',
+                resetLink,
+            ).replace('{email}', user.username);
+            await sendEmail(data.email, 'Forgot Password', emailTemplate);
+
+            return {
+                code: 200,
+                message: 'Please check your email for a password reset link!',
+            };
+        } catch (error) {
+            console.error(error);
+            return {
+                code: 500,
+                message: 'Internal server error',
+            };
+        }
+    },
+    resetPassword: async (data) => {
+        try {
+            const user = await _user.findOne({
+                resetToken: data.token,
+                resetTokenExpiry: { $gt: Date.now() },
+            });
+
+            if (!user) {
+                return {
+                    code: 404,
+                    message: 'Invalid or expired reset token',
+                };
+            }
+
+            user.password = await hashPassword(data.password);
+            user.resetToken = undefined;
+            user.resetTokenExpiry = undefined;
+
+            await user.save();
+
+            return {
+                code: 200,
+                message: 'Password reset successfully!',
             };
         } catch (error) {
             console.error(error);

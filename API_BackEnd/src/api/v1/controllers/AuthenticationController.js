@@ -4,12 +4,139 @@ const {
     login,
     refreshToken,
     logout,
+    update,
+    forgotPassword,
+    resetPassword,
 } = require('~/api/v1/services/AccountService');
 
 require('dotenv').config();
 const CreateError = require('http-errors');
 
+const User = require('~v1/models/Account');
+const FederatedCredential = require('~v1/models/federatedCredential');
+const { get } = require('mongoose');
+const { restart } = require('nodemon');
+
 module.exports = {
+    getAllUsers: async (req, res, next) => {
+        try {
+            const users = await User.find();
+            return res.status(200).json({
+                users,
+            });
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    getUser: async (req, res, next) => {
+        try {
+            const { id } = req.params;
+            const user = await User.findById(id);
+            if (!user) {
+                return res.status(404).json({
+                    message: 'User not found',
+                });
+            }
+            return res.status(200).json({
+                user,
+            });
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    forgotPassword: async (req, res, next) => {
+        try {
+            const { email } = req.body;
+
+            if (!email) {
+                return res.status(400).json({ message: 'Email is required' });
+            }
+
+            const { code, message, elements } = await forgotPassword(req.body);
+
+            // res.redirect(process.env.FRONTEND_URL + '/change-password');
+
+            return res.status(code).json({
+                code,
+                message,
+                elements,
+            });
+        } catch (err) {
+            console.error(err);
+            next(err);
+        }
+    },
+
+    resetPassword: async (req, res, next) => {
+        try {
+            const { password, token } = req.body;
+
+            if (!password || !token) {
+                return res
+                    .status(400)
+                    .json({ message: 'Password are required' });
+            }
+
+            const { code, message, elements } = await resetPassword(req.body);
+
+            if (code === 200) {
+                return res.redirect(process.env.FRONTEND_URL + '/login');
+            }
+
+            return res.status(code).json({
+                code,
+                message,
+                elements,
+            });
+        } catch (err) {
+            console.error(err);
+            next(err);
+        }
+    },
+
+    verifyGoogleAccount: async (accessToken, refreshToken, profile, cb) => {
+        try {
+            const cred = await FederatedCredential.findOne({
+                provider: 'https://accounts.google.com',
+                subject: profile.id,
+            });
+
+            const email = profile.emails[0].value;
+
+            if (!cred) {
+                // The account has not logged in before. Create a new user.
+                const newUser = new User({
+                    username: profile.displayName,
+                    email: email,
+                });
+                const savedUser = await newUser.save();
+
+                const newCred = new FederatedCredential({
+                    user_id: savedUser._id,
+                    provider: 'https://accounts.google.com',
+                    subject: profile.id,
+                });
+                await newCred.save();
+
+                const user = {
+                    id: savedUser._id,
+                    name: savedUser.name,
+                    email: savedUser.e,
+                };
+                return cb(null, user);
+            } else {
+                const user = await User.findById(cred.user_id);
+                if (!user) {
+                    return cb(null, false);
+                }
+                return cb(null, user);
+            }
+        } catch (err) {
+            return cb(err);
+        }
+    },
     verifyAccount: async (req, res, next) => {
         try {
             console.log(req.body.otp);
@@ -141,6 +268,26 @@ module.exports = {
             });
 
             return res.status(code).json({
+                elements,
+            });
+        } catch (err) {
+            console.error(err);
+            next(err);
+        }
+    },
+
+    update: async (req, res, next) => {
+        try {
+            if (!req.body.email) {
+                const { email } = req.user;
+                req.body.email = email;
+            }
+
+            const { code, message, elements } = await update(req.body);
+
+            return res.status(code).json({
+                code,
+                message,
                 elements,
             });
         } catch (err) {

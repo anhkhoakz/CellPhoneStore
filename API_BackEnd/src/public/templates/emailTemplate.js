@@ -77,6 +77,88 @@ const Verification_Email_Template = `
   </html>
 `;
 
+const Forgot_Password_Template = `  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reset Requested</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+            overflow: hidden;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .content {
+            padding: 25px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .verification-code {
+            display: inline-block;
+            font-size: 22px;
+            color: #4CAF50;
+            background: #e8f5e9;
+            border: 1px dashed #4CAF50;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin: 15px 0;
+        }
+        .footer {
+            background-color: #f9f9f9;
+            padding: 15px;
+            text-align: center;
+            color: #777;
+            font-size: 12px;
+            border-top: 1px solid #ddd;
+        }
+        p {
+            margin: 0 0 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">Reset Your Password</div>
+        <div class="content">
+            <p>Hello {email},</p>
+            <p>You can also reset your password directly by following this link:</p>
+            <a href="{resetLink}">{resetLink}</a>
+            <p>If you did not request this change, you can safely ignore this email.</p>
+            <p>Best regards,</p>
+            <p>CellPhoneStore Team</p>
+        </div>
+        <div class="footer">
+            &copy; ${new Date().getFullYear()} CellPhoneStore. All rights reserved.
+        </div>
+    </div>
+</body>
+</html>
+`;
+
 const Welcome_Email_Template = `
   <!DOCTYPE html>
   <html lang="en">
@@ -169,4 +251,8 @@ const Welcome_Email_Template = `
   </html>
 `;
 
-module.exports = { Verification_Email_Template, Welcome_Email_Template };
+module.exports = {
+    Verification_Email_Template,
+    Welcome_Email_Template,
+    Forgot_Password_Template,
+};

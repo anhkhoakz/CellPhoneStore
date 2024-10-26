@@ -1,19 +1,14 @@
 const mongoose = require('mongoose');
-const {
-    hashPassword,
-    comparePassword,
-} = require('~v1/middleware/userMiddleware');
+const { comparePassword } = require('~v1/middleware/userMiddleware');
 
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
-        required: true,
         min: 6,
         max: 255,
     },
     email: {
         type: String,
-        required: true,
         min: 6,
         max: 255,
         validate: {
@@ -26,18 +21,27 @@ const userSchema = new mongoose.Schema({
 
     password: {
         type: String,
-        required: true,
         min: 8,
         max: 124,
     },
+
+    addresses: [
+        {
+            street: String,
+            city: String,
+            postalCode: String,
+        },
+    ],
+    points: { type: Number, default: 0 },
+
+    role: { type: String, enum: ['customer', 'admin'], default: 'customer' },
+    resetToken: { type: String, default: null }, // Optional default
+    resetTokenExpiry: { type: Date, default: null }, // Optional default
     createAt: {
         type: Date,
         default: Date.now,
     },
 });
-
-// // Middleware
-// userSchema.pre('save', hashPassword);
 
 userSchema.methods.comparePassword = comparePassword;
 

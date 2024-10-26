@@ -6,6 +6,8 @@ const morgan = require('morgan');
 const database = require('~/config/database');
 const cookieParser = require('cookie-parser');
 
+const session = require('express-session');
+const path = require('path');
 const cors = require('cors');
 
 const createError = require('http-errors');
@@ -15,12 +17,24 @@ database.connect();
 
 const app = express();
 
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(
+    session({
+        secret: 'your_secret_key',
+        resave: false,
+        saveUninitialized: false,
+    }),
+);
+
 app.use(cookieParser());
 
 app.use(
+    // allow all cors
     cors({
-        origin: 'http://localhost:8080',
-        credentials: true,
+        origin: '*',
+        methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
     }),
 );
 app.use(helmet());
