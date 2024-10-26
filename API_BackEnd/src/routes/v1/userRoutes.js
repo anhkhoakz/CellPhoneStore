@@ -1,7 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const AuthenticationController = require('~v1/controllers/AuthenticationController');
-const { checkValidate } = require('~v1/middleware/userMiddleware');
+const {
+    checkValidateLogin,
+    checkValidateRegister,
+} = require('~v1/middleware/userMiddleware');
 
 const { verifyAccessToken } = require('~v1/middleware/tokenMiddleware');
 const roleAuth = require('~/api/v1/middleware/roleAuth');
@@ -24,8 +27,12 @@ router.get('/:id', verifyAccessToken, AuthenticationController.getUser);
 router.post('/resetPassword', AuthenticationController.resetPassword);
 router.post('/forgotPassword', AuthenticationController.forgotPassword);
 
-router.post('/register', AuthenticationController.register);
-router.post('/login', checkValidate, AuthenticationController.login);
+router.post(
+    '/register',
+    checkValidateRegister,
+    AuthenticationController.register,
+);
+router.post('/login', checkValidateLogin, AuthenticationController.login);
 router.post('/verifyAccount', AuthenticationController.verifyAccount);
 
 router.post('/refresh-token', AuthenticationController.refreshToken);

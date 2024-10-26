@@ -9,6 +9,12 @@ const preUserSchema = new Schema({
         required: true,
     },
 
+    phone: {
+        type: String,
+        min: 10,
+        max: 10,
+    },
+
     otp: {
         type: String,
     },

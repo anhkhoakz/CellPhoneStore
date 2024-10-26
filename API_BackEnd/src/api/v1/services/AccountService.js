@@ -28,7 +28,6 @@ require('dotenv').config();
 
 module.exports = {
     verifyGoogleAccount: async (data) => {},
-
     verifyAccount: async (data) => {
         try {
             const preUsers = await _preUser.find({
@@ -57,6 +56,7 @@ module.exports = {
 
             const user = await _user.create({
                 username: lastPreUser.username,
+                phone: lastPreUser.phone,
                 email: data.email,
                 password: lastPreUser.password,
             });
@@ -83,7 +83,6 @@ module.exports = {
             };
         }
     },
-
     register: async (data) => {
         try {
             const user = await _user.findOne({ email: data.email });
@@ -134,13 +133,20 @@ module.exports = {
             };
         }
     },
-
     login: async (data) => {
         try {
             if (mongoSanitize.has(data)) {
                 return {
                     code: 400,
                     message: 'Invalid input',
+                };
+            }
+
+            const preUsers = await _preUser.findOne({ email: data.email });
+            if (preUsers) {
+                return {
+                    code: 400,
+                    message: 'Please check your email to verify first!',
                 };
             }
 
@@ -261,7 +267,6 @@ module.exports = {
             };
         }
     },
-
     update: async (data) => {
         try {
             const user = await _user.findOne({ email: data.email });

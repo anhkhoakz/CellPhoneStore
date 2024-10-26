@@ -14,8 +14,6 @@ const CreateError = require('http-errors');
 
 const User = require('~v1/models/Account');
 const FederatedCredential = require('~v1/models/federatedCredential');
-const { get } = require('mongoose');
-const { restart } = require('nodemon');
 
 module.exports = {
     getAllUsers: async (req, res, next) => {
@@ -106,7 +104,6 @@ module.exports = {
             const email = profile.emails[0].value;
 
             if (!cred) {
-                // The account has not logged in before. Create a new user.
                 const newUser = new User({
                     username: profile.displayName,
                     email: email,
@@ -161,8 +158,6 @@ module.exports = {
     register: async (req, res, next) => {
         try {
             const { email } = req.body;
-
-            console.log(email);
 
             if (!email) {
                 return res.status(400).json({ message: 'Email is required' });

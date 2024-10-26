@@ -25,6 +25,12 @@ const userSchema = new mongoose.Schema({
         max: 124,
     },
 
+    phone: {
+        type: String,
+        min: 10,
+        max: 10,
+    },
+
     addresses: [
         {
             street: String,
