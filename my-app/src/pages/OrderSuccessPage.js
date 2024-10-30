@@ -1,56 +1,72 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Box, Typography, Button } from "@mui/material";
 
 const OrderSuccessPage = () => {
     return (
-        <div
-            style={{
+        <Box
+            sx={{
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
                 height: "90vh",
-                backgroundColor: "#d4edda",
                 color: "#155724",
                 textAlign: "center",
                 border: "1px solid #c3e6cb",
                 borderRadius: "10px",
-                margin: "-20px 0 0 0",
+                padding: 4, 
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", 
             }}
         >
-            <h1>Purchase successful!</h1>
-            <p>Thank you for your purchase. Your order will be shipped soon!</p>
-            <img
+            <Typography variant="h4" component="h1" gutterBottom>
+                Purchase successful!
+            </Typography>
+            <Typography variant="body1" paragraph>
+                Thank you for your purchase. Your order will be shipped soon!
+            </Typography>
+            <Box
+                component="img"
                 src="/image/car.png"
                 alt="success"
-                style={{ marginTop: "20px", width: "250px", height: "auto" }} // Chỉnh kích thước hình ảnh
+                sx={{ marginTop: "20px", width: "250px", height: "auto", mb: 3 }} 
             />
-            <div style={styles.linkContainer}>
-                <Link to="/" style={styles.link}>
+            <Box
+                sx={{
+                    display: "flex",
+                    gap: 2, 
+                    marginTop: 3,
+                }}
+            >
+                <Button
+                    component={Link}
+                    to="/"
+                    variant="contained"
+                    sx={{
+                        backgroundColor: "#28a745",
+                        color: "#fff",
+                        "&:hover": {
+                            backgroundColor: "#218838",
+                        },
+                        padding: "10px 20px",
+                    }}
+                >
                     Quay lại trang chủ
-                </Link>
-                <Link to="/orderManagement" style={styles.link}>
+                </Button>
+                <Button
+                    component={Link}
+                    to="/orderManagement"
+                    variant="contained"
+                    color="primary"
+                    sx={{
+                        padding: "10px 20px",
+                    }}
+                >
                     Quản lý đơn hàng
-                </Link>
-            </div>
-        </div>
+                </Button>
+            </Box>
+        </Box>
     );
-};
-
-const styles = {
-    linkContainer: {
-        display: "flex",
-        marginTop: "30px",
-        gap: "20px",
-    },
-    link: {
-        padding: "10px 20px",
-        backgroundColor: "#4CAF50",
-        color: "white",
-        textDecoration: "none",
-        borderRadius: "5px",
-        transition: "background-color 0.3s ease",
-    },
 };
 
 export default OrderSuccessPage;

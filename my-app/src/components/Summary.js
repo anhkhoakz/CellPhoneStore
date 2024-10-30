@@ -1,101 +1,105 @@
 import React, { useState } from "react";
+import { TextField, Select, MenuItem, InputLabel, FormControl, Button, Typography, Box } from "@mui/material";
 
 const Summary = ({ subtotal, total, shipping, setShipping }) => {
-    // Thêm state cho tên, số điện thoại, địa chỉ
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
     const [address, setAddress] = useState("");
 
     const handleSubmit = () => {
-        // Xử lý dữ liệu khi người dùng nhấn nút Register
         console.log("Customer Information:", { name, phone, address });
         console.log("Shipping:", shipping);
         console.log("Total Price:", total);
     };
 
     return (
-        <div className="p-5">
-            <h3 className="fw-bold mb-4 pt-1">Customer Information</h3>
-            <div className="form-floating mb-4">
-                <input
-                    type="text"
-                    className="form-control"
-                    id="floatingName"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Full Name"
-                    required
-                />
-                <label htmlFor="floatingName">Full Name</label>
-            </div>
+        <Box className="p-5">
+            <Typography variant="h5" component="h3" gutterBottom>
+                Customer Information
+            </Typography>
 
-            <div className="form-floating mb-4">
-                <input
-                    type="tel"
-                    className="form-control"
-                    id="floatingPhone"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="Phone Number"
-                    required
-                />
-                <label htmlFor="floatingPhone">Phone Number</label>
-            </div>
+            <TextField
+                fullWidth
+                variant="outlined"
+                label="Full Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                margin="normal"
+            />
 
-            <div className="form-floating mb-4">
-                <textarea
-                    className="form-control"
-                    id="floatingAddress"
-                    rows="3"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    placeholder="Shipping Address"
-                    style={{ height: "100px" }}
-                    required
-                ></textarea>
-                <label htmlFor="floatingAddress">Shipping Address</label>
-            </div>
+            <TextField
+                fullWidth
+                variant="outlined"
+                label="Phone Number"
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required
+                margin="normal"
+            />
+
+            <TextField
+                fullWidth
+                variant="outlined"
+                label="Shipping Address"
+                multiline
+                rows={3}
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                required
+                margin="normal"
+            />
+
             <hr className="my-4" />
-            <h3 className="fw-bold mb-4 pt-1">Summary</h3>
-            <h5 className=" mb-3">Shipping</h5>
-            <div className="mb-4 pb-2">
-                <select
-                    className="form-select"
-                    onChange={(e) => setShipping(Number(e.target.value))}
+
+            <Typography variant="h5" component="h3" gutterBottom>
+                Summary
+            </Typography>
+
+            <Typography variant="h6" gutterBottom>
+                Shipping
+            </Typography>
+            <FormControl fullWidth variant="outlined" margin="normal">
+                <InputLabel>Delivery Method</InputLabel>
+                <Select
                     value={shipping}
+                    onChange={(e) => setShipping(Number(e.target.value))}
+                    label="Delivery Method"
                 >
-                    <option value="5">Standard Delivery - $5.00</option>
-                    <option value="10">Express Delivery - $10.00</option>
-                </select>
-            </div>
+                    <MenuItem value={5}>Standard Delivery - $5.00</MenuItem>
+                    <MenuItem value={10}>Express Delivery - $10.00</MenuItem>
+                </Select>
+            </FormControl>
 
-            <h5 className=" mb-3">Discount Code</h5>
-            <div className="form-floating mb-5">
-                <input
-                    type="text"
-                    className="form-control"
-                    id="floatingCode"
-                    placeholder="Enter your code"
-                />
-                <label htmlFor="floatingCode">Enter your code</label>
-            </div>
+            <Typography variant="h6" gutterBottom>
+                Discount Code
+            </Typography>
+            <TextField
+                fullWidth
+                variant="outlined"
+                label="Enter your code"
+                margin="normal"
+            />
 
             <hr className="my-4" />
 
-            <div className="d-flex justify-content-between mb-5">
-                <h5 className="text-uppercase">Total price</h5>
-                <h5>$ {total.toFixed(2)}</h5>
-            </div>
+            <Box display="flex" justifyContent="space-between" mb={5}>
+                <Typography variant="h6" className="text-uppercase">
+                    Total price
+                </Typography>
+                <Typography variant="h6">${total.toFixed(2)}</Typography>
+            </Box>
 
-            <button
-                type="button"
-                className="btn btn-success btn-lg"
-                style={{ fontWeight: "bold", width: "100%" }}
+            <Button
+                variant="contained"
+                color="success"
                 onClick={handleSubmit}
+                sx={{ fontWeight: "bold", width: "100%" }}
             >
                 Register
-            </button>
-        </div>
+            </Button>
+        </Box>
     );
 };
 

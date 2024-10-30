@@ -1,19 +1,26 @@
 import React from 'react';
-import { Row, Col, Image } from 'react-bootstrap';
+import { Grid2 } from '@mui/material'; // Thay đổi import từ Grid sang Grid2
+import { CardMedia, Typography } from '@mui/material';
 
 const OrderItem = ({ product }) => {
     return (
-        <Row className="mb-2">
-            <Col md={3} className="d-flex justify-content-center">
-                <Image src={product.image} rounded fluid />
-            </Col>
-            <Col md={9}>
-                <h5>{product.name}</h5>
-                <p>Price: ${product.price}</p>
-                <p>Amount: {product.amount}</p>
-            </Col>
-        </Row>
+        <Grid2 container spacing={2}>
+            <Grid2 xs={3} container justifyContent="center">
+                <CardMedia
+                    component="img"
+                    src={product.image}
+                    alt={product.name}
+                    sx={{ borderRadius: 1, maxHeight: 150 }} 
+                />
+            </Grid2>
+            <Grid2 xs={9}>
+                <Typography variant="h6">{product.name}</Typography>
+                <Typography variant="body2">Price: ${product.price}</Typography>
+                <Typography variant="body2">Amount: {product.amount}</Typography>
+            </Grid2>
+            
+        </Grid2>
     );
 };
 
-export default OrderItem;   
+export default OrderItem;

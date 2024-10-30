@@ -12,6 +12,8 @@ import LoginPage from "./pages/LoginPage";
 import ProductDetail from "./pages/ProductDetailPage";
 import OrderSuccessPage from "./pages/OrderSuccessPage";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import SearchPage from "./pages/SearchPage";
+import Page404 from "./pages/Page404";
 
 // Data test
 const yourProductsArray = [
@@ -57,6 +59,8 @@ function App() {
                         />
 
                         <Route path="/success" element={<OrderSuccessPage />} />
+                        <Route path="/search" element={<SearchPage />} />
+                        <Route path="/404" element={<Page404 />} />
                     </Routes>
                 </main>
                 <Footer />

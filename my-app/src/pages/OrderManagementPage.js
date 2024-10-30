@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Typography, Paper } from '@mui/material';
 import OrderCard from "../components/OrderCard";
 import SearchBar from "../components/SearchBar";
 import OrderEmpty from "../components/OrderEmpty";
@@ -47,12 +47,11 @@ const OrderManagementPage = () => {
         },
     ]);
 
-    const [filteredOrders, setFilteredOrders] = useState(orders); // Trạng thái cho kết quả tìm kiếm
-    const [statusFilter, setStatusFilter] = useState('All'); // Trạng thái cho bộ lọc trạng thái đơn hàng
+    const [filteredOrders, setFilteredOrders] = useState(orders);
+    const [statusFilter, setStatusFilter] = useState('All');
 
     const handleSearch = (query) => {
         const result = orders.filter(order => 
-            // Tìm kiếm theo tên sản phẩm hoặc ID đơn hàng
             order.products.some(product =>
                 product.name.toLowerCase().includes(query.toLowerCase())
             ) || order.id.toString().includes(query)
@@ -61,7 +60,7 @@ const OrderManagementPage = () => {
     };
 
     const handleStatusChange = (status) => {
-        setStatusFilter(status); // Cập nhật trạng thái bộ lọc
+        setStatusFilter(status);
     };
 
     const filteredByStatus = filteredOrders.filter(order => 
@@ -72,45 +71,44 @@ const OrderManagementPage = () => {
     const deliveredOrders = filteredByStatus.filter(order => order.status === 'Delivered');
 
     return (
-        <Container>
-            <h2 className="text-center my-4">Order Management</h2>
+        <Container sx={{minHeight: "90vh"}}>
+            <Typography sx={{margin: "20px 0"}} variant="h4" align="center" gutterBottom>
+                Order Management
+            </Typography>
             <SearchBar onSearch={handleSearch} onStatusChange={handleStatusChange} />
 
-            {/* Kiểm tra nếu cả 2 danh sách đều trống, hiển thị OrderEmpty */}
             {inTransitOrders.length === 0 && deliveredOrders.length === 0 ? (
                 <OrderEmpty />
             ) : (
                 <>
-                    {/* Phần "In Transit Orders" - chỉ hiển thị khi không lọc "Delivered" */}
                     {(statusFilter === 'All' || statusFilter === 'In Transit') && (
-                        <Row>
-                            <Col>
-                                <h4 className="mb-3">In Transit Orders</h4>
-                                {inTransitOrders.length > 0 ? (
-                                    inTransitOrders.map(order => (
-                                        <OrderCard key={order.id} order={order} />
-                                    ))
-                                ) : (
-                                    <h3 className="text-center">No orders in transit.</h3>
-                                )}
-                            </Col>
-                        </Row>
+                        <Paper style={{ padding: '16px', margin: '16px 0' }}>
+                            <Typography variant="h5" gutterBottom>
+                                In Transit Orders
+                            </Typography>
+                            {inTransitOrders.length > 0 ? (
+                                inTransitOrders.map(order => (
+                                    <OrderCard key={order.id} order={order} />
+                                ))
+                            ) : (
+                                <Typography align="center">No orders in transit.</Typography>
+                            )}
+                        </Paper>
                     )}
 
-                    {/* Phần "Delivered Orders" - chỉ hiển thị khi không lọc "In Transit" */}
                     {(statusFilter === 'All' || statusFilter === 'Delivered') && (
-                        <Row style={{marginTop: '6vh'}}>
-                            <Col>
-                                <h4 className="mb-3">Delivered Orders</h4>
-                                {deliveredOrders.length > 0 ? (
-                                    deliveredOrders.map(order => (
-                                        <OrderCard key={order.id} order={order} />
-                                    ))
-                                ) : (
-                                    <h3 className="text-center">No delivered orders.</h3>
-                                )}
-                            </Col>
-                        </Row>
+                        <Paper style={{ padding: '16px', margin: '16px 0' }}>
+                            <Typography variant="h5" gutterBottom>
+                                Delivered Orders
+                            </Typography>
+                            {deliveredOrders.length > 0 ? (
+                                deliveredOrders.map(order => (
+                                    <OrderCard key={order.id} order={order} />
+                                ))
+                            ) : (
+                                <Typography align="center">No delivered orders.</Typography>
+                            )}
+                        </Paper>
                     )}
                 </>
             )}

@@ -2,8 +2,9 @@ import React from "react";
 import ProductNotFound from "../components/ProductNotFound";
 import { useParams } from "react-router-dom";
 import ProductList from "../components/ProductList";
+import { Box, Typography, Button, Grid, Divider, TextField, MenuItem } from "@mui/material";
 
-const ProductDetail = () => {
+const ProductDetailPage = () => {
     const product = {
         id: 1,
         name: "iPhone 13",
@@ -14,128 +15,96 @@ const ProductDetail = () => {
     };
 
     const relaProducts = [
-        {
-            id: 1,
-            name: "Product 1",
-            price: 29.99,
-            image: "/image/ip16.jpg",
-        },
-        {
-            id: 2,
-            name: "Product 2",
-            price: 39.99,
-            image: "/image/ip16.jpg",
-        },
-        {
-            id: 3,
-            name: "Product 3",
-            price: 19.99,
-            image: "/image/ip16.jpg",
-        },
-        {
-            id: 4,
-            name: "Product 3",
-            price: 19.99,
-            image: "/image/ip16.jpg",
-        },
+        { id: 1, name: "Product 1", price: 29.99, image: "/image/ip16.jpg" },
+        { id: 2, name: "Product 2", price: 39.99, image: "/image/ip16.jpg" },
+        { id: 3, name: "Product 3", price: 19.99, image: "/image/ip16.jpg" },
+        { id: 4, name: "Product 4", price: 19.99, image: "/image/ip16.jpg" },
     ];
+
     const { id } = useParams();
 
-    // Kiểm tra xem ID trong URL có khớp với ID của sản phẩm không
     if (parseInt(id) !== product.id) {
         return <ProductNotFound />;
     }
 
     return (
-        <div>
+        <Box sx={{ padding: "20px" }}>
             {/* Product Detail */}
-            <section className="py-5">
-                <div className="container" style={{ minHeight: "60vh" }}>
-                    <div className="row gx-5">
-                        <aside className="col-lg-6">
-                            <div
-                                className="border rounded-4 mb-3 d-flex justify-content-center"
+            <Box sx={{ minHeight: "70vh", width: "80%", margin: "20px auto" }}>
+                <Grid container spacing={4} alignItems="center">
+                    {/* Hình ảnh bên trái */}
+                    <Grid item xs={12} md={6}>
+                        <Box
+                            sx={{
+                                border: "1px solid #ccc",
+                                borderRadius: "8px",
+                                display: "flex",
+                                justifyContent: "center",
+                                overflow: "hidden",
+                                height: "400px",
+                                backgroundColor: "#f9f9f9",
+                            }}
+                        >
+                            <img
                                 style={{
-                                    width: "400px",
-                                    height: "400px",
+                                    maxWidth: "90%",
+                                    maxHeight: "100%",
+                                    objectFit: "contain",
                                     margin: "auto",
-                                    overflow: "hidden",
                                 }}
-                            >
-                                <img
-                                    style={{
-                                        maxWidth: "90%",
-                                        maxHeight: "50vh",
-                                        margin: "auto",
-                                    }} // Thay đổi kích thước ảnh
-                                    className="rounded-4 fit"
-                                    src={product.image}
-                                    alt={product.name}
-                                />
-                            </div>
-                        </aside>
+                                src={product.image}
+                                alt={product.name}
+                            />
+                        </Box>
+                    </Grid>
 
-                        <main className="col-lg-6">
-                            <div className="ps-lg-3">
-                                <h4 className="title text-dark">
-                                    {product.name}
-                                </h4>
-                                <div className="d-flex flex-row my-3">
-                                    <span className="text-success">
-                                        In stock
-                                    </span>
-                                </div>
-
-                                <div className="mb-3">
-                                    <span className="h5">${product.price}</span>
-                                </div>
-
-                                <p>{product.description}</p>
-
-                                <hr />
-
-                                <div className="row mb-4">
-                                    <div className="col-md-4 col-6">
-                                        <label className="mb-2">Color</label>
-                                        <select
-                                            className="form-select border border-secondary"
-                                            style={{ height: "35px" }}
-                                        >
-                                            <option>Black</option>
-                                            <option>White</option>
-                                            <option>Blue</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <button
-                                    type="button"
-                                    className="btn btn-success shadow-0"
+                    {/* Nội dung bên phải */}
+                    <Grid item xs={12} md={6}>
+                        <Box sx={{ paddingLeft: 2 }}>
+                            <Typography variant="h4" color="textPrimary" gutterBottom>
+                                {product.name}
+                            </Typography>
+                            <Typography variant="body1" color="textSecondary" sx={{ mb: 1 }}>
+                                In stock
+                            </Typography>
+                            <Typography variant="h5" sx={{ color: "green", mb: 2 }}>
+                                ${product.price}
+                            </Typography>
+                            <Typography variant="body1" paragraph>
+                                {product.description}
+                            </Typography>
+                            <Box sx={{ my: 2 }}>
+                                <Typography variant="body1" mb={1}>
+                                    Color
+                                </Typography>
+                                <TextField
+                                    select
+                                    variant="outlined"
+                                    fullWidth
+                                    defaultValue="Black"
+                                    sx={{ maxWidth: "150px", height: "35px", '& .MuiOutlinedInput-root': { height: "35px" } }}
                                 >
-                                    Buy now
-                                </button>
-                                <button
-                                    type="button"
-                                    className="btn btn-primary shadow-0 mx-2"
-                                >
-                                    <i className="bi bi-cart"></i> Add to cart
-                                </button>
-                            </div>
-                        </main>
-                    </div>
-                </div>
-            </section>
-            <hr
-                style={{
-                    maxWidth: "80%",
-                    margin: "auto",
-                    padding: "10px",
-                }}
-            />
-            <div>
+                                    <MenuItem value="Black">Black</MenuItem>
+                                    <MenuItem value="White">White</MenuItem>
+                                    <MenuItem value="Blue">Blue</MenuItem>
+                                </TextField>
+                            </Box>
+                            <Button variant="contained" color="success" sx={{ mr: 2 }}>
+                                Buy now
+                            </Button>
+                            <Button variant="contained" color="primary">
+                                Add to cart
+                            </Button>
+                        </Box>
+                    </Grid>
+                </Grid>
+            </Box>
+            <Divider sx={{ maxWidth: "80%", margin: "20px auto" }} />
+            <Box>
                 <ProductList title="Similar items" products={relaProducts} />
-            </div>
-        </div>
+            </Box>
+        </Box>
     );
 };
 
-export default ProductDetail;
+export default ProductDetailPage;

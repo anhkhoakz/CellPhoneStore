@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { TextField, Select, MenuItem, InputLabel, FormControl, Box } from '@mui/material';
 
 const SearchBar = ({ onSearch, onStatusChange }) => {
     const [query, setQuery] = useState('');
@@ -11,24 +12,39 @@ const SearchBar = ({ onSearch, onStatusChange }) => {
 
     const handleStatusChange = (e) => {
         setStatus(e.target.value);
-        onStatusChange(e.target.value); // Truyền trạng thái mới lên component cha
+        onStatusChange(e.target.value);
     };
 
     return (
-        <div className="mb-4" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <input
-                type="text"
+        <Box
+            className="mb-4"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            sx={{ gap: 2 }} 
+        >
+            <TextField
+                variant="outlined"
                 placeholder="Search orders..."
                 value={query}
                 onChange={handleSearch}
-                style={{ width: '50%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc', marginRight: '10px' }}
+                fullWidth
+                sx={{ maxWidth: '400px' }}
             />
-            <select value={status} onChange={handleStatusChange} style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}>
-                <option value="All">All</option>
-                <option value="In Transit">In Transit</option>
-                <option value="Delivered">Delivered</option>
-            </select>
-        </div>
+            <FormControl variant="outlined" sx={{ minWidth: 120 }}>
+                <InputLabel id="status-select-label">Status</InputLabel>
+                <Select
+                    labelId="status-select-label"
+                    value={status}
+                    onChange={handleStatusChange}
+                    label="Status"
+                >
+                    <MenuItem value="All">All</MenuItem>
+                    <MenuItem value="In Transit">In Transit</MenuItem>
+                    <MenuItem value="Delivered">Delivered</MenuItem>
+                </Select>
+            </FormControl>
+        </Box>
     );
 };
 

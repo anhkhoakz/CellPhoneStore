@@ -1,28 +1,34 @@
-import React from 'react';
-import { Card, Button } from 'react-bootstrap';
-import OrderItem from './OrderItem';
+import React from "react";
+import { Card, CardContent, Button, Divider, Typography } from "@mui/material"; 
+import OrderItem from "./OrderItem";
 
 const OrderCard = ({ order }) => {
     return (
-        <Card className="mb-3">
-            <Card.Body>
-                <Card.Title>Order #{order.id}</Card.Title>
-                <Card.Text>Order Date: {order.date}</Card.Text>
+        <Card variant="outlined" sx={{ marginBottom: 2 }}>
+            <CardContent>
+                <Typography variant="h6">Order #{order.id}</Typography>
+                <Typography color="textSecondary">Order Date: {order.date}</Typography>
+                
                 {order.products.map((product, index) => (
                     <React.Fragment key={index}>
                         <OrderItem product={product} />
                         {index < order.products.length - 1 && (
-                            <hr style={{ width: '100%', margin: '20px auto' }} /> 
+                            <Divider sx={{ marginY: 2 }} />
                         )}
                     </React.Fragment>
                 ))}
-                <Card.Text>Total: ${order.total}</Card.Text>
-                {order.status === 'In Transit' ? (
-                    <Button variant="primary">Track Order</Button>
+                
+                <Typography variant="h6">Total: ${order.total}</Typography>
+                {order.status === "In Transit" ? (
+                    <Button variant="contained" color="primary">
+                        Track Order
+                    </Button>
                 ) : (
-                    <Button variant="success" disabled>Delivered</Button>
+                    <Button variant="contained" color="success" disabled>
+                        Delivered
+                    </Button>
                 )}
-            </Card.Body>
+            </CardContent>
         </Card>
     );
 };

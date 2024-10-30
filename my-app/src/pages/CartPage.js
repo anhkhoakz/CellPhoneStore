@@ -1,7 +1,9 @@
+// CartPage.js
 import React, { useState } from "react";
+import { Box, Grid, Typography, Card, Divider, Button } from "@mui/material";
 import CartItem from "../components/CartItem";
 import CartEmpty from "../components/CartEmpty";
-import Summary from "../components/Summary"; // Import component Summary
+import Summary from "../components/Summary"; 
 import { Link } from "react-router-dom";
 
 const CartPage = () => {
@@ -55,85 +57,59 @@ const CartPage = () => {
     const total = subtotal + shipping;
 
     return (
-        <section className="h-100 h-custom">
-            <div className="container h-100" style={{ marginBottom: "20px" }}>
-                <div className="row d-flex justify-content-center align-items-center h-100">
-                    <div className="col-12">
-                        <div
-                            className="card card-registration card-registration-2"
-                            style={{ borderRadius: "15px" }}
-                        >
-                            <div className="card-body p-0">
-                                <div className="row g-0">
-                                    <div className="col-lg-8">
-                                        <div className="p-5">
-                                            <div className="d-flex justify-content-between align-items-center">
-                                                <h2 className="fw-bold mb-0">
-                                                    Shopping Cart
-                                                </h2>
-                                                <h6 className="mb-0 text-muted">
-                                                    {items.length} items
-                                                </h6>
-                                            </div>
-                                            <hr className="my-4" />
-                                            {items.length === 0 ? (
-                                                <CartEmpty />
-                                            ) : (
-                                                <>
-                                                    {items.map((item) => (
-                                                        <CartItem
-                                                            key={item.id}
-                                                            item={item}
-                                                            onQuantityChange={
-                                                                handleQuantityChange
-                                                            }
-                                                            onRemoveItem={
-                                                                handleRemoveItem
-                                                            }
-                                                        />
-                                                    ))}
-                                                    <div className="d-flex justify-content-between">
-                                                        <h5 className="text-uppercase">
-                                                            Price
-                                                        </h5>
-                                                        <h5>
-                                                            ${" "}
-                                                            {subtotal.toFixed(
-                                                                2
-                                                            )}
-                                                        </h5>
-                                                    </div>
-                                                    <hr className="my-4" />
-                                                    <div>
-                                                        <h6 className="mb-0">
-                                                            <Link to="/">
-                                                                Back to shop
-                                                            </Link>
-                                                        </h6>
-                                                    </div>
-                                                </>
-                                            )}
-                                        </div>
-                                    </div>
+        <Box sx={{ flexGrow: 1, padding: 4 }}>
+            <Grid container spacing={4}>
+                {/* Kiểm tra xem giỏ hàng có trống không */}
+                {items.length === 0 ? (
+                    <Grid item xs={12}>
+                        <CartEmpty />
+                    </Grid>
+                ) : (
+                    <>
+                        {/* Cột bên trái - Giỏ hàng */}
+                        <Grid item xs={12} md={8}>
+                            <Card variant="outlined" sx={{ padding: 2 }}>
+                                <Typography variant="h4" gutterBottom>
+                                    Shopping Cart
+                                </Typography>
+                                <Typography variant="body1" color="textSecondary">
+                                    {items.length} items
+                                </Typography>
+                                <Divider sx={{ my: 2 }} />
+                                {items.map((item) => (
+                                    <CartItem
+                                        key={item.id}
+                                        item={item}
+                                        onQuantityChange={handleQuantityChange}
+                                        onRemoveItem={handleRemoveItem}
+                                    />
+                                ))}
+                                <Grid container justifyContent="space-between" sx={{ my: 2 }}>
+                                    <Typography variant="h6">Price</Typography>
+                                    <Typography variant="h6">${subtotal.toFixed(2)}</Typography>
+                                </Grid>
+                                <Divider sx={{ my: 2 }} />
+                                <Button component={Link} to="/" variant="contained" color="primary">
+                                    Back to shop
+                                </Button>
+                            </Card>
+                        </Grid>
 
-                                    {/* Chỉ hiển thị Summary khi giỏ hàng không trống */}
-                                    {items.length > 0 && (
-                                        <div className="col-lg-4 bg-body-tertiary">
-                                            <Summary
-                                                subtotal={subtotal}
-                                                total={total}
-                                                shipping={shipping}
-                                                setShipping={setShipping}
-                                            />
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+                        {/* Cột bên phải - Summary */}
+                        <Grid item xs={12} md={4}>
+                            <Card variant="outlined" sx={{ padding: 2 }}>
+                                <Summary
+                                    subtotal={subtotal}
+                                    total={total}
+                                    shipping={shipping}
+                                    setShipping={setShipping}
+                                />
+                            </Card>
+                        </Grid>
+                    </>
+                )}
+            </Grid>
+        </Box>
     );
 };
 

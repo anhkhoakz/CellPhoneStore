@@ -24,7 +24,7 @@ const HomePage = () => {
         },
         {
             id: 4,
-            name: "Product 3",
+            name: "Product 4",
             price: 19.99,
             image: "/image/ip16.jpg",
         },
@@ -32,9 +32,9 @@ const HomePage = () => {
 
     return (
         <div>
-            <ProductList title="Sale" products={products} />
-            <ProductList title="Hot" products={products} />
-            <ProductList title="New" products={products} />
+            <ProductList title="SALE PRODUCTS" products={products} />
+            <ProductList title="HOT PRODUCTS" products={products} />
+            <ProductList title="NEW PRODUCTS" products={products} />
         </div>
     );
 };

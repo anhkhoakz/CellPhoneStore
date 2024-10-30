@@ -1,52 +1,54 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-
+import { Box, Typography, Button } from "@mui/material"; // Import các thành phần Material-UI
 
 const OrderEmpty = () => {
     return (
-        <div
-            style={{
+        <Box
+            sx={{
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
+                justifyContent: "center",
                 height: "60vh",
                 color: "#155724",
                 textAlign: "center",
                 borderRadius: "10px",
-                margin: "0 0 20px 0",
+                padding: "20px",
             }}
         >
-            <h1>There are no orders here!</h1>
-            <p>Sorry, we currently have no orders found !!!</p>
-            <img
+            <Typography variant="h4" sx={{ mb: 1 }}>
+                There are no orders here!
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2, color: "#6c757d" }}>
+                Sorry, we currently have no orders found!
+            </Typography>
+            <Box
+                component="img"
                 src="/image/empty-box.png"
                 alt="order-empty"
-                style={{ marginTop: "20px", width: "250px", height: "auto" }} // Chỉnh kích thước hình ảnh
+                sx={{ width: "250px", height: "auto", mb: 3 }}
             />
-            <div style={styles.linkContainer}>
-                <Link to="/" style={styles.link}>
-                    Continue shopping
-                </Link>
-            </div>
-        </div>
+            <Button
+                variant="contained"
+                color="primary"
+                component={Link}
+                to="/"
+                sx={{
+                    backgroundColor: "#4CAF50",
+                    color: "white",
+                    padding: "10px 20px",
+                    borderRadius: "5px",
+                    textDecoration: "none",
+                    "&:hover": {
+                        backgroundColor: "#45A049",
+                    },
+                }}
+            >
+                Continue Shopping
+            </Button>
+        </Box>
     );
 };
-
-const styles = {
-    linkContainer: {
-        display: "flex",
-        marginTop: "30px",
-        gap: "20px",
-    },
-    link: {
-        padding: "10px 20px",
-        backgroundColor: "#4CAF50",
-        color: "white",
-        textDecoration: "none",
-        borderRadius: "5px",
-        transition: "background-color 0.3s ease",
-    },
-};
-
 
 export default OrderEmpty;

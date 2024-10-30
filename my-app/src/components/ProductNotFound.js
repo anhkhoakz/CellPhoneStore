@@ -1,33 +1,43 @@
 import React from "react";
+import { Box, Typography, Button } from "@mui/material";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"; // Import icon từ Material-UI
+import { useNavigate } from "react-router-dom"; // Để điều hướng trở lại
 
 const NotFound = () => {
+    const navigate = useNavigate();
+
     return (
-        <div
-            style={{
+        <Box
+            sx={{
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
                 height: "90vh",
-                backgroundColor: "#f8d7da",
                 color: "#721c24",
                 textAlign: "center",
                 border: "1px solid #f5c6cb",
                 borderRadius: "10px",
-                margin: "-20px 0 0 0",
+                padding: "20px",
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
             }}
         >
-            <h1>Product Not Found</h1>
-            <p>
-                The product you're looking for does not exist or has been
-                removed.
-            </p>
-            <img
-                src="https://img.icons8.com/ios-filled/100/000000/error.png"
-                alt="error"
-                style={{ marginTop: "20px" }}
-            />
-        </div>
+            <ErrorOutlineIcon sx={{ fontSize: 80, mb: 2, color: "#721c24" }} />
+            <Typography variant="h4" sx={{ mb: 1 }}>
+                Product Not Found
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2 }}>
+                The product you're looking for does not exist or has been removed.
+            </Typography>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={() => navigate("/")}
+                sx={{ mt: 2 }}
+            >
+                Go Back to Products
+            </Button>
+        </Box>
     );
 };
 
