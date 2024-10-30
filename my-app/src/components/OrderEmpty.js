@@ -17,7 +17,7 @@ const OrderEmpty = () => {
                 padding: "20px",
             }}
         >
-            <Typography variant="h4" sx={{ mb: 1 }}>
+            <Typography variant="h4" sx={{ mb: 1, marginTop: 5 }}>
                 There are no orders here!
             </Typography>
             <Typography variant="body1" sx={{ mb: 2, color: "#6c757d" }}>
@@ -35,17 +35,13 @@ const OrderEmpty = () => {
                 component={Link}
                 to="/"
                 sx={{
-                    backgroundColor: "#4CAF50",
                     color: "white",
                     padding: "10px 20px",
                     borderRadius: "5px",
                     textDecoration: "none",
-                    "&:hover": {
-                        backgroundColor: "#45A049",
-                    },
                 }}
             >
-                Continue Shopping
+                Go back to products 
             </Button>
         </Box>
     );

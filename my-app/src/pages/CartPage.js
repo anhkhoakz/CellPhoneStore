@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Box, Grid, Typography, Card, Divider, Button } from "@mui/material";
 import CartItem from "../components/CartItem";
 import CartEmpty from "../components/CartEmpty";
-import Summary from "../components/Summary"; 
+import Summary from "../components/Summary";
 import { Link } from "react-router-dom";
 
 const CartPage = () => {
@@ -90,7 +90,7 @@ const CartPage = () => {
                                 </Grid>
                                 <Divider sx={{ my: 2 }} />
                                 <Button component={Link} to="/" variant="contained" color="primary">
-                                    Back to shop
+                                    Go back to products
                                 </Button>
                             </Card>
                         </Grid>

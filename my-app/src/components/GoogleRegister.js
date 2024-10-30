@@ -24,7 +24,7 @@ const GoogleRegister = () => {
                 sx={{
                     backgroundColor: 'green',
                     color: 'white',
-                    width: '20%',
+                    width: '150',
                     '&:hover': {
                         backgroundColor: 'darkgreen',
                     },

@@ -14,15 +14,15 @@ const Footer = () => {
     >
       <Container>
         <Typography variant="body1" align="center">
-          &copy; {new Date().getFullYear()} Công ty của tôi
+          &copy; {new Date().getFullYear()} My company
         </Typography>
         <Typography variant="body2" align="center">
           <Link href="#" color="inherit" underline="hover">
-            Điều khoản sử dụng
+            Terms of Use
           </Link>{' '}
           |{' '}
           <Link href="#" color="inherit" underline="hover">
-            Chính sách bảo mật
+            Privacy Policy
           </Link>
         </Typography>
       </Container>

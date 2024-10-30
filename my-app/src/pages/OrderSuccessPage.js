@@ -51,7 +51,7 @@ const OrderSuccessPage = () => {
                         padding: "10px 20px",
                     }}
                 >
-                    Quay lại trang chủ
+                    Go back to products 
                 </Button>
                 <Button
                     component={Link}
@@ -62,7 +62,7 @@ const OrderSuccessPage = () => {
                         padding: "10px 20px",
                     }}
                 >
-                    Quản lý đơn hàng
+                    Order Management
                 </Button>
             </Box>
         </Box>

@@ -88,7 +88,7 @@ const Navigation = () => {
 
                 <Drawer anchor="right" open={isDrawerOpen} onClose={toggleDrawer(false)}>
                     <Box
-                        sx={{ width: 300, padding: 2 }}
+                        sx={{ width: 250, padding: 2 }}
                         role="presentation"
                         onClick={(e) => e.stopPropagation()}
                         onKeyDown={(e) => e.stopPropagation()}
@@ -116,13 +116,13 @@ const Navigation = () => {
                         </Box>
 
                         <List>
-                            <ListItem button component={Link} to="/orderManagement">
+                            <ListItem button component={Link} to="/orderManagement" onClick={toggleDrawer(false)}>
                                 <ListItemText primary="Orders" />
                             </ListItem>
-                            <ListItem button component={Link} to="/cart">
+                            <ListItem button component={Link} to="/cart" onClick={toggleDrawer(false)}>
                                 <ListItemText primary="Cart" />
                             </ListItem>
-                            <ListItem button component={Link} to="/login">
+                            <ListItem button component={Link} to="/login" onClick={toggleDrawer(false)}>
                                 <ListItemText primary="Login" />
                             </ListItem>
                         </List>

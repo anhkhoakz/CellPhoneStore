@@ -29,7 +29,7 @@ const CartEmpty = () => {
                 size="large"
                 sx={{ mt: 3 }}
             >
-                Back to Shop
+                Go back to products 
             </Button>
         </Box>
     );
