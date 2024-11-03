@@ -7,7 +7,6 @@ import Copyright from '../internals/components/Copyright';
 import ChartUserByCountry from './ChartUserByCountry';
 import CustomizedTreeView from './CustomizedTreeView';
 import CustomizedDataGrid from './CustomizedDataGrid';
-import HighlightedCard from './HighlightedCard';
 import PageViewsBarChart from './PageViewsBarChart';
 import SessionsChart from './SessionsChart';
 import StatCard from './StatCard';
@@ -24,7 +23,7 @@ const data = [
     ],
   },
   {
-    title: 'Conversions',
+    title: 'Number of orders',
     value: '325',
     interval: 'Last 30 days',
     trend: 'down',
@@ -34,7 +33,7 @@ const data = [
     ],
   },
   {
-    title: 'Event count',
+    title: 'Visits',
     value: '200k',
     interval: 'Last 30 days',
     trend: 'neutral',
@@ -59,13 +58,10 @@ export default function MainGrid() {
         sx={{ mb: (theme) => theme.spacing(2) }}
       >
         {data.map((card, index) => (
-          <Grid key={index} size={{ xs: 12, sm: 6, lg: 3 }}>
+          <Grid key={index} size={{ xs: 12, sm: 6, lg: 4 }}>
             <StatCard {...card} />
           </Grid>
         ))}
-        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-          <HighlightedCard />
-        </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           <SessionsChart />
         </Grid>

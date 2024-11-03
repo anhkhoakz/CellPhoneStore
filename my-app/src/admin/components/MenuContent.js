@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link, useLocation } from 'react-router-dom'; 
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -6,18 +7,18 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import AnalyticsRoundedIcon from '@mui/icons-material/AnalyticsRounded';
-import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
-import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
+import PersonIcon from '@mui/icons-material/Person';
+import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
+import InventorySharpIcon from '@mui/icons-material/InventorySharp';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 
 const mainListItems = [
-  { text: 'Home', icon: <HomeRoundedIcon /> },
-  { text: 'Analytics', icon: <AnalyticsRoundedIcon /> },
-  { text: 'Clients', icon: <PeopleRoundedIcon /> },
-  { text: 'Tasks', icon: <AssignmentRoundedIcon /> },
+  { text: 'Home', icon: <HomeRoundedIcon />, path: '/admin/dashboard' },
+  { text: 'Users', icon: <PersonIcon />, path: '/admin/user-management' },
+  { text: 'Product', icon: <Inventory2OutlinedIcon />, path: '/admin/product-management' },
+  { text: 'Order', icon: <InventorySharpIcon />, path: '/admin/order-management' },
 ];
 
 const secondaryListItems = [
@@ -27,12 +28,18 @@ const secondaryListItems = [
 ];
 
 export default function MenuContent() {
+  const location = useLocation();
+
   return (
     <Stack sx={{ flexGrow: 1, p: 1, justifyContent: 'space-between' }}>
       <List dense>
         {mainListItems.map((item, index) => (
           <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton selected={index === 0}>
+            <ListItemButton
+              component={Link}
+              to={item.path}
+              selected={location.pathname === item.path} // Chọn nếu đường dẫn hiện tại khớp với đường dẫn của mục
+            >
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItemButton>

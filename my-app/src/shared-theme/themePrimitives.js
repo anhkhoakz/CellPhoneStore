@@ -1,4 +1,5 @@
 import { createTheme, alpha } from '@mui/material/styles';
+import '@fontsource/inter'; 
 
 const defaultTheme = createTheme();
 
