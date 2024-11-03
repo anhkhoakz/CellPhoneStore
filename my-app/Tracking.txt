@@ -8,3 +8,9 @@ Các trang đã làm:
 Chưa làm: 
     - Kết quả tìm kiếm
 
+npm install dayjs
+# Cài đặt MUI packages
+npm install @mui/x-data-grid @mui/x-tree-view @mui/x-charts @mui/x-date-pickers
+
+# Cài đặt React Spring
+npm install @react-spring/web
