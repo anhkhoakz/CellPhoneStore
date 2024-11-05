@@ -15,7 +15,7 @@ import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 
 const mainListItems = [
-  { text: 'Home', icon: <HomeRoundedIcon />, path: '/admin/dashboard' },
+  { text: 'Home', icon: <HomeRoundedIcon />, path: '/admin' },
   { text: 'Users', icon: <PersonIcon />, path: '/admin/user-management' },
   { text: 'Product', icon: <Inventory2OutlinedIcon />, path: '/admin/product-management' },
   { text: 'Order', icon: <InventorySharpIcon />, path: '/admin/order-management' },
@@ -38,7 +38,7 @@ export default function MenuContent() {
             <ListItemButton
               component={Link}
               to={item.path}
-              selected={location.pathname === item.path} // Chọn nếu đường dẫn hiện tại khớp với đường dẫn của mục
+              selected={location.pathname === item.path} 
             >
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />

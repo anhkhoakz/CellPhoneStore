@@ -15,6 +15,7 @@ import OrderSuccessPage from './pages/OrderSuccessPage';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import SearchPage from './pages/SearchPage';
 import Page404 from './pages/Page404';
+import Profile from './pages/UserProfilePage'
 
 import AdminRoutes from './admin/AdminRoutes';
 
@@ -41,6 +42,7 @@ function App() {
                     <Route path="/success" element={<OrderSuccessPage />} />
                     <Route path="/search" element={<SearchPage />} />
                     <Route path="/404" element={<Page404 />} />
+                    <Route path="/profile" element={<Profile />} />
                   </Routes>
                 </main>
                 <Footer />
