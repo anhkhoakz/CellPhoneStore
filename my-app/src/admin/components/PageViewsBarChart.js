@@ -7,7 +7,7 @@ import Stack from '@mui/material/Stack';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { useTheme } from '@mui/material/styles';
 
-export default function PageViewsBarChart() {
+export default function TopSellingProductsChart() {
   const theme = useTheme();
   const colorPalette = [
     (theme.vars || theme).palette.primary.dark,
@@ -19,7 +19,7 @@ export default function PageViewsBarChart() {
     <Card variant="outlined" sx={{ width: '100%' }}>
       <CardContent>
         <Typography component="h2" variant="subtitle2" gutterBottom>
-          Page views and downloads
+          Top 5 best selling products
         </Typography>
         <Stack sx={{ justifyContent: 'space-between' }}>
           <Stack
@@ -31,12 +31,12 @@ export default function PageViewsBarChart() {
             }}
           >
             <Typography variant="h4" component="p">
-              1.3M
+              Total: 10,250
             </Typography>
-            <Chip size="small" color="error" label="-8%" />
+            <Chip size="small" color="success" label="+15%" />
           </Stack>
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            Page views and downloads for the last 6 months
+            Number of sales in the past 6 months
           </Typography>
         </Stack>
         <BarChart
@@ -46,26 +46,14 @@ export default function PageViewsBarChart() {
             {
               scaleType: 'band',
               categoryGapRatio: 0.5,
-              data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+              data: ['iPhone 14', 'Samsung Galaxy S23', 'Xiaomi Mi 13', 'Oppo Reno8', 'Vivo Y55'],
             },
           ]}
           series={[
             {
-              id: 'page-views',
-              label: 'Page views',
-              data: [2234, 3872, 2998, 4125, 3357, 2789, 2998],
-              stack: 'A',
-            },
-            {
-              id: 'downloads',
-              label: 'Downloads',
-              data: [3098, 4215, 2384, 2101, 4752, 3593, 2384],
-              stack: 'A',
-            },
-            {
-              id: 'conversions',
-              label: 'Conversions',
-              data: [4051, 2275, 3129, 4693, 3904, 2038, 2275],
+              id: 'sold-units',
+              label: 'Số lượng bán ra',
+              data: [2230, 3400, 2900, 3100, 2750],
               stack: 'A',
             },
           ]}

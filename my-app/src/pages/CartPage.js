@@ -5,6 +5,7 @@ import CartItem from "../components/CartItem";
 import CartEmpty from "../components/CartEmpty";
 import Summary from "../components/Summary";
 import { Link } from "react-router-dom";
+import ExpressCheckout from "../components/ExpressCheckout";
 
 const CartPage = () => {
     const [items, setItems] = useState([
@@ -97,6 +98,9 @@ const CartPage = () => {
 
                         {/* Cột bên phải - Summary */}
                         <Grid item xs={12} md={4}>
+                            <Card variant="outlined" sx={{ padding: 2, marginBottom: 2 }}>
+                                <ExpressCheckout/>
+                            </Card>
                             <Card variant="outlined" sx={{ padding: 2 }}>
                                 <Summary
                                     subtotal={subtotal}

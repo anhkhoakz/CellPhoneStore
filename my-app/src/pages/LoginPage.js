@@ -3,6 +3,7 @@ import React from 'react';
 import { Box, Divider, Typography } from '@mui/material';
 import Login from '../components/Login';
 import GoogleLogin from '../components/GoogleLogin';
+import ContinueAsGuest from '../components/ContinueAsGuest';
 
 const LoginPage = () => {
     return (
@@ -13,6 +14,7 @@ const LoginPage = () => {
             <GoogleLogin />
             <Divider sx={{ margin: 2 }}>Or</Divider>
             <Login />
+            <ContinueAsGuest />
         </Box>
     );
 };

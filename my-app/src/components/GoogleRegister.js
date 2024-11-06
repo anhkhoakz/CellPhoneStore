@@ -1,4 +1,3 @@
-// src/components/GoogleRegister.js
 import React from 'react';
 import { Button, Box } from '@mui/material';
 import { Google as GoogleIcon } from '@mui/icons-material';
@@ -24,7 +23,7 @@ const GoogleRegister = () => {
                 sx={{
                     backgroundColor: 'green',
                     color: 'white',
-                    width: '150',
+                    width: 400, 
                     '&:hover': {
                         backgroundColor: 'darkgreen',
                     },

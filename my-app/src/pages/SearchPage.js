@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Box, Grid, Typography, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import ProductCard from '../components/ProductCard';
-import NoResult from '../components/NoResult'; // Import NoResult
+import NoResult from '../components/NoResult'; 
 
 const SearchPage = () => {
   const location = useLocation();
@@ -78,6 +78,7 @@ const SearchPage = () => {
     }
 
     setResults(filteredResults);
+    // eslint-disable-next-line 
   }, [location.search, filter, sort]);
 
   return (

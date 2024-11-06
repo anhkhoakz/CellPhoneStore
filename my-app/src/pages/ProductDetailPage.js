@@ -54,11 +54,11 @@ const ProductDetailPage = () => {
 
   const handleSubmitComment = (newCommentContent) => {
     const newComment = {
-      username: "Current User", // In real app, this could come from the logged-in user's info
+      username: "Current User", 
       content: newCommentContent,
       date: new Date().toISOString(),
     };
-    setComments([newComment, ...comments]); // Add new comment to the top of the list
+    setComments([newComment, ...comments]); 
   };
 
   return (

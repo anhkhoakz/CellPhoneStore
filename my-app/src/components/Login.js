@@ -16,7 +16,7 @@ const Login = () => {
     <Box
       component="form"
       onSubmit={handleSubmit}
-      sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 300, margin: 'auto' }}
+      sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 400, margin: 'auto' }}
     >
       <TextField
         label="Email"
@@ -26,7 +26,7 @@ const Login = () => {
         required
       />
       <TextField
-        label="Mật Khẩu"
+        label="Password"
         variant="outlined"
         type="password"
         value={password}

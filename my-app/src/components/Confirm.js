@@ -15,10 +15,10 @@ const Confirm = ({ open, message, onClose, onConfirm }) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary">
-          Hủy
+          Cancel
         </Button>
         <Button onClick={onConfirm} color="primary">
-          Lưu
+          Yes
         </Button>
       </DialogActions>
     </Dialog>

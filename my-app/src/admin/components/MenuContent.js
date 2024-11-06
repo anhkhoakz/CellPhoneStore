@@ -16,9 +16,9 @@ import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 
 const mainListItems = [
   { text: 'Home', icon: <HomeRoundedIcon />, path: '/admin' },
-  { text: 'Users', icon: <PersonIcon />, path: '/admin/user-management' },
-  { text: 'Product', icon: <Inventory2OutlinedIcon />, path: '/admin/product-management' },
-  { text: 'Order', icon: <InventorySharpIcon />, path: '/admin/order-management' },
+  { text: 'Users', icon: <PersonIcon />, path: '/admin/user' },
+  { text: 'Product', icon: <Inventory2OutlinedIcon />, path: '/admin/product' },
+  { text: 'Order', icon: <InventorySharpIcon />, path: '/admin/order' },
 ];
 
 const secondaryListItems = [
