@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Copyright from '../internals/components/Copyright';
-import OrdersTable from './OrdersTables';
+import OrdersTable from './OrdersTable';
 
 export default function MainGridOrders() {
   return (

@@ -21,11 +21,11 @@ const GoogleRegister = () => {
                 onClick={handleGoogleRegister}
                 startIcon={<GoogleIcon />}
                 sx={{
-                    backgroundColor: 'green',
+                    backgroundColor: 'red',
                     color: 'white',
                     width: 400, 
                     '&:hover': {
-                        backgroundColor: 'darkgreen',
+                        backgroundColor: 'darkred',
                     },
                 }}
             >

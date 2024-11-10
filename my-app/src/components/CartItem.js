@@ -11,50 +11,50 @@ const CartItem = ({ item, onQuantityChange, onRemoveItem }) => {
     const handleInputChange = (e) => {
         const newQuantity = parseInt(e.target.value, 10);
         if (newQuantity > 0) {
-            onQuantityChange(item.id, newQuantity - item.quantity); 
+            onQuantityChange(item.id, newQuantity - item.quantity);
         } else {
-            setConfirmOpen(true); 
+            setConfirmOpen(true);
         }
     };
 
     const handleRemoveClick = () => {
         if (item.quantity > 1) {
-            onQuantityChange(item.id, -1); 
+            onQuantityChange(item.id, -1);
         } else {
-            setConfirmOpen(true); 
+            setConfirmOpen(true);
         }
     };
 
     const handleConfirmRemove = () => {
         onRemoveItem(item.id);
-        setConfirmOpen(false); 
+        setConfirmOpen(false);
     };
 
     const handleCloseConfirm = () => {
-        setConfirmOpen(false); 
+        setConfirmOpen(false);
     };
 
     return (
         <>
-            <Grid 
-                container 
-                spacing={2} 
-                alignItems="center" 
-                sx={{ 
-                    borderBottom: "1px solid #ddd", 
-                    paddingBottom: 2, 
-                    flexDirection: { xs: "column", sm: "row" }, 
-                    textAlign: { xs: 'center', sm: 'left' } 
+            <Grid
+                container
+                spacing={2}
+                alignItems="center"
+                sx={{
+                    borderBottom: "1px solid #ddd",
+                    paddingBottom: 2,
+                    flexDirection: { xs: "column", sm: "row" },
+                    textAlign: { xs: 'center', sm: 'left' }
                 }}
             >
                 <Grid item xs={12} sm={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <img 
-                        src={item.image} 
-                        alt={item.name} 
+                    <img
+                        src={item.image}
+                        alt={item.name}
                         style={{
                             marginTop: '16px',
-                            maxWidth: '150px',  
-                            maxHeight: '150px', 
+                            maxWidth: '150px',
+                            maxHeight: '150px',
                             borderRadius: '8px',
                         }}
                     />
@@ -74,7 +74,15 @@ const CartItem = ({ item, onQuantityChange, onRemoveItem }) => {
                         type="number"
                         value={item.quantity}
                         onChange={handleInputChange}
-                        inputProps={{ min: 0, style: { textAlign: "center", width: "50px" } }}
+                        inputProps={{ min: 0, style: { textAlign: "center", width: "50px" }, inputMode: "numeric", pattern: "[0-9]*" }}
+                        sx={{
+                            '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                                display: 'none',
+                            },
+                            '& input[type=number]': {
+                                MozAppearance: 'textfield',
+                            }
+                        }}
                     />
                     <IconButton onClick={() => onQuantityChange(item.id, 1)} aria-label="increase quantity">
                         <AddIcon />
