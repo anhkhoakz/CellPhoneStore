@@ -17,8 +17,8 @@ const UserProfilePage = () => {
     email: 'email@example.com',
     phone: '0123456789',
     addresses: [
-      { id: 1, address: '123 Đường A, Quận 1, TP.HCM' },
-      { id: 2, address: '456 Đường B, Quận 2, TP.HCM' },
+      { id: 1, address: '123 Đường A, Quận 1, TP.HCM', isDefault: true },
+      { id: 2, address: '456 Đường B, Quận 2, TP.HCM', isDefault: false },
     ]
   });
 
@@ -34,6 +34,27 @@ const UserProfilePage = () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleAddAddress = (newAddress) => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      addresses: [
+        ...prevUser.addresses,
+        { id: prevUser.addresses.length + 1, isDefault: false, ...newAddress }
+      ]
+    }));
+  };
+
+  // Hàm đặt địa chỉ mặc định
+  const handleSetDefaultAddress = (id) => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      addresses: prevUser.addresses.map((addr) =>
+        addr.id === id ? { ...addr, isDefault: true } : { ...addr, isDefault: false }
+      )
+      
+    }));
   };
 
   return (
@@ -59,13 +80,16 @@ const UserProfilePage = () => {
         </Paper>
       </Grid>
 
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={6} mb={2}>
         <Paper elevation={3} sx={{ padding: '20px', width: '80vh', maxWidth: '80vh' }}>
-          <AddressManagement addresses={user.addresses} />
+          <AddressManagement 
+            addresses={user.addresses} 
+            onAddAddress={handleAddAddress} 
+            onSetDefaultAddress={handleSetDefaultAddress} 
+          />
         </Paper>
       </Grid>
 
-      {/* Modal đổi mật khẩu */}
       <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
         <DialogTitle>Đổi mật khẩu</DialogTitle>
         <DialogContent>

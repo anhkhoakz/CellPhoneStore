@@ -4,10 +4,10 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Copyright from '../internals/components/Copyright';
-import StickyHeadTable from './StickyHeadTable';
 import PageViewsBarChart from './PageViewsBarChart';
 import SessionsChart from './SessionsChart';
 import StatCard from './StatCard';
+import EditSaleProductList from './EditSaleProductList'
 
 const data = [
   {
@@ -77,13 +77,13 @@ export default function MainGrid() {
           <PageViewsBarChart />
         </Grid>
       </Grid>
-      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        New orders
-      </Typography>
       <Grid container spacing={2} columns={12}>
+      <Typography component="h2" variant="h6" sx={{ mt: 2 }}>
+        List Sale Products
+      </Typography>
         <Grid size={{ xs: 12, lg: 12 }}>
           {/* ADD TABLE */}
-          <StickyHeadTable />
+          <EditSaleProductList />
         </Grid>
         <Grid size={{ xs: 12, lg: 3 }}>
           <Stack gap={2} direction={{ xs: 'column', sm: 'row', lg: 'column' }}>

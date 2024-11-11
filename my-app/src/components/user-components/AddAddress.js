@@ -13,14 +13,13 @@ const AddAddress = ({ onAddAddress, onClose }) => {
   const [district, setDistrict] = useState('');
   const [ward, setWard] = useState('');
 
-  // Giả sử các dữ liệu này là danh sách các tỉnh, huyện, xã
   const provinces = ['TP.HCM', 'Hà Nội', 'Đà Nẵng'];
   const districts = ['Quận 1', 'Quận 2', 'Quận 3'];
   const wards = ['Phường 1', 'Phường 2', 'Phường 3'];
 
   const handleAddAddress = () => {
-    onAddAddress({ address, province, district, ward });
-    onClose(); // Đóng modal sau khi thêm địa chỉ
+    onAddAddress({ address: `${address}, ${ward}, ${district}, ${province}` });
+    onClose();
   };
 
   return (

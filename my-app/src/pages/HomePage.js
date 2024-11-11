@@ -1,8 +1,9 @@
 import React from "react";
 import ProductList from "../components/ProductList";
+import TimedBanner from "../components/TimedBanner"; 
 
 const HomePage = () => {
-    // Dữ liệu mẫu cho các sản phẩm
+    // Sample data for products
     const products = [
         {
             id: 1,
@@ -32,6 +33,7 @@ const HomePage = () => {
 
     return (
         <div>
+            <TimedBanner /> 
             <ProductList title="SALE PRODUCTS" products={products} />
             <ProductList title="HOT PRODUCTS" products={products} />
             <ProductList title="NEW PRODUCTS" products={products} />
