@@ -29,6 +29,9 @@ export default function NavbarBreadcrumbs() {
     } else if (path.includes('/order')) {
       return 'Orders';
     }
+    else if (path.includes('/discount')) {
+      return 'Discounts';
+    }
     return 'Home'; 
   };
 

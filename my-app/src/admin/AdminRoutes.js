@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard'
 import UserManagement from './pages/UserManagement'
 import ProductManagement from './pages/ProductManagement'
 import OrderManagement from './pages/OrderManagement'
+import DiscountManagement from './pages/DiscountManagement'
 
 
 const AdminRoutes = () => {
@@ -16,6 +17,7 @@ const AdminRoutes = () => {
         <Route path="user" element={<UserManagement />} />
         <Route path="order" element={<OrderManagement />} />
         <Route path="product" element={<ProductManagement />} />
+        <Route path="discount" element={<DiscountManagement />} />
       </Routes>
     </AdminLayout>
   );

@@ -10,6 +10,7 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import PersonIcon from '@mui/icons-material/Person';
 import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
 import InventorySharpIcon from '@mui/icons-material/InventorySharp';
+import { DiscountOutlined } from '@mui/icons-material';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
@@ -19,6 +20,8 @@ const mainListItems = [
   { text: 'Users', icon: <PersonIcon />, path: '/admin/user' },
   { text: 'Product', icon: <Inventory2OutlinedIcon />, path: '/admin/product' },
   { text: 'Order', icon: <InventorySharpIcon />, path: '/admin/order' },
+  { text: 'Discount', icon: <DiscountOutlined />, path: '/admin/discount' },
+
 ];
 
 const secondaryListItems = [

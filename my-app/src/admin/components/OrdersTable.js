@@ -35,10 +35,10 @@ const StatusTableCell = styled(TableCell)(({ theme, status }) => ({
     status === 'Canceled'
       ? theme.palette.error.main
       : status === 'Delivered'
-      ? theme.palette.success.main
-      : status === 'Pending'
-      ? '#FF9800'
-      : theme.palette.text.primary,
+        ? theme.palette.success.main
+        : status === 'Pending'
+          ? '#FF9800'
+          : theme.palette.text.primary,
   fontWeight: 'bold',
   padding: '16px',
 }));
@@ -85,8 +85,9 @@ export default function OrdersTable() {
   const [dateRange, setDateRange] = React.useState('all');
   const [customStartDate, setCustomStartDate] = React.useState('');
   const [customEndDate, setCustomEndDate] = React.useState('');
-  const [selectedOrder, setSelectedOrder] = React.useState(null); 
-  const [isOrderDetailDialogOpen, setIsOrderDetailDialogOpen] = React.useState(false); 
+  const [selectedOrder, setSelectedOrder] = React.useState(null);
+  const [selectedOrderId, setSelectedOrderId] = React.useState(null);
+  const [isOrderDetailDialogOpen, setIsOrderDetailDialogOpen] = React.useState(false);
   const [isCanceledReasonDialogOpen, setIsCanceledReasonDialogOpen] = React.useState(false);
 
   const handleChangePage = (event, newPage) => {
@@ -98,28 +99,35 @@ export default function OrdersTable() {
     setPage(0);
   };
 
-  const handleChangeStatus = (event, index) => {
+  const handleChangeStatus = (event, orderId) => {
     const updatedRows = [...rows];
     const newStatus = event.target.value;
 
     if (newStatus === 'Canceled') {
       setIsCanceledReasonDialogOpen(true);
-      setSelectedOrder(index);
+      setSelectedOrderId(orderId);
     } else {
-      updatedRows[index].orderStatus = newStatus;
-      setRows(updatedRows);
+      const orderIndex = updatedRows.findIndex((order) => order.orderId === orderId);
+      if (orderIndex !== -1) {
+        updatedRows[orderIndex].orderStatus = newStatus;
+        setRows(updatedRows);
+      }
     }
   };
 
   const handleSaveCanceledReason = (reason) => {
-    if (selectedOrder !== null) {
+    if (selectedOrderId) {
       const updatedRows = [...rows];
-      updatedRows[selectedOrder].orderStatus = 'Canceled';
-      updatedRows[selectedOrder].cancelReason = reason;
-      setRows(updatedRows);
+      const orderIndex = updatedRows.findIndex((order) => order.orderId === selectedOrderId);
+
+      if (orderIndex !== -1) {
+        updatedRows[orderIndex].orderStatus = 'Canceled';
+        updatedRows[orderIndex].cancelReason = reason;
+        setRows(updatedRows);
+      }
     }
     setIsCanceledReasonDialogOpen(false);
-    setSelectedOrder(null);
+    setSelectedOrderId(null);
   };
 
   const handleSearchChange = (value) => {
@@ -144,13 +152,13 @@ export default function OrdersTable() {
   };
 
   const handleOpenOrderDetailDialog = (order) => {
-    setSelectedOrder(order); 
-    setIsOrderDetailDialogOpen(true); 
+    setSelectedOrder(order);
+    setIsOrderDetailDialogOpen(true);
   };
 
   const handleCloseOrderDetailDialog = () => {
-    setIsOrderDetailDialogOpen(false); 
-    setSelectedOrder(null); 
+    setIsOrderDetailDialogOpen(false);
+    setSelectedOrder(null);
   };
 
   const filteredRows = rows.filter((row) => {
@@ -158,7 +166,7 @@ export default function OrdersTable() {
     const matchesSearch =
       row.customerName.toLowerCase().includes(search.toLowerCase()) ||
       row.orderId.toLowerCase().includes(search.toLowerCase());
-      
+
     // Date Filtering Logic
     let matchesDateRange = true;
     const orderDate = new Date(row.orderDate);
@@ -168,29 +176,29 @@ export default function OrdersTable() {
 
     }
     else if (dateRange === 'today') {
-        const today = new Date();
-        matchesDateRange = orderDate.toDateString() === today.toDateString();
+      const today = new Date();
+      matchesDateRange = orderDate.toDateString() === today.toDateString();
     } else if (dateRange === 'yesterday') {
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        matchesDateRange = orderDate.toDateString() === yesterday.toDateString();
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      matchesDateRange = orderDate.toDateString() === yesterday.toDateString();
     } else if (dateRange === 'thisWeek') {
-        const today = new Date();
-        const startOfWeek = new Date(today);
-        startOfWeek.setDate(today.getDate() - today.getDay()); // Start of the week (Sunday)
-        matchesDateRange = orderDate >= startOfWeek && orderDate <= today;
+      const today = new Date();
+      const startOfWeek = new Date(today);
+      startOfWeek.setDate(today.getDate() - today.getDay()); // Start of the week (Sunday)
+      matchesDateRange = orderDate >= startOfWeek && orderDate <= today;
     } else if (dateRange === 'thisMonth') {
-        const today = new Date();
-        matchesDateRange = orderDate.getMonth() === today.getMonth() &&
-            orderDate.getFullYear() === today.getFullYear();
+      const today = new Date();
+      matchesDateRange = orderDate.getMonth() === today.getMonth() &&
+        orderDate.getFullYear() === today.getFullYear();
     } else if (dateRange === 'custom' && customStartDate && customEndDate) {
-        const startDate = new Date(customStartDate);
-        const endDate = new Date(customEndDate);
-        matchesDateRange = orderDate >= startDate && orderDate <= endDate;
+      const startDate = new Date(customStartDate);
+      const endDate = new Date(customEndDate);
+      matchesDateRange = orderDate >= startDate && orderDate <= endDate;
     }
 
     return matchesStatus && matchesSearch && matchesDateRange;
-});
+  });
 
 
   return (
@@ -252,9 +260,9 @@ export default function OrdersTable() {
                         <TableCell key={column.id} align="center" style={{ padding: '16px' }}>
                           <FormControl fullWidth>
                             <Select
-                              labelId={`status-label-${index}`}
+                              labelId={`status-label-${row.orderId}`} // Tạo ID duy nhất dựa trên orderId
                               value={row.orderStatus}
-                              onChange={(e) => handleChangeStatus(e, index)}
+                              onChange={(e) => handleChangeStatus(e, row.orderId)} // Truyền orderId
                               sx={{
                                 border: 'none',
                                 '.MuiSelect-select': {
@@ -269,6 +277,7 @@ export default function OrdersTable() {
                             </Select>
                           </FormControl>
                         </TableCell>
+
                       ) : (
                         <TableCell key={column.id} align="center" style={{ padding: '16px' }}>
                           {column.format && typeof value === 'number' ? column.format(value) : value}
@@ -290,7 +299,7 @@ export default function OrdersTable() {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-      
+
       {selectedOrder && (
         <OrderDetailDialog
           open={isOrderDetailDialogOpen}
@@ -298,7 +307,7 @@ export default function OrdersTable() {
           order={selectedOrder}
         />
       )}
-      
+
       <CanceledReasonDialog
         open={isCanceledReasonDialogOpen}
         onClose={() => setIsCanceledReasonDialogOpen(false)}
