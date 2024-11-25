@@ -1,5 +1,6 @@
 
 GET http://localhost:8080/api/v1
+Authorization: Bearer undefined
 
 ###
 GET http://localhost:8080/
@@ -11,6 +12,7 @@ Content-Type: application/json
 {
     "email": "khanhmh2004@gmail.com",
     "password": "123456",
+    "confirmPassword": "123456",
     "username": "khanh"
 }
 
@@ -50,7 +52,7 @@ Content-Type: application/json
 
 {
     "email": "khanhmh2004@gmail.com",
-    "otp": "196475"
+    "otp": "821547"
 }
 
 
@@ -60,7 +62,7 @@ Content-Type: application/json
 
 {
     "email": "khanhmh2004@gmail.com",
-    "password": "duykhanh123"
+    "password": "123456"
 }
 
 
@@ -82,7 +84,7 @@ POST http://localhost:8080/api/v1/users/refresh-token
 Content-Type: application/json
 
 {
-    "refreshToken": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImtoYW5obWgyMDA0QGdtYWlsLmNvbSIsInVzZXJJZCI6IjY3MTI3MGJjYWY4YTA5MzgwNTVlYzg1NyIsImlhdCI6MTcyOTM1NDQyMywiZXhwIjoxNzYwOTEyMDIzfQ.RouB8mBJ3IIEsqmOReX7eq4fwp5LQE-N_nxlFfa5haFwmLvY53o7bf9Ipj8FkXqOXb5sVQhDGpJHmpi5Nu2Q47Lsmci1Y5GKoY1P0CuxshoQePlEBjAo9Be8XhVvqnWgQ0Xinze5Clxj6Rizeig7nDnJ3Q-J49zjkLBCVrDJgF3BEcMianLYEmIpaptn5I1kD9mKA8dAghpYpDWJNDpfQ8s7T5zuXIe6eWQxMaFFanaznm3AdiJ27h9tbXuXDawNttu94Z0cyE2kbU4RNUN1fLQkSG1Qj-Gt7fmiRBKZvNPTT0QlfgVytbwJZR6H6UcNrzTVjU2HDGYU-SNQxPkQjKxe9qBqZJKa7LQp-t5VJhE9Nig4prCAQo2df_C4V-lkwfwdQwF56Elm7da5PTec1oILwSAnDbXHd_01R0d6lkAfWxV71-0lzq7hP25zRFi70au4QdMVLJLR4qOnf9sKBzoWhQshHKgOydVNsrFkeHwLX5soNPa_UYc0g8xq7uNpAYiv6DAdJuvledfDA6gZaiAsRSgbTMqKox6tkHVXjXA5LixerbcOSNI7Lnb_B7sBRvwR29sS44wfQ8UaHmrgQrJmskFZ0reaspMYsZ3OOpMYokg39Qe3Lnayay3QqdDQdONXtr9RwiJiE3T5P_85gQG3vlzhUiNxsIx1zwRW3aY"
+    "refreshToken": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImtoYW5obWgyMDA0QGdtYWlsLmNvbSIsInVzZXJJZCI6IjY3NDJmYTM5NTY4NDIwYjdkOGMxN2IzNSIsImlhdCI6MTczMjQ2MTI0NywiZXhwIjoxNzY0MDE4ODQ3fQ.TXbM_X43sEBb27XipVVV7_KoW-H2fzILhutbPIWybm94g1HuYr9vvoGyrZxxKFLPzp545AUL4RxKaXinsfUS78anMBV1iijeexYEUWql_Nl2bGFQ0HRa28Pyi5JGZIMaT8HAL4zlbmFu30aAhTikbuSNhw_1OlU7jIMDMynR0PFOqGZ2l7YZTmj-sCij4dboiVOfWDwCLr7h94A8V6qgdvpW94aaHLytAxMucqV9rifnSqaXSlCbtlT-Q0sLdeNIbxUZ8-zbHarTJZJPKz1ts1wZvgl02ucrPA5UhL4WRFlBdMVmb8FcITPHzBghTmRb7BnarUZPTiwUDg_MUBFdFm95iYHDEA1dn7RTzmuyfIvzgpHf28LcZBMAgF3oqMDBTI8_FV-z1Un3JTjC3LOIBTZjfzGuJ1-JO0eh55QK46NP79Oo11kjHqpIRjU0UF2zbkFYXgP3fg3-7m6vUwSG4wqwh42SPvtk5NlHvJoPhCesvqeD5z4jXFK5zcIvUXjWvECT9meyyd2Sr1KkF_OslLOxBflofpWQSfbcag-Uv4jSWZKUGGyMt9gAYgvrcB_iyJS1D4I9ZFf7t_WOvF8sj_1vFQE1dtPQvgT8wFr3pDznif-rBrOnf8-1C_955afIzCJw_1mVIvmkXtBFQ1WZaYqcFbqyPN7vDqXqUgJBfBM"
 }
 
 
@@ -92,7 +94,15 @@ Content-Type: application/json
 
 
 ### pageign products
-GET  http://localhost:8080/api/v1/products/page/?after=671bb83c08d03b3f04e011da
+GET  http://localhost:8080/api/v1/products/page/
+
+
+### get products
+GET  http://localhost:8080/api/v1/products/?sort=price_asc&q=phone
+
+
+### delete product
+DELETE  http://localhost:8080/api/v1/products/671d20bf6d0cf9d25a89e9f
 
 
 ###
@@ -105,4 +115,17 @@ Content-Type: application/json
     "category": "ipad",
     "stock": "123",
     "image": "upload.jpg"
+}
+
+
+### get cart
+POST  http://localhost:8080/api/v1/cart
+Content-Type: application/json
+
+{
+
+    "productId": "671b1fda58ec0d68f0625600",
+    "quantity": 324234,
+    "variantId": "671b1fda58ec0d68f0625601"
+     
 }

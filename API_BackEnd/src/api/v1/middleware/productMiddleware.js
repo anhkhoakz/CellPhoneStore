@@ -7,7 +7,7 @@ const checkProuductValidation = (req, res, next) => {
     const hasMainImage =
         req.files && req.files.some((file) => file.fieldname === 'image');
 
-    if (!name || !price || !category || !stock) {
+    if (!name || !price || !category || !stock || !hasMainImage) {
         return res.status(400).json({
             message: 'All fields including the main image are required',
         });

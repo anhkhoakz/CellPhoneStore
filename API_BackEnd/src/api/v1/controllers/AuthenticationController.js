@@ -125,6 +125,9 @@ module.exports = {
                 return cb(null, user);
             } else {
                 const user = await User.findById(cred.user_id);
+
+
+                
                 if (!user) {
                     return cb(null, false);
                 }
@@ -186,30 +189,36 @@ module.exports = {
                     .json({ message: 'Email and Password are required' });
             }
 
-            const { code, message, elements } = await login(req.body);
-
-            if (code === 200) {
-                const { accessToken, userId } = elements;
-
-                res.cookie('accessToken', accessToken, {
-                    maxAge: process.env.COOKIE_TOKEN_EXPIRY,
-                    httpOnly: true,
-                    // secure: true,
-                    sameSite: 'lax',
+            const { code, message } = await login(req.body);
+            
+            if (code !== 200) {
+                return res.status(code).json({
+                    message,
                 });
 
-                res.cookie('userId', userId, {
-                    maxAge: 365 * 24 * 60 * 60 * 1000,
-                    httpOnly: true,
-                    // secure: true,
-                    sameSite: 'lax',
-                });
             }
 
+            const { userId, accessToken } = message;
+
+            res.cookie('accessToken', accessToken, {
+                maxAge: process.env.COOKIE_TOKEN_EXPIRY,
+                httpOnly: true,
+                // secure: process.env.NODE_ENV === 'production',
+                sameSite: 'lax',
+            });
+
+           
+            res.cookie('userId', userId, {
+                maxAge: 365 * 24 * 60 * 60 * 1000,
+                httpOnly: true,
+                // secure: true,
+                sameSite: 'lax',
+            });
+            
+            
             return res.status(code).json({
                 code,
-                message,
-                elements,
+                message: accessToken
             });
         } catch (err) {
             console.error(err);
@@ -223,6 +232,7 @@ module.exports = {
             if (code === 200) {
                 res.clearCookie('accessToken');
                 res.clearCookie('userId');
+                req.user = null;
             }
 
             return res.status(code).json({
@@ -246,21 +256,6 @@ module.exports = {
                 });
             }
 
-            const { accessToken, userId } = elements;
-
-            res.cookie('accessToken', accessToken, {
-                maxAge: process.env.COOKIE_TOKEN_EXPIRY,
-                httpOnly: true,
-                // secure: true,
-                sameSite: 'lax',
-            });
-
-            res.cookie('userId', userId, {
-                maxAge: 365 * 24 * 60 * 60 * 1000,
-                httpOnly: true,
-                // secure: true,
-                sameSite: 'lax',
-            });
 
             return res.status(code).json({
                 elements,

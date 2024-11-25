@@ -11,19 +11,30 @@ const orderSchema = new mongoose.Schema({
         },
     ],
     totalAmount: Number,
+
     status: {
         type: String,
         enum: ['pending', 'confirmed', 'shipping', 'delivered'],
         default: 'pending',
     },
+
+    shippingOption: {
+        type: String,
+        enum: ['standard', 'express'],
+        default: 'standard',
+        required: true,
+    },
+
+    // orderNumber: { type: String, unique: true, required: true },
+    paymentConfirmed: { type: Boolean, default: false },
+
     shippingAddress: {
-        street: String,
         city: String,
-        state: String,
+        district: String,
+        street: String,
         zip: String,
         contactNumber: String,
     },
-    paymentConfirmed: { type: Boolean, default: false },
 });
 
 module.exports = mongoose.model('Order', orderSchema);

@@ -29,7 +29,9 @@ const createRefreshToken = async (payload) => {
 // Verify refresh token
 const verifyAndRefreshToken = async (token) => {
     try {
+
         const decoded = verifyToken(token);
+
         const storedToken = await getAsync(decoded.userId.toString());
 
         if (!storedToken || storedToken !== token) {
@@ -41,9 +43,7 @@ const verifyAndRefreshToken = async (token) => {
 
         return { success: true, decoded };
     } catch (error) {
-        if (error.name === 'TokenExpiredError') {
-            return { success: false, error: error.message };
-        }
+        
         return { success: false, error: error.message };
     }
 };

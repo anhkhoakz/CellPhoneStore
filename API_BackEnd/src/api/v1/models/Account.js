@@ -35,6 +35,7 @@ const userSchema = new mongoose.Schema({
         {
             street: String,
             city: String,
+            district: String,
             postalCode: String,
         },
     ],

@@ -32,6 +32,7 @@ router.post(
     checkValidateRegister,
     AuthenticationController.register,
 );
+
 router.post('/login', checkValidateLogin, AuthenticationController.login);
 router.post('/verifyAccount', AuthenticationController.verifyAccount);
 

@@ -27,13 +27,12 @@ const checkValidateLogin = function (req, res, next) {
 
 const checkValidateRegister = function (req, res, next) {
     try {
-        const { email, password, confirmPassword, phone, username } = req.body;
+        const { email, password, confirmPassword, username } = req.body;
 
         if (
             email === undefined ||
             username === undefined ||
             password === undefined ||
-            phone === undefined ||
             confirmPassword === undefined
         ) {
             return res.status(400).json({ message: 'Please fill out fields' });

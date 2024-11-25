@@ -1,15 +1,6 @@
 const productService = require('~v1/services/ProductService');
 
 class ProductController {
-    async getProducts(req, res) {
-        try {
-            const products = await productService.getProducts();
-            res.json(products);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
     async getProductById(req, res) {
         const id = req.params.id;
         try {
@@ -45,8 +36,11 @@ class ProductController {
         const data = req.body;
         const files = req.files;
         try {
-            const product = await productService.createProduct(data, files);
-            res.status(201).json({ success: true, message: product });
+            const { code, message } = await productService.createProduct(
+                data,
+                files,
+            );
+            res.status(code).json({ message: message });
         } catch (error) {
             res.status(500).json({
                 success: false,
@@ -58,21 +52,52 @@ class ProductController {
     async updateProduct(req, res) {
         const id = req.params.id;
         const data = req.body;
+        const files = req.files;
         try {
-            const product = await productService.updateProduct(id, data);
-            res.json(product);
+            const { code, message } = await productService.updateProduct(
+                id,
+                data,
+                files,
+            );
+
+            res.status(code).json({ message: message });
         } catch (error) {
-            res.status(500).json({ message: 'Server error', error });
+            res.status(500).json({
+                message: error.message,
+            });
         }
     }
 
     async deleteProduct(req, res) {
         const id = req.params.id;
         try {
-            const product = await productService.deleteProduct(id);
-            res.json(product);
+            const { code, message } = await productService.deleteProduct(id);
+            res.status(code).json({ message: message });
         } catch (error) {
             res.status(500).json({ message: 'Server error', error });
+        }
+    }
+
+    async searchProducts(req, res) {
+        const { q, sort, category, minPrice, maxPrice, minRating, maxRating } =
+            req.query;
+
+        try {
+            const products = await productService.searchProducts({
+                q,
+                sort,
+                category,
+                minPrice,
+                maxPrice,
+                minRating,
+                maxRating,
+            });
+            res.status(200).json({ success: true, products });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: error.message,
+            });
         }
     }
 }

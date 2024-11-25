@@ -5,10 +5,6 @@ const Product = require('~v1/models/Product');
 //  */
 
 class ProductService {
-    async getProducts() {
-        return await Product.find({});
-    }
-
     async getProductsByCategory({ category }) {
         try {
             const products = await Product.find({ category });
@@ -56,6 +52,11 @@ class ProductService {
     }
 
     async createProduct(data, files) {
+        const product = await Product.findOne({ name: data.name });
+        if (product) {
+            return { code: 401, message: 'Product already exists' };
+        }
+
         let mainImage,
             variantImages = [];
 
@@ -77,15 +78,112 @@ class ProductService {
                 };
             });
         }
-        return await Product.create(data);
+
+        await Product.create(data);
+        return { code: 201, message: 'Product created successfully' };
     }
 
-    async updateProduct(id, data) {
-        return await Product.findByIdAndUpdate(id, data, { new: true });
+    async updateProduct(id, data, files) {
+        const product = await Product.findOne({ name: data.name });
+
+        if (!product) {
+            return { code: 404, message: 'Product not found' };
+        }
+
+        if (data.name && product.name === data.name) {
+            return { code: 401, message: 'Product already exists' };
+        }
+
+        let mainImage,
+            variantImages = [];
+
+        // Check if there are any files to process
+        if (files) {
+            files.forEach((file) => {
+                if (file.fieldname === 'image') {
+                    mainImage = file.filename;
+                } else {
+                    variantImages.push(file.filename);
+                }
+            });
+        }
+
+        if (mainImage) {
+            data.image = mainImage;
+        }
+
+        if (data.variants && Array.isArray(data.variants)) {
+            data.variants = data.variants.map((variant, index) => {
+                return {
+                    ...variant,
+                    image: variantImages[index] || variant.image, // Keep existing image if none is provided
+                };
+            });
+        }
+
+        await Product.findByIdAndUpdate(id, data, { new: true });
+
+        return { code: 200, message: 'Product updated successfully' };
     }
 
     async deleteProduct(id) {
-        return await Product.findByIdAndDelete(id);
+        const product = await Product.findOne({ _id: id });
+
+        if (!product) {
+            return { code: 404, message: 'Product not found' };
+        }
+        await Product.findByIdAndDelete(id);
+
+        return { code: 200, message: 'Product deleted successfully' };
+    }
+
+    async searchProducts({
+        q,
+        sort,
+        category,
+        minPrice,
+        maxPrice,
+        minRating,
+        maxRating,
+    }) {
+        const query = {};
+
+        if (q) {
+            query.$or = [
+                { name: { $regex: q, $options: 'i' } }, // Case-insensitive search on name
+                { description: { $regex: q, $options: 'i' } }, // Case-insensitive search on description
+                { category: { $regex: q, $options: 'i' } }, // Case-insensitive search on category
+            ];
+        }
+
+        if (category) {
+            query.category = category;
+        }
+
+        if (minPrice || maxPrice) {
+            query.price = {};
+            if (minPrice) {
+                query.price.$gte = parseFloat(minPrice);
+            }
+            if (maxPrice) {
+                query.price.$lte = parseFloat(maxPrice);
+            }
+        }
+
+        if (minRating || maxRating) {
+            query.rating = {};
+            if (minRating) query.rating.$gte = parseFloat(minRating); // Minimum rating
+            if (maxRating) query.rating.$lte = parseFloat(maxRating); // Maximum rating
+        }
+
+        const sortOptions = {
+            price_asc: { price: 1 },
+            price_desc: { price: -1 },
+            rating_asc: { rating: 1 },
+            rating_desc: { rating: -1 },
+        }[sort] || { _id: -1 };
+
+        return await Product.find(query).sort(sortOptions);
     }
 }
 

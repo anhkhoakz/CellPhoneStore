@@ -78,7 +78,8 @@ const apiRouter = (app) => {
                     // secure: true,
                     sameSite: 'lax',
                 });
-                res.redirect(`http://localhost:8080/api/v1`);
+                
+                res.status(200).json({message: token});
 
             }
             catch(error)

@@ -2,6 +2,7 @@ const _user = require('~v1/models/Account');
 const _preUser = require('~v1/models/preUser');
 const _preUserService = require('~v1/services/preUserService');
 const mongoSanitize = require('express-mongo-sanitize');
+require('dotenv').config();
 
 const {
     Verification_Email_Template,
@@ -21,7 +22,6 @@ const { delAsync, getAsync } = require('~/config/redis');
 
 const hashPassword = require('~v1/helpers/hashPassword');
 
-const generatePassword = require('~v1/helpers/passwordGenerator');
 const generateResetToken = require('~v1/helpers/generateKey');
 
 require('dotenv').config();
@@ -170,7 +170,7 @@ module.exports = {
                 };
             }
 
-            const token = signAccessToken({
+            const accessToken = signAccessToken({
                 email: user.email,
                 userId: user._id,
             });
@@ -182,12 +182,7 @@ module.exports = {
 
             return {
                 code: 200,
-                message: 'User found!',
-                elements: {
-                    accessToken: token,
-                    refreshToken,
-                    userId: user._id,
-                },
+                message: {accessToken, userId: user._id}
             };
         } catch (error) {
             return {
@@ -215,6 +210,7 @@ module.exports = {
                     message: error || 'Invalid or expired refresh token',
                 };
             }
+
             await delAsync(decoded.userId.toString());
             return {
                 code: 200,
@@ -235,6 +231,7 @@ module.exports = {
             );
 
             if (!success || !decoded) {
+
                 return {
                     code: 401,
                     message: error || 'Invalid or expired refresh token',
@@ -246,16 +243,15 @@ module.exports = {
                 userId: decoded.userId,
             });
 
-            const _refreshToken = await createRefreshToken({
-                email: decoded.email,
-                userId: decoded.userId,
-            });
+            // const _refreshToken = await createRefreshToken({
+            //     email: decoded.email,
+            //     userId: decoded.userId,
+            // });
 
             return {
                 code: 200,
                 elements: {
                     accessToken,
-                    refreshToken: _refreshToken,
                     userId: decoded.userId,
                 },
             };
