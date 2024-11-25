@@ -126,8 +126,6 @@ module.exports = {
             } else {
                 const user = await User.findById(cred.user_id);
 
-
-                
                 if (!user) {
                     return cb(null, false);
                 }
@@ -190,12 +188,11 @@ module.exports = {
             }
 
             const { code, message } = await login(req.body);
-            
+
             if (code !== 200) {
                 return res.status(code).json({
                     message,
                 });
-
             }
 
             const { userId, accessToken } = message;
@@ -207,18 +204,16 @@ module.exports = {
                 sameSite: 'lax',
             });
 
-           
             res.cookie('userId', userId, {
                 maxAge: 365 * 24 * 60 * 60 * 1000,
                 httpOnly: true,
                 // secure: true,
                 sameSite: 'lax',
             });
-            
-            
+
             return res.status(code).json({
                 code,
-                message: accessToken
+                message: accessToken,
             });
         } catch (err) {
             console.error(err);
@@ -255,7 +250,6 @@ module.exports = {
                     message,
                 });
             }
-
 
             return res.status(code).json({
                 elements,

@@ -16,4 +16,3 @@ router.use('/cart', cartRouter);
 router.use('/checkout', checkoutRouter);
 
 module.exports = router;
-

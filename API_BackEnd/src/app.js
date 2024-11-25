@@ -11,6 +11,7 @@ const path = require('path');
 const cors = require('cors');
 
 const createError = require('http-errors');
+const compression = require('compression');
 
 // connect to database
 database.connect();
@@ -42,6 +43,7 @@ app.use(morgan('combined'));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(compression());
 
 configViewEngine(app);
 

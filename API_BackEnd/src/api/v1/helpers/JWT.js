@@ -37,8 +37,9 @@ const verifyAccessToken = async (req, res, next) => {
                 return next(CreateError.Unauthorized(error.message));
             }
 
-            const { success, decoded, error } =
-                await verifyRefreshToken(refreshToken);
+            const { success, decoded, error } = await verifyRefreshToken(
+                refreshToken,
+            );
 
             if (!success) {
                 return next(CreateError.Unauthorized(error));

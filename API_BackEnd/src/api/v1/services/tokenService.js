@@ -25,11 +25,9 @@ const createRefreshToken = async (payload) => {
     }
 };
 
-
 // Verify refresh token
 const verifyAndRefreshToken = async (token) => {
     try {
-
         const decoded = verifyToken(token);
 
         const storedToken = await getAsync(decoded.userId.toString());
@@ -43,7 +41,6 @@ const verifyAndRefreshToken = async (token) => {
 
         return { success: true, decoded };
     } catch (error) {
-        
         return { success: false, error: error.message };
     }
 };

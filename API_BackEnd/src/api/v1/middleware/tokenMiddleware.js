@@ -13,7 +13,6 @@ const verifyAccessToken = async (req, res, next) => {
         const authHeader = req.headers['authorization'];
         const authToken = authHeader?.split(' ')[1];
 
-
         // Redirect to login if no cookieToken and no userId
         if (!cookieToken && !req.cookies['userId']) {
             return res.redirect('/login');
@@ -51,7 +50,6 @@ const verifyAccessToken = async (req, res, next) => {
 
                 console.log('New access token:', accessToken);
 
-
                 res.cookie('accessToken', accessToken, {
                     maxAge: process.env.COOKIE_TOKEN_EXPIRY,
                     httpOnly: true,
@@ -64,9 +62,7 @@ const verifyAccessToken = async (req, res, next) => {
                 req.user = decoded;
 
                 return next();
-
             } catch (error) {
-            
                 return next(
                     CreateError.Unauthorized('Unable to refresh access token'),
                 );
@@ -85,7 +81,6 @@ const verifyAccessToken = async (req, res, next) => {
             if (error.name !== 'TokenExpiredError') {
                 return next(CreateError.InternalServerError(error.message));
             }
-
         }
     } catch (error) {
         return next(CreateError.InternalServerError(error.message));

@@ -21,8 +21,7 @@ module.exports = {
             if (isExist) {
                 return {
                     code: 400,
-                    message:
-                        'OTP already sent, please check your email!',
+                    message: 'OTP already sent, please check your email!',
                 };
             }
 

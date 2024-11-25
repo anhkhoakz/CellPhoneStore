@@ -182,7 +182,7 @@ module.exports = {
 
             return {
                 code: 200,
-                message: {accessToken, userId: user._id}
+                message: { accessToken, userId: user._id },
             };
         } catch (error) {
             return {
@@ -231,7 +231,6 @@ module.exports = {
             );
 
             if (!success || !decoded) {
-
                 return {
                     code: 401,
                     message: error || 'Invalid or expired refresh token',
