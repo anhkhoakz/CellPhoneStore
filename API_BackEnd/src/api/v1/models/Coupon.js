@@ -1,11 +1,13 @@
 const mongoose = require('mongoose');
 
+const typeValues = ['percentage', 'fixed'];
+
 const couponSchema = new mongoose.Schema({
     code: { type: String, unique: true },
 
     type: {
         type: String,
-        enum: ['percentage', 'fixed'],
+        enum: typeValues,
         default: 'percentage',
     },
 

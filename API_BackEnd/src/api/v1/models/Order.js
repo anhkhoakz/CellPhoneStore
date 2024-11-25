@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 
+const statusValue = ['pending', 'confirmed', 'shipping', 'delivered'];
+const shippingOption = ['standard', 'express'];
+
 const orderSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     items: [
@@ -14,13 +17,13 @@ const orderSchema = new mongoose.Schema({
 
     status: {
         type: String,
-        enum: ['pending', 'confirmed', 'shipping', 'delivered'],
+        enum: statusValue,
         default: 'pending',
     },
 
     shippingOption: {
         type: String,
-        enum: ['standard', 'express'],
+        enum: shippingOption,
         default: 'standard',
         required: true,
     },
