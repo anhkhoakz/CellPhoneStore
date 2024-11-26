@@ -28,6 +28,7 @@ const preUserSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now,
+        immutable: true,
         expires: '1d',
     },
 });

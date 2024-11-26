@@ -165,7 +165,7 @@ module.exports = {
 
             if (!isPasswordValid) {
                 return {
-                    code: 404,
+                    code: 401,
                     message: 'Email or password is incorrect',
                 };
             }

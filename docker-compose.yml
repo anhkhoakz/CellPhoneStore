@@ -46,7 +46,7 @@ services:
       - app-network
 
   proxy:
-    image: nginx:latest
+    image: nginx:alpine
     hostname: proxy.midterm.nodejs
     ports:
       - "80:80"

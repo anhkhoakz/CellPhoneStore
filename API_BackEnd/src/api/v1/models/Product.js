@@ -34,7 +34,7 @@ const productSchema = new Schema({
     image: { type: String, required: true },
     images: [{ type: String }],
 
-    createAt: { type: Date, default: Date.now },
+    createAt: { type: Date, default: Date.now, immutable: true },
     updateAt: { type: Date, default: Date.now },
 });
 

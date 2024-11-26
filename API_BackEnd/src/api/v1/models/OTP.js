@@ -17,6 +17,7 @@ const otpSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now,
+        immutable: true,
         expires: '5m',
     },
 });
