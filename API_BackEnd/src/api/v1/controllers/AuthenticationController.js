@@ -96,6 +96,8 @@ module.exports = {
 
     verifyGoogleAccount: async (accessToken, refreshToken, profile, cb) => {
         try {
+
+
             const cred = await FederatedCredential.findOne({
                 provider: 'https://accounts.google.com',
                 subject: profile.id,
@@ -206,7 +208,7 @@ module.exports = {
 
             res.cookie('userId', userId, {
                 maxAge: 365 * 24 * 60 * 60 * 1000,
-                httpOnly: true,
+                httpOnly: false,
                 // secure: true,
                 sameSite: 'lax',
             });

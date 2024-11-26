@@ -2,6 +2,9 @@ require('dotenv').config();
 const rateLimit = require('~v1/middleware/rateLimit');
 const apiRouter_v1 = require('./v1');
 
+const User = require('~v1/models/Account');
+
+
 const AuthenticationController = require('~v1/controllers/AuthenticationController');
 
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
@@ -28,10 +31,13 @@ passport.serializeUser(function (user, done) {
     done(null, user.id);
 });
 
-passport.deserializeUser(function (id, done) {
-    User.findById(id, function (err, user) {
-        done(err, user);
-    });
+passport.deserializeUser(async function (id, done) {
+    try {
+        const user = await User.findById(id);
+        done(null, user);
+    } catch (error) {
+        done(error);
+    }
 });
 
 const apiRouter = (app) => {
@@ -40,8 +46,10 @@ const apiRouter = (app) => {
     app.use(passport.initialize());
     app.use(passport.session());
 
+    console.log('API Router');
     app.get('/login/google', passport.authenticate('google'));
 
+    
     app.get(
         '/oauth2/redirect/google',
         passport.authenticate('google', {
@@ -63,7 +71,7 @@ const apiRouter = (app) => {
 
                 res.cookie('userId', req.user.id, {
                     maxAge: 365 * 24 * 60 * 60 * 1000,
-                    httpOnly: true,
+                    httpOnly: false,
                     sameSite: 'lax',
                 });
 
@@ -74,9 +82,13 @@ const apiRouter = (app) => {
                     sameSite: 'lax',
                 });
 
-                res.status(200).json({ message: token });
+
+                // res.status(200).json({ message: token });
+                res.redirect(`http://localhost:3000`);
+
             } catch (error) {
-                res.status(500).json({ error: error.message });
+                // res.status(500).json({ error: error.message });
+                res.redirect(`http://localhost:3000/login/error`);
             }
         },
     );
