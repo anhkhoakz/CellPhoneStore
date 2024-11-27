@@ -24,8 +24,8 @@ export default function EditProductDialog({
         name: "",
         description: "",
         price: "",
-        stockQuantity: "",
-        colors: [],
+        stock: "",
+        variants: [],
     });
 
     // Update editedProductData when productData changes (e.g., when a different product is being edited)
@@ -41,37 +41,40 @@ export default function EditProductDialog({
     };
 
     const handleColorChange = (index, field, value) => {
-        const updatedColors = [...editedProductData.colors];
-        updatedColors[index] = { ...updatedColors[index], [field]: value };
+        const updatedvariants = [...editedProductData.variants];
+        updatedvariants[index] = { ...updatedvariants[index], [field]: value };
         setEditedProductData((prevData) => ({
             ...prevData,
-            colors: updatedColors,
+            variants: updatedvariants,
         }));
     };
 
     const handleAddColor = () => {
         setEditedProductData((prevData) => ({
             ...prevData,
-            colors: [...prevData.colors, { color: "", image: null }],
+            variants: [
+                ...prevData.variants,
+                { name: "", image: null, price: prevData.price, quantity: "" },
+            ],
         }));
     };
 
     const handleRemoveColor = (index) => {
-        const updatedColors = editedProductData.colors.filter(
+        const updatedvariants = editedProductData.variants.filter(
             (_, i) => i !== index
         );
         setEditedProductData((prevData) => ({
             ...prevData,
-            colors: updatedColors,
+            variants: updatedvariants,
         }));
     };
 
     const handleImageUpload = (index, file) => {
-        const updatedColors = [...editedProductData.colors];
-        updatedColors[index].image = file;
+        const updatedvariants = [...editedProductData.variants];
+        updatedvariants[index].image = file;
         setEditedProductData((prevData) => ({
             ...prevData,
-            colors: updatedColors,
+            variants: updatedvariants,
         }));
     };
 
@@ -88,14 +91,16 @@ export default function EditProductDialog({
     };
 
     const isFormValid = () => {
-        const { productId, name, price, stockQuantity, colors } =
-            editedProductData;
+        const { productId, name, price, stock, variants } = editedProductData;
         return (
             productId &&
             name &&
             price &&
-            stockQuantity &&
-            colors.every((colorData) => colorData.color && colorData.image)
+            stock &&
+            variants.every(
+                (colorData) =>
+                    colorData.name && colorData.image && colorData.price
+            )
         );
     };
 
@@ -180,60 +185,97 @@ export default function EditProductDialog({
                     onChange={handleChange}
                 />
 
+                <Button variant="outlined" component="label">
+                    Main Image
+                    <input
+                        name="image"
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onChange={(e) =>
+                            setEditedProductData((prevData) => ({
+                                ...prevData,
+                                image: e.target.files[0],
+                            }))
+                        }
+                    />
+                </Button>
+
                 <div style={{ marginTop: "20px" }}>
                     <h4>Màu sắc và hình ảnh</h4>
-                    {editedProductData.colors &&
-                        editedProductData.colors.map((colorData, index) => (
-                            <div
-                                key={index}
-                                style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: "10px",
-                                    marginBottom: "10px",
-                                }}
-                            >
-                                <TextField
-                                    label="Color"
-                                    name="color"
-                                    fullWidth
-                                    value={colorData.color}
+                    {editedProductData.variants.map((colorData, index) => (
+                        <div
+                            key={index}
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "10px",
+                                marginBottom: "10px",
+                            }}
+                        >
+                            <TextField
+                                label="Color"
+                                name="name"
+                                fullWidth
+                                value={colorData.name || ""}
+                                onChange={(e) =>
+                                    handleColorChange(
+                                        index,
+                                        "name",
+                                        e.target.value
+                                    )
+                                }
+                            />
+
+                            <TextField
+                                label="Price"
+                                name="price"
+                                type="number"
+                                value={colorData.price || ""}
+                                onChange={(e) =>
+                                    handleColorChange(
+                                        index,
+                                        "price",
+                                        e.target.value
+                                    )
+                                }
+                            />
+
+                            <TextField
+                                label="Stock Quantity"
+                                name="stock"
+                                type="number"
+                                value={colorData.stock || ""}
+                                onChange={(e) =>
+                                    handleColorChange(
+                                        index,
+                                        "stock",
+                                        e.target.value
+                                    )
+                                }
+                            />
+                            <Button variant="outlined" component="label">
+                                Image
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    hidden
                                     onChange={(e) =>
-                                        handleColorChange(
+                                        handleImageUpload(
                                             index,
-                                            "color",
-                                            e.target.value
+                                            e.target.files[0]
                                         )
                                     }
                                 />
-                                <Button variant="outlined" component="label">
-                                    Upload
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        hidden
-                                        onChange={(e) =>
-                                            handleImageUpload(
-                                                index,
-                                                e.target.files[0]
-                                            )
-                                        }
-                                    />
-                                </Button>
-                                {colorData.image && (
-                                    <span>
-                                        {colorData.image.name ||
-                                            "Current Image"}
-                                    </span>
-                                )}
-                                <IconButton
-                                    color="error"
-                                    onClick={() => handleRemoveColor(index)}
-                                >
-                                    <RemoveCircle />
-                                </IconButton>
-                            </div>
-                        ))}
+                            </Button>
+                            <IconButton
+                                color="error"
+                                onClick={() => handleRemoveColor(index)}
+                            >
+                                <RemoveCircle />
+                            </IconButton>
+                        </div>
+                    ))}
                     <Button
                         variant="outlined"
                         color="primary"

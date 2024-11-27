@@ -86,13 +86,16 @@ class ProductService {
     }
 
     async updateProduct(id, data, files) {
-        const product = await Product.findOne({ name: data.name });
+
+        const product = await Product.findOne({ productId: id });
 
         if (!product) {
             return { code: 404, message: 'Product not found' };
         }
 
-        if (data.name && product.name === data.name) {
+        const existing = await Product.findOne({ name: data.name, productId: { $ne: id } });
+
+        if (existing) {
             return { code: 401, message: 'Product already exists' };
         }
 
@@ -123,9 +126,17 @@ class ProductService {
             });
         }
 
-        await Product.findByIdAndUpdate(id, data, { new: true });
+        const updatedProduct = await Product.findByIdAndUpdate(product._id, data, {
+            new: true,
+            runValidators: true,
+        });
+    
+        if (!updatedProduct) {
+            return { code: 500, message: 'Failed to update product' };
+        }
 
-        return { code: 200, message: 'Product updated successfully' };
+        
+        return { code: 200, message: 'Product updated successfully'};
     }
 
     async deleteProduct(id) {

@@ -92,7 +92,7 @@ const ProductList = ({ title, products }) => {
                 </IconButton>
             </Box>
 
-            <Divider sx={{ marginTop: 4, width: "80%", margin: "40px auto" }} />
+            <Divider sx={{ marginTop: 4, width: "80%", margin: "40px auto", backgroundColor: "blue" }} />
         </Box>
     );
 };

@@ -10,7 +10,6 @@ import {
     Autocomplete,
 } from "@mui/material";
 
-
 import { AddCircle, Category, RemoveCircle } from "@mui/icons-material";
 
 export default function AddProductDialog({ open, onClose, onSave }) {
@@ -22,7 +21,7 @@ export default function AddProductDialog({ open, onClose, onSave }) {
         description: "",
         price: "",
         stock: "",
-        colors: [],
+        variants: [],
     });
 
     const handleChange = (e) => {
@@ -31,31 +30,32 @@ export default function AddProductDialog({ open, onClose, onSave }) {
     };
 
     const handleColorChange = (index, field, value) => {
-        const updatedColors = [...productData.colors];
-        updatedColors[index] = { ...updatedColors[index], [field]: value };
-        setProductData((prevData) => ({ ...prevData, colors: updatedColors }));
+        const updatedvariants = [...productData.variants];
+        updatedvariants[index] = { ...updatedvariants[index], [field]: value };
+        setProductData((prevData) => ({ ...prevData, variants: updatedvariants }));
     };
 
     const handleAddColor = () => {
         setProductData((prevData) => ({
             ...prevData,
-            colors: [...prevData.colors, { color: "", image: null }],
+            variants: [...prevData.variants, { name: "", image: null, price: prevData.price, quantity: "" }],
         }));
     };
 
     const handleRemoveColor = (index) => {
-        const updatedColors = productData.colors.filter((_, i) => i !== index);
-        setProductData((prevData) => ({ ...prevData, colors: updatedColors }));
+        const updatedvariants = productData.variants.filter((_, i) => i !== index);
+        setProductData((prevData) => ({ ...prevData, variants: updatedvariants }));
     };
 
     const handleImageUpload = (index, file) => {
-        const updatedColors = [...productData.colors];
-        updatedColors[index].image = file;
-        setProductData((prevData) => ({ ...prevData, colors: updatedColors }));
+        const updatedvariants = [...productData.variants];
+        updatedvariants[index].image = file;
+        setProductData((prevData) => ({ ...prevData, variants: updatedvariants }));
     };
 
     const handleSave = () => {
         if (isFormValid()) {
+
             const formData = new FormData();
             formData.append("name", productData.name);
             formData.append("price", productData.price);
@@ -64,9 +64,12 @@ export default function AddProductDialog({ open, onClose, onSave }) {
 
             formData.append("stock", productData.stock);
             formData.append("image", productData.image);
-            productData.colors.forEach((color, index) => {
-                formData.append(`colors[${index}][color]`, color.color);
-                formData.append(`colors[${index}][image]`, color.image);
+
+            productData.variants.forEach((color, index) => {
+                formData.append(`variants[${index}][name]`, color.name);
+                formData.append(`variants[${index}][price]`, color.price);
+                formData.append(`variants[${index}][stock]`, color.quantity);
+                formData.append(`variants[${index}][image]`, color.image);
             });
 
             onSave(formData);
@@ -81,20 +84,20 @@ export default function AddProductDialog({ open, onClose, onSave }) {
             description: "",
             price: "",
             stock: "",
-            colors: [],
+            variants: [],
         });
         onClose();
     };
 
     const isFormValid = () => {
-        const { category, name, price, stock, colors, image } = productData;
+        const { category, name, price, stock, variants, image } = productData;
         return (
             category &&
             name &&
             price &&
             stock &&
             image &&
-            colors.every((colorData) => colorData.color && colorData.image)
+            variants.every((colorData) => colorData.name && colorData.image && colorData.price && colorData.quantity)
         );
     };
 
@@ -187,7 +190,7 @@ export default function AddProductDialog({ open, onClose, onSave }) {
 
                 <div style={{ marginTop: "20px" }}>
                     <h4>Màu sắc và hình ảnh</h4>
-                    {productData.colors.map((colorData, index) => (
+                    {productData.variants.map((colorData, index) => (
                         <div
                             key={index}
                             style={{
@@ -199,16 +202,44 @@ export default function AddProductDialog({ open, onClose, onSave }) {
                         >
                             <TextField
                                 label="Color"
-                                name="color"
-                                fullWidth
+                                name="name"
                                 value={colorData.color}
                                 onChange={(e) =>
                                     handleColorChange(
                                         index,
-                                        "color",
+                                        "name",
                                         e.target.value
                                     )
                                 }
+                            />
+
+                            <TextField
+                                label="Price"
+                                name="price"
+                                type="number"
+                                value={colorData.price || ""}
+                                onChange={(e) =>
+                                    handleColorChange(
+                                        index,
+                                        "price",
+                                        e.target.value
+                                    )
+                                }
+                            />
+                            <TextField
+                                label="Quantity"
+                                name="quantity"
+                                type="number"
+                                value={colorData.quantity || ""}
+                                onChange={(e) =>
+                                    handleColorChange(
+                                        index,
+                                        "quantity",
+                                        e.target.value
+                                    )
+                                }
+                                inputProps={{ min: 0 }}
+                                style={{ width: "100px" }}
                             />
                             <Button variant="outlined" component="label">
                                 Upload
