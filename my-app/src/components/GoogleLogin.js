@@ -8,7 +8,7 @@ const GoogleLogin = () => {
     console.log('Đăng nhập bằng Google');
     // Xử lý đăng nhập bằng Google ở đây
     // i don't want to use fetch here, because it will redirect to google login page
-    window.location.href = 'http://localhost:8080/login/google';
+    window.location.href = `${process.env.REACT_APP_BACKEND_URL}/login/google`;
 
 
   };

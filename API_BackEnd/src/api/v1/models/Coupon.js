@@ -1,9 +1,12 @@
 const mongoose = require('mongoose');
+const { deserializeUser } = require('passport');
 
 const typeValues = ['percentage', 'fixed'];
 
 const couponSchema = new mongoose.Schema({
     code: { type: String, unique: true },
+
+    description: { type: String, required: true },
 
     type: {
         type: String,

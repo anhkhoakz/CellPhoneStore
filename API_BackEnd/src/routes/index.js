@@ -83,12 +83,13 @@ const apiRouter = (app) => {
                 });
 
 
+
                 // res.status(200).json({ message: token });
-                res.redirect(`http://localhost:3000`);
+                res.redirect(`${process.env.FRONTEND_URL}`);
 
             } catch (error) {
                 // res.status(500).json({ error: error.message });
-                res.redirect(`http://localhost:3000/login/error`);
+                res.redirect(`${process.env.FRONTEND_URL}/login/error`);
             }
         },
     );

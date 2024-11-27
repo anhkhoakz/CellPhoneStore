@@ -3,9 +3,12 @@ import { Box, Button, TextField, Typography, Link } from "@mui/material";
 import { red } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
 
+
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
 
 
@@ -18,7 +21,10 @@ const Login = () => {
        
         // Xử lý đăng nhập ở đây
 
-        fetch("http://localhost:8080/api/v1/users/login", {
+        console.log("Login");
+        console.log("Backend URL:", process.env.REACT_APP_BACKEND_URL);
+
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -27,9 +33,9 @@ const Login = () => {
             body: JSON.stringify({ email, password }),
         })
             .then((res) => {
-                if (!res.ok) {
-                    throw new Error("Network response was not ok");
-                }
+                // if (!res.ok) {
+                //     throw new Error("Network response was not ok");
+                // }
                 return res.json();
             })
             .then((data) => {
@@ -40,6 +46,7 @@ const Login = () => {
 
                 } else {
                     console.log(data.message);
+                    setErrorMessage(data.message);
                     console.log("Login failed");
                 }
             })
@@ -78,6 +85,13 @@ const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
             />
+
+            {errorMessage && (
+                <Typography sx={{ color: red[500] }}>
+                    {errorMessage}
+                </Typography>
+            )}
+
             <Link
                 href="/forgot-password"
                 variant="body2"

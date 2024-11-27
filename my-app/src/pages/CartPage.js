@@ -1,5 +1,5 @@
 // CartPage.js
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Grid, Typography, Card, Divider, Button } from "@mui/material";
 import CartItem from "../components/CartItem";
 import CartEmpty from "../components/CartEmpty";
@@ -35,7 +35,21 @@ const CartPage = () => {
         },
     ]);
 
+
+
     const [shipping, setShipping] = useState(5);
+    // const [items, setItems] = useState([]);
+
+    // useEffect(() => {
+    //     fetch(" http://localhost:8080/api/v1/cart")
+    //         .then((response) => response.json())
+    //         .then((data) => {
+    //             setItems(data);
+    //         })
+    //         .catch((error) => {
+    //             console.error("Error:", error);
+    //         });
+    // }, []);
 
     const handleQuantityChange = (id, value) => {
         const newItems = items.map((item) =>

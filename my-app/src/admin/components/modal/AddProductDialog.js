@@ -1,15 +1,23 @@
-import * as React from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, IconButton } from '@mui/material';
-import { AddCircle, RemoveCircle } from '@mui/icons-material';
+import * as React from "react";
+import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Button,
+    TextField,
+    IconButton,
+} from "@mui/material";
+import { AddCircle, Category, RemoveCircle } from "@mui/icons-material";
 
 export default function AddProductDialog({ open, onClose, onSave }) {
     const [productData, setProductData] = React.useState({
-        productId: '',
-        name: '',
-        description: '',
-        price: '',
-        stockQuantity: '',
-        colors: [] 
+        category: "",
+        name: "",
+        description: "",
+        price: "",
+        stockQuantity: "",
+        colors: [],
     });
 
     const handleChange = (e) => {
@@ -26,7 +34,7 @@ export default function AddProductDialog({ open, onClose, onSave }) {
     const handleAddColor = () => {
         setProductData((prevData) => ({
             ...prevData,
-            colors: [...prevData.colors, { color: '', image: null }]
+            colors: [...prevData.colors, { color: "", image: null }],
         }));
     };
 
@@ -43,31 +51,46 @@ export default function AddProductDialog({ open, onClose, onSave }) {
 
     const handleSave = () => {
         if (isFormValid()) {
-            onSave(productData);
+            const formData = new FormData();
+            formData.append("name", productData.name);
+            formData.append("price", productData.price);
+            formData.append("description", productData.description);
+            formData.append("category", productData.category);
+
+            formData.append("stockQuantity", productData.stockQuantity);
+            formData.append("image", productData.image);
+            productData.colors.forEach((color, index) => {
+                formData.append(`colors[${index}][color]`, color.color);
+                formData.append(`colors[${index}][image]`, color.image);
+            });
+
+            
+            onSave(formData);
             handleClose();
         }
     };
 
     const handleClose = () => {
         setProductData({
-            productId: '',
-            name: '',
-            description: '',
-            price: '',
-            stockQuantity: '',
-            colors: []
+            category: "",
+            name: "",
+            description: "",
+            price: "",
+            stockQuantity: "",
+            colors: [],
         });
         onClose();
     };
 
     const isFormValid = () => {
-        const { productId, name, price, stockQuantity, colors } = productData;
+        const { category, name, price, stockQuantity, colors, image } = productData;
         return (
-            productId &&
+            category &&
             name &&
             price &&
             stockQuantity &&
-            colors.every(colorData => colorData.color && colorData.image)
+            image &&
+            colors.every((colorData) => colorData.color && colorData.image)
         );
     };
 
@@ -75,37 +98,113 @@ export default function AddProductDialog({ open, onClose, onSave }) {
         <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
             <DialogTitle>Thêm Sản Phẩm Mới</DialogTitle>
             <DialogContent>
-                <TextField label="Product ID" name="productId" fullWidth margin="dense" value={productData.productId} onChange={handleChange} />
-                <TextField label="Product Name" name="name" fullWidth margin="dense" value={productData.name} onChange={handleChange} />
-                <TextField label="Description" name="description" fullWidth margin="dense" value={productData.description} onChange={handleChange} />
-                <TextField label="Price" name="price" type="number" fullWidth margin="dense" value={productData.price} onChange={handleChange} />
-                <TextField label="Stock Quantity" name="stockQuantity" type="number" fullWidth margin="dense" value={productData.stockQuantity} onChange={handleChange} />
+                <TextField
+                    label="Product Name"
+                    name="name"
+                    fullWidth
+                    margin="dense"
+                    value={productData.name}
+                    onChange={handleChange}
+                />
+                <TextField
+                    label="Description"
+                    name="description"
+                    fullWidth
+                    margin="dense"
+                    value={productData.description}
+                    onChange={handleChange}
+                />
+                <TextField
+                    label="Category"
+                    name="category"
+                    fullWidth
+                    margin="dense"
+                    value={productData.category}
+                    onChange={handleChange}
+                />
+                <TextField
+                    label="Price"
+                    name="price"
+                    type="number"
+                    fullWidth
+                    margin="dense"
+                    value={productData.price}
+                    onChange={handleChange}
+                />
+                <TextField
+                    label="Stock Quantity"
+                    name="stockQuantity"
+                    type="number"
+                    fullWidth
+                    margin="dense"
+                    value={productData.stockQuantity}
+                    onChange={handleChange}
+                />
+                <Button variant="outlined" component="label">
+                    Main Image
+                    <input
+                        name="image"
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onChange={(e) =>
+                            setProductData((prevData) => ({
+                                ...prevData,
+                                image: e.target.files[0],
+                            }))
+                        }
+                        
 
-                <div style={{ marginTop: '20px' }}>
+
+                    />
+                </Button>
+
+                <div style={{ marginTop: "20px" }}>
                     <h4>Màu sắc và hình ảnh</h4>
                     {productData.colors.map((colorData, index) => (
-                        <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                        <div
+                            key={index}
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "10px",
+                                marginBottom: "10px",
+                            }}
+                        >
                             <TextField
                                 label="Color"
                                 name="color"
                                 fullWidth
                                 value={colorData.color}
-                                onChange={(e) => handleColorChange(index, 'color', e.target.value)}
+                                onChange={(e) =>
+                                    handleColorChange(
+                                        index,
+                                        "color",
+                                        e.target.value
+                                    )
+                                }
                             />
-                            <Button
-                                variant="outlined"
-                                component="label"
-                            >
+                            <Button variant="outlined" component="label">
                                 Upload
                                 <input
                                     type="file"
                                     accept="image/*"
                                     hidden
-                                    onChange={(e) => handleImageUpload(index, e.target.files[0])}
+                                    onChange={(e) =>
+                                        handleImageUpload(
+                                            index,
+                                            e.target.files[0]
+                                        )
+                                    }
                                 />
                             </Button>
-                            {colorData.image && <span>{colorData.image.name}</span>}
-                            <IconButton color="error" onClick={() => handleRemoveColor(index)}>
+                            {colorData.image && (
+                                <span>{colorData.image.name}</span>
+                            )}
+                            <IconButton
+                                color="error"
+                                onClick={() => handleRemoveColor(index)}
+                            >
                                 <RemoveCircle />
                             </IconButton>
                         </div>
@@ -121,8 +220,15 @@ export default function AddProductDialog({ open, onClose, onSave }) {
                 </div>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} color="secondary">Cancel</Button>
-                <Button onClick={handleSave} color="primary" variant="contained" disabled={!isFormValid()}>
+                <Button onClick={handleClose} color="secondary">
+                    Cancel
+                </Button>
+                <Button
+                    onClick={handleSave}
+                    color="primary"
+                    variant="contained"
+                    disabled={!isFormValid()}
+                >
                     Save
                 </Button>
             </DialogActions>
