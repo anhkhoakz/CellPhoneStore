@@ -31,44 +31,19 @@ const StyledTableRow = styled(TableRow)(({ theme, isEven }) => ({
 }));
 
 const columns = [
-    { id: 'productId', label: 'Product ID', minWidth: 150 },
+    { id: 'productId', label: '#', minWidth: 150 },
     { id: 'image', label: 'Image', minWidth: 100 },
     { id: 'name', label: 'Product Name', minWidth: 150 },
     { id: 'description', label: 'Description', minWidth: 200 },
     { id: 'price', label: 'Price', minWidth: 100 },
-    { id: 'stockQuantity', label: 'Stock Quantity', minWidth: 150 },
-    { id: 'soldQuantity', label: 'Sold Quantity', minWidth: 150 },
+    { id: 'stock', label: 'Stock Quantity', minWidth: 150 },
+    { id: 'sold', label: 'Sold Quantity', minWidth: 150 },
     { id: 'actions', label: 'Actions', minWidth: 150 },
 ];
 
-const createData = (productId, name, description, price, stockQuantity, soldQuantity, colors) => {
-    return { 
-        productId, 
-        name, 
-        description, 
-        price, 
-        stockQuantity, 
-        soldQuantity, 
-        colors 
-    };
-};
-
-const initialRows = [
-    createData('PROD001', 'Smartphone', 'Latest model with 128GB storage', 599, 100, 25, [
-        { color: 'Black', image: 'https://via.placeholder.com/50' },
-        { color: 'White', image: 'https://via.placeholder.com/50' }
-    ]),
-    createData('PROD002', 'Laptop', 'Powerful laptop with 16GB RAM', 1299, 0, 15, [
-        { color: 'Silver', image: 'https://via.placeholder.com/50' },
-    ]),
-    createData('PROD003', 'Headphones', 'Noise-canceling over-ear headphones', 199, 200, 75, [
-        { color: 'Blue', image: 'https://via.placeholder.com/50' },
-        { color: 'Red', image: 'https://via.placeholder.com/50' },
-    ]),
-];
 
 export default function ProductsTable() {
-    const [rows, setRows] = React.useState(initialRows);
+    const [rows, setRows] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [search, setSearch] = React.useState('');
@@ -78,6 +53,25 @@ export default function ProductsTable() {
     const [selectedProduct, setSelectedProduct] = React.useState(null);
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = React.useState(false); // State for confirm dialog
     const [productToDelete, setProductToDelete] = React.useState(null); // Product selected for deletion
+
+    React.useEffect(() => {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/products`)
+            .then((response) => response.json())
+            .then((data) => {
+
+                console.log('Success:', data.products);
+
+                const rows = data.products
+
+                const sortedRows = rows.sort((a, b) => a.productId - b.productId);
+
+                setRows(rows);
+                console.log('Rows:', sortedRows);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }, []);
 
     const handleDelete = () => {
         setRows(rows.filter(row => row.productId !== productToDelete.productId));
@@ -108,14 +102,35 @@ export default function ProductsTable() {
     };
 
     const handleAddProduct = (newProduct) => {
-        setRows((prevRows) => [...prevRows, newProduct]);
-        setIsAddDialogOpen(false);
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/products`, {
+            method: 'POST',
+            body: newProduct,
+        })
+            .then((response) => response.json())
+            .then((data) => {
+
+                console.log('Success:', data);
+
+                setRows((prevRows) => [...prevRows, data.product]);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        
+            setIsAddDialogOpen(false);
+        
+       
     };
 
     const handleEditClick = (productId) => {
         const product = rows.find(row => row.productId === productId);
-        setSelectedProduct(product);
-        setIsEditDialogOpen(true);
+
+        if (product) {
+            setSelectedProduct(product);  // Ensure product is found
+            setIsEditDialogOpen(true);
+        } else {
+            alert("Product not found for productId:", productId);
+        }
     };
 
     const handleEditProduct = (updatedProduct) => {
@@ -131,8 +146,8 @@ export default function ProductsTable() {
             (status === 'inStock' && row.stockQuantity > 0) ||
             (status === 'outOfStock' && row.stockQuantity === 0);
 
-        const matchesSearch = row.name.toLowerCase().includes(search.toLowerCase()) ||
-            row.productId.toLowerCase().includes(search.toLowerCase());
+        const matchesSearch = row.name.toLowerCase().includes(search.toLowerCase()) 
+        // || row.productId.toLowerCase().includes(search.toLowerCase());
 
         return matchesStatus && matchesSearch;
     });
@@ -184,7 +199,7 @@ export default function ProductsTable() {
                                                 </TableCell>
                                             ) : column.id === 'image' ? (
                                                 <TableCell key={column.id} align="center" style={{ padding: '16px' }}>
-                                                    <img src={row.colors[0].image} alt={row.name} style={{ width: '50px', height: '50px' }} />
+                                                    <img src={`${process.env.REACT_APP_BACKEND_URL}/images/${row.image}`} alt={row.name} style={{ width: '50px', height: '50px' }} />
                                                 </TableCell>
                                             ) : column.id === 'actions' ? (
                                                 <TableCell key={column.id} align="center" style={{ padding: '16px' }}>

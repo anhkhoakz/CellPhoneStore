@@ -79,8 +79,10 @@ class ProductService {
             });
         }
 
-        await Product.create(data);
-        return { code: 201, message: 'Product created successfully' };
+        
+
+        const result = await Product.create(data);
+        return { code: 201, message: 'Product created successfully', product: result };
     }
 
     async updateProduct(id, data, files) {

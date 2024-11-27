@@ -21,9 +21,6 @@ const Login = () => {
        
         // Xử lý đăng nhập ở đây
 
-        console.log("Login");
-        console.log("Backend URL:", process.env.REACT_APP_BACKEND_URL);
-
         fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users/login`, {
             method: "POST",
             headers: {

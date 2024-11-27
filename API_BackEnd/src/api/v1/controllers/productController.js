@@ -36,11 +36,11 @@ class ProductController {
         const data = req.body;
         const files = req.files;
         try {
-            const { code, message } = await productService.createProduct(
+            const { code, message, product } = await productService.createProduct(
                 data,
                 files,
             );
-            res.status(code).json({ message: message });
+            res.status(code).json({ message, product });
         } catch (error) {
             res.status(500).json({
                 success: false,

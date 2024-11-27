@@ -4,10 +4,14 @@ const checkProuductValidation = (req, res, next) => {
     const { name, price, category, stock } = req.body;
 
     // Check if the main image exists in req.files (which is an array)
+
+    console.log(req.files);
     const hasMainImage =
         req.files && req.files.some((file) => file.fieldname === 'image');
 
     if (!name || !price || !category || !stock || !hasMainImage) {
+
+        console.log(name, price, category, stock, hasMainImage);
         return res.status(400).json({
             message: 'All fields including the main image are required',
         });

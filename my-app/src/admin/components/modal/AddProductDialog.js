@@ -7,16 +7,21 @@ import {
     Button,
     TextField,
     IconButton,
+    Autocomplete,
 } from "@mui/material";
+
+
 import { AddCircle, Category, RemoveCircle } from "@mui/icons-material";
 
 export default function AddProductDialog({ open, onClose, onSave }) {
+    const categories = ["phone", "laptop", "ipad"];
+
     const [productData, setProductData] = React.useState({
         category: "",
         name: "",
         description: "",
         price: "",
-        stockQuantity: "",
+        stock: "",
         colors: [],
     });
 
@@ -57,14 +62,13 @@ export default function AddProductDialog({ open, onClose, onSave }) {
             formData.append("description", productData.description);
             formData.append("category", productData.category);
 
-            formData.append("stockQuantity", productData.stockQuantity);
+            formData.append("stock", productData.stock);
             formData.append("image", productData.image);
             productData.colors.forEach((color, index) => {
                 formData.append(`colors[${index}][color]`, color.color);
                 formData.append(`colors[${index}][image]`, color.image);
             });
 
-            
             onSave(formData);
             handleClose();
         }
@@ -76,19 +80,19 @@ export default function AddProductDialog({ open, onClose, onSave }) {
             name: "",
             description: "",
             price: "",
-            stockQuantity: "",
+            stock: "",
             colors: [],
         });
         onClose();
     };
 
     const isFormValid = () => {
-        const { category, name, price, stockQuantity, colors, image } = productData;
+        const { category, name, price, stock, colors, image } = productData;
         return (
             category &&
             name &&
             price &&
-            stockQuantity &&
+            stock &&
             image &&
             colors.every((colorData) => colorData.color && colorData.image)
         );
@@ -114,13 +118,38 @@ export default function AddProductDialog({ open, onClose, onSave }) {
                     value={productData.description}
                     onChange={handleChange}
                 />
-                <TextField
-                    label="Category"
-                    name="category"
-                    fullWidth
-                    margin="dense"
+
+                <Autocomplete
+                    options={categories}
+                    getOptionLabel={(option) => option}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            label="Category"
+                            name="category"
+                            fullWidth
+                            margin="dense"
+                            InputProps={{
+                                ...params.InputProps,
+                                endAdornment: <></>, // Remove the clear and close buttons
+                            }}
+                        />
+                    )}
                     value={productData.category}
-                    onChange={handleChange}
+                    onChange={(event, newValue) => {
+                        if (categories.includes(newValue)) {
+                            setProductData((prevData) => ({
+                                ...prevData,
+                                category: newValue,
+                            }));
+                        } else {
+                            setProductData((prevData) => ({
+                                ...prevData,
+                                category: "",
+                            }));
+                        }
+                    }}
+                    isOptionEqualToValue={(option, value) => option === value} // Ensure equality is based on value matching
                 />
                 <TextField
                     label="Price"
@@ -133,11 +162,11 @@ export default function AddProductDialog({ open, onClose, onSave }) {
                 />
                 <TextField
                     label="Stock Quantity"
-                    name="stockQuantity"
+                    name="stock"
                     type="number"
                     fullWidth
                     margin="dense"
-                    value={productData.stockQuantity}
+                    value={productData.stock}
                     onChange={handleChange}
                 />
                 <Button variant="outlined" component="label">
@@ -153,9 +182,6 @@ export default function AddProductDialog({ open, onClose, onSave }) {
                                 image: e.target.files[0],
                             }))
                         }
-                        
-
-
                     />
                 </Button>
 
