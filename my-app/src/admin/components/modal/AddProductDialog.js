@@ -64,7 +64,7 @@ export default function AddProductDialog({ open, onClose, onSave }) {
                 formData.append(`colors[${index}][image]`, color.image);
             });
 
-            
+
             onSave(formData);
             handleClose();
         }
@@ -153,7 +153,7 @@ export default function AddProductDialog({ open, onClose, onSave }) {
                                 image: e.target.files[0],
                             }))
                         }
-                        
+
 
 
                     />
@@ -174,7 +174,6 @@ export default function AddProductDialog({ open, onClose, onSave }) {
                             <TextField
                                 label="Color"
                                 name="color"
-                                fullWidth
                                 value={colorData.color}
                                 onChange={(e) =>
                                     handleColorChange(
@@ -183,6 +182,17 @@ export default function AddProductDialog({ open, onClose, onSave }) {
                                         e.target.value
                                     )
                                 }
+                            />
+                            <TextField
+                                label="Quantity"
+                                name="quantity"
+                                type="number"
+                                value={colorData.quantity || ""}
+                                onChange={(e) =>
+                                    handleColorChange(index, "quantity", e.target.value)
+                                }
+                                inputProps={{ min: 0 }}
+                                style={{ width: "100px" }}
                             />
                             <Button variant="outlined" component="label">
                                 Upload
