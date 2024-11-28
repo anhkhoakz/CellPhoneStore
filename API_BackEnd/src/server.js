@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const app = require('./app');
+const process = require('process');
 
 const port = process.env.PORT || 3000;
 const hostName = process.env.HOST_NAME || 'localhost';

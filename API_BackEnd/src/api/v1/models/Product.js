@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const categoryValues = ['phone', 'laptop', 'ipad'];
 
 const productSchema = new Schema({
-    name: { type: String, maxLength: 255, required: true },
+    name: { type: String, maxLength: 255, required: true, trim: true },
     price: { type: Number, required: true },
     description: { type: String, maxLength: 600 },
     category: {
