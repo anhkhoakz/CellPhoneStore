@@ -1,12 +1,3 @@
-Các trang đã làm: 
-    - Home 
-    - Login 
-    - Product Detail 
-    - Product Not Found 
-    - Mua hang thanh cong
-    - Tìm kiếm/Quản lý đơn hàng
-Chưa làm: 
-    - Kết quả tìm kiếm
 
 npm install dayjs
 # Cài đặt MUI packages
