@@ -68,7 +68,7 @@ const verifyAccessToken = async (req, res, next) => {
                 return next();
             } catch (error) {
 
-                console.log('Refresh token error:', error);
+                console.log('Refresh token error:', error.response.data);
                 return next(
                     CreateError.Unauthorized('Unable to refresh access token'),
                 );

@@ -201,10 +201,11 @@ module.exports = {
 
             res.cookie('accessToken', accessToken, {
                 maxAge: process.env.COOKIE_TOKEN_EXPIRY,
-                httpOnly: true,
-                // secure: process.env.NODE_ENV === 'production',
+                httpOnly: false,
+                // secure: true,
                 sameSite: 'lax',
             });
+
 
             res.cookie('userId', userId, {
                 maxAge: 365 * 24 * 60 * 60 * 1000,

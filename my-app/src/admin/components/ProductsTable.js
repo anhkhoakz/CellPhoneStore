@@ -176,13 +176,12 @@ export default function ProductsTable() {
     const filteredRows = rows.filter((row) => {
         const matchesStatus =
             status === "all" ||
-            (status === "inStock" && row.stockQuantity > 0) ||
-            (status === "outOfStock" && row.stockQuantity === 0);
+            (status === "inStock" && row.stock > 0) ||
+            (status === "outOfStock" && row.stock === 0);
 
-        const matchesSearch = row.name
-            .toLowerCase()
-            .includes(search.toLowerCase());
-        // || row.productId.toLowerCase().includes(search.toLowerCase());
+        const matchesSearch = row.name?.toLowerCase()
+            .includes(search.toLowerCase()) || row.productId?.toString().includes(search.toLowerCase());
+            ;
 
         return matchesStatus && matchesSearch;
     });

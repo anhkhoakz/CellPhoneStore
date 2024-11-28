@@ -9,12 +9,14 @@ const {
 const { verifyAccessToken } = require('~v1/middleware/tokenMiddleware');
 const roleAuth = require('~/api/v1/middleware/roleAuth');
 
-router.get(
-    '/',
-    verifyAccessToken,
-    roleAuth('admin'),
-    AuthenticationController.getAllUsers,
-);
+// router.get(
+//     '/',
+//     verifyAccessToken,
+//     roleAuth('admin'),
+//     AuthenticationController.getAllUsers,
+// );
+
+router.get('/', AuthenticationController.getAllUsers);
 
 router.get('/:id', verifyAccessToken, AuthenticationController.getUser);
 
