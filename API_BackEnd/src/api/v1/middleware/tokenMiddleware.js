@@ -42,7 +42,7 @@ const verifyAccessToken = async (req, res, next) => {
             // Request a new access token using the refresh token
             try {
                 const response = await axios.post(
-                    'http://localhost:8080/api/v1/users/refresh-token',
+                    ` ${process.env.BACKEND_URL}/api/v1/users/refresh-token`,
                     { refreshToken },
                 );
 
@@ -52,7 +52,7 @@ const verifyAccessToken = async (req, res, next) => {
 
                 res.cookie('accessToken', accessToken, {
                     maxAge: process.env.COOKIE_TOKEN_EXPIRY,
-                    httpOnly: true,
+                    httpOnly: false,
                     // secure: true,
                     sameSite: 'lax',
                 });

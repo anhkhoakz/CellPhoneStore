@@ -1,86 +1,82 @@
-import * as React from 'react';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import { styled } from '@mui/material/styles';
-import { Edit, Delete } from '@mui/icons-material';
-import IconButton from '@mui/material/IconButton';
-import SearchBar from './SearchBar';
-import AddProductDialog from './modal/AddProductDialog';
-import EditProductDialog from './modal/EditProductDialog';
-import Confirm from '../../components/Confirm';
+import * as React from "react";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+import { styled } from "@mui/material/styles";
+import { Edit, Delete } from "@mui/icons-material";
+import IconButton from "@mui/material/IconButton";
+import SearchBar from "./SearchBar";
+import AddProductDialog from "./modal/AddProductDialog";
+import EditProductDialog from "./modal/EditProductDialog";
+import Confirm from "../../components/Confirm";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontWeight: 600,
     backgroundColor: theme.palette.primary.light,
     color: theme.palette.primary.contrastText,
-    padding: '16px',
-    textAlign: 'center',
+    padding: "16px",
+    textAlign: "center",
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme, isEven }) => ({
-    backgroundColor: isEven ? theme.palette.action.hover : 'transparent',
-    '&:hover': {
+    backgroundColor: isEven ? theme.palette.action.hover : "transparent",
+    "&:hover": {
         backgroundColor: theme.palette.action.selected,
     },
 }));
 
 const columns = [
-    { id: 'productId', label: 'Product ID', minWidth: 150 },
-    { id: 'image', label: 'Image', minWidth: 100 },
-    { id: 'name', label: 'Product Name', minWidth: 150 },
-    { id: 'description', label: 'Description', minWidth: 200 },
-    { id: 'price', label: 'Price', minWidth: 100 },
-    { id: 'stockQuantity', label: 'Stock Quantity', minWidth: 150 },
-    { id: 'soldQuantity', label: 'Sold Quantity', minWidth: 150 },
-    { id: 'actions', label: 'Actions', minWidth: 150 },
-];
-
-const createData = (productId, name, description, price, stockQuantity, soldQuantity, colors) => {
-    return { 
-        productId, 
-        name, 
-        description, 
-        price, 
-        stockQuantity, 
-        soldQuantity, 
-        colors 
-    };
-};
-
-const initialRows = [
-    createData('PROD001', 'Smartphone', 'Latest model with 128GB storage', 599, 100, 25, [
-        { color: 'Black', image: 'https://via.placeholder.com/50' },
-        { color: 'White', image: 'https://via.placeholder.com/50' }
-    ]),
-    createData('PROD002', 'Laptop', 'Powerful laptop with 16GB RAM', 1299, 0, 15, [
-        { color: 'Silver', image: 'https://via.placeholder.com/50' },
-    ]),
-    createData('PROD003', 'Headphones', 'Noise-canceling over-ear headphones', 199, 200, 75, [
-        { color: 'Blue', image: 'https://via.placeholder.com/50' },
-        { color: 'Red', image: 'https://via.placeholder.com/50' },
-    ]),
+    { id: "productId", label: "#", minWidth: 150 },
+    { id: "image", label: "Image", minWidth: 100 },
+    { id: "name", label: "Product Name", minWidth: 150 },
+    { id: "description", label: "Description", minWidth: 200 },
+    { id: "price", label: "Price", minWidth: 100 },
+    { id: "stock", label: "Stock Quantity", minWidth: 150 },
+    { id: "sold", label: "Sold Quantity", minWidth: 150 },
+    { id: "actions", label: "Actions", minWidth: 150 },
 ];
 
 export default function ProductsTable() {
-    const [rows, setRows] = React.useState(initialRows);
+    const [rows, setRows] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    const [search, setSearch] = React.useState('');
-    const [status, setStatus] = React.useState('all');
+    const [search, setSearch] = React.useState("");
+    const [status, setStatus] = React.useState("all");
     const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false);
     const [selectedProduct, setSelectedProduct] = React.useState(null);
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = React.useState(false); // State for confirm dialog
     const [productToDelete, setProductToDelete] = React.useState(null); // Product selected for deletion
 
+    React.useEffect(() => {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/products`)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("Success:", data.products);
+
+                const rows = data.products;
+
+                const sortedRows = rows.sort(
+                    (a, b) => a.productId - b.productId
+                );
+
+                setRows(rows);
+                console.log("Rows:", sortedRows);
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+    }, []);
+
     const handleDelete = () => {
-        setRows(rows.filter(row => row.productId !== productToDelete.productId));
+        setRows(
+            rows.filter((row) => row.productId !== productToDelete.productId)
+        );
         setIsConfirmDialogOpen(false);
         setProductToDelete(null);
     };
@@ -108,37 +104,91 @@ export default function ProductsTable() {
     };
 
     const handleAddProduct = (newProduct) => {
-        setRows((prevRows) => [...prevRows, newProduct]);
-        setIsAddDialogOpen(false);
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/products`, {
+            method: "POST",
+            body: newProduct,
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("Success:", data);
+
+                setRows((prevRows) => [...prevRows, data.product]);
+                setIsAddDialogOpen(false);
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
     };
 
     const handleEditClick = (productId) => {
-        const product = rows.find(row => row.productId === productId);
-        setSelectedProduct(product);
-        setIsEditDialogOpen(true);
+        const product = rows.find((row) => row.productId === productId);
+
+        if (product) {
+            setSelectedProduct(product);
+            setIsEditDialogOpen(true);
+        } else {
+            alert("Product not found for productId:", productId);
+        }
     };
 
     const handleEditProduct = (updatedProduct) => {
-        setRows((prevRows) =>
-            prevRows.map(row => (row.productId === updatedProduct.productId ? updatedProduct : row))
-        );
-        setIsEditDialogOpen(false);
+        const formData = new FormData();
+        formData.append("name", updatedProduct.name);
+        formData.append("description", updatedProduct.description);
+        formData.append("category", updatedProduct.category);
+        formData.append("price", updatedProduct.price);
+        formData.append("stock", updatedProduct.stock);
+        formData.append("image", updatedProduct.image);
+
+        updatedProduct.variants.forEach((variant, index) => {
+            formData.append(`variants[${index}][name]`, variant.name);
+            formData.append(`variants[${index}][price]`, variant.price);
+            formData.append(`variants[${index}][stock]`, variant.stock);
+            formData.append(`variants[${index}][image]`, variant.image);
+        });
+
+
+        fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/api/v1/products/${updatedProduct.productId}`,
+            {
+                method: "PATCH",
+               body: formData,
+            }
+        )
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("Success:", data);
+
+                setRows((prevRows) =>
+                    prevRows.map((row) =>
+                        row.productId === updatedProduct.productId
+                            ? updatedProduct
+                            : row
+                    )
+                );
+                setIsEditDialogOpen(false);
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
     };
 
     const filteredRows = rows.filter((row) => {
         const matchesStatus =
-            status === 'all' ||
-            (status === 'inStock' && row.stockQuantity > 0) ||
-            (status === 'outOfStock' && row.stockQuantity === 0);
+            status === "all" ||
+            (status === "inStock" && row.stockQuantity > 0) ||
+            (status === "outOfStock" && row.stockQuantity === 0);
 
-        const matchesSearch = row.name.toLowerCase().includes(search.toLowerCase()) ||
-            row.productId.toLowerCase().includes(search.toLowerCase());
+        const matchesSearch = row.name
+            .toLowerCase()
+            .includes(search.toLowerCase());
+        // || row.productId.toLowerCase().includes(search.toLowerCase());
 
         return matchesStatus && matchesSearch;
     });
 
     return (
-        <Paper sx={{ width: '100%', overflow: 'hidden', padding: 2 }}>
+        <Paper sx={{ width: "100%", overflow: "hidden", padding: 2 }}>
             <SearchBar
                 search={search}
                 onSearchChange={handleSearchChange}
@@ -149,9 +199,9 @@ export default function ProductsTable() {
                 searchPlaceholder="Search by Product ID or Name"
                 statusLabel="Stock Status"
                 statusOptions={[
-                    { value: 'all', label: 'All' },
-                    { value: 'inStock', label: 'In Stock' },
-                    { value: 'outOfStock', label: 'Out of Stock' },
+                    { value: "all", label: "All" },
+                    { value: "inStock", label: "In Stock" },
+                    { value: "outOfStock", label: "Out of Stock" },
                 ]}
             />
             <TableContainer>
@@ -171,40 +221,80 @@ export default function ProductsTable() {
                     </TableHead>
                     <TableBody>
                         {filteredRows
-                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            .slice(
+                                page * rowsPerPage,
+                                page * rowsPerPage + rowsPerPage
+                            )
                             .map((row, index) => {
                                 const isEven = index % 2 === 0;
                                 return (
-                                    <StyledTableRow hover role="checkbox" tabIndex={-1} key={row.productId} isEven={isEven}>
+                                    <StyledTableRow
+                                        hover
+                                        role="checkbox"
+                                        tabIndex={-1}
+                                        key={row.productId}
+                                        isEven={isEven}
+                                    >
                                         {columns.map((column) => {
                                             const value = row[column.id];
-                                            return column.id === 'price' ? (
-                                                <TableCell key={column.id} align="center" style={{ padding: '16px' }}>
+                                            return column.id === "price" ? (
+                                                <TableCell
+                                                    key={column.id}
+                                                    align="center"
+                                                    style={{ padding: "16px" }}
+                                                >
                                                     ${value}
                                                 </TableCell>
-                                            ) : column.id === 'image' ? (
-                                                <TableCell key={column.id} align="center" style={{ padding: '16px' }}>
-                                                    <img src={row.colors[0].image} alt={row.name} style={{ width: '50px', height: '50px' }} />
+                                            ) : column.id === "image" ? (
+                                                <TableCell
+                                                    key={column.id}
+                                                    align="center"
+                                                    style={{ padding: "16px" }}
+                                                >
+                                                    <img
+                                                        src={`${process.env.REACT_APP_BACKEND_URL}/images/${row.image}`}
+                                                        alt={row.name}
+                                                        style={{
+                                                            width: "50px",
+                                                            height: "50px",
+                                                        }}
+                                                    />
                                                 </TableCell>
-                                            ) : column.id === 'actions' ? (
-                                                <TableCell key={column.id} align="center" style={{ padding: '16px' }}>
+                                            ) : column.id === "actions" ? (
+                                                <TableCell
+                                                    key={column.id}
+                                                    align="center"
+                                                    style={{ padding: "16px" }}
+                                                >
                                                     <IconButton
                                                         aria-label="edit"
                                                         color="primary"
-                                                        onClick={() => handleEditClick(row.productId)}
+                                                        onClick={() =>
+                                                            handleEditClick(
+                                                                row.productId
+                                                            )
+                                                        }
                                                     >
                                                         <Edit />
                                                     </IconButton>
                                                     <IconButton
                                                         aria-label="delete"
                                                         color="error"
-                                                        onClick={() => handleDeleteClick(row)}
+                                                        onClick={() =>
+                                                            handleDeleteClick(
+                                                                row
+                                                            )
+                                                        }
                                                     >
                                                         <Delete />
                                                     </IconButton>
                                                 </TableCell>
                                             ) : (
-                                                <TableCell key={column.id} align="center" style={{ padding: '16px' }}>
+                                                <TableCell
+                                                    key={column.id}
+                                                    align="center"
+                                                    style={{ padding: "16px" }}
+                                                >
                                                     {value}
                                                 </TableCell>
                                             );

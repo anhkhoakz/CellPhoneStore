@@ -34,7 +34,7 @@ router.post(
     ProductController.createProduct,
 );
 
-router.patch('/:id', ProductController.updateProduct);
+router.patch('/:id', upload.any(), checkProuductValidation,ProductController.updateProduct);
 
 router.delete('/:id', ProductController.deleteProduct);
 

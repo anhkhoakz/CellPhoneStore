@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongooseSequence = require('mongoose-sequence')(mongoose);
 const Schema = mongoose.Schema;
 
 const categoryValues = ['phone', 'laptop', 'ipad'];
@@ -12,7 +13,9 @@ const productSchema = new Schema({
         enum: categoryValues,
         required: true,
     },
+    productId: { type: Number,  unique: true},
     stock: { type: Number, required: true },
+    sold: { type: Number, default: 0 },
 
     variants: [
         {
@@ -37,5 +40,11 @@ const productSchema = new Schema({
     createAt: { type: Date, default: Date.now, immutable: true },
     updateAt: { type: Date, default: Date.now },
 });
+
+productSchema.plugin(mongooseSequence, {
+    inc_field: 'productId',  
+    start_seq: 1,          
+});
+
 
 module.exports = mongoose.model('Product', productSchema);

@@ -1,20 +1,36 @@
-import * as React from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, IconButton } from '@mui/material';
-import { AddCircle, RemoveCircle } from '@mui/icons-material';
+import * as React from "react";
+import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Button,
+    TextField,
+    IconButton,
+} from "@mui/material";
+import { AddCircle, RemoveCircle } from "@mui/icons-material";
+import { Autocomplete } from "@mui/material";
 
-export default function EditProductDialog({ open, onClose, onSave, productData }) {
+export default function EditProductDialog({
+    open,
+    onClose,
+    onSave,
+    productData,
+}) {
+    const categories = ["phone", "laptop", "ipad"];
+
     const [editedProductData, setEditedProductData] = React.useState({
-        productId: '',
-        name: '',
-        description: '',
-        price: '',
-        stockQuantity: '',
-        colors: []
+        productId: "",
+        name: "",
+        description: "",
+        price: "",
+        stock: "",
+        variants: [],
     });
 
     // Update editedProductData when productData changes (e.g., when a different product is being edited)
     React.useEffect(() => {
-        if (productData) {
+        if (productData && productData.productId) {
             setEditedProductData({ ...productData });
         }
     }, [productData]);
@@ -25,27 +41,41 @@ export default function EditProductDialog({ open, onClose, onSave, productData }
     };
 
     const handleColorChange = (index, field, value) => {
-        const updatedColors = [...editedProductData.colors];
-        updatedColors[index] = { ...updatedColors[index], [field]: value };
-        setEditedProductData((prevData) => ({ ...prevData, colors: updatedColors }));
+        const updatedvariants = [...editedProductData.variants];
+        updatedvariants[index] = { ...updatedvariants[index], [field]: value };
+        setEditedProductData((prevData) => ({
+            ...prevData,
+            variants: updatedvariants,
+        }));
     };
 
     const handleAddColor = () => {
         setEditedProductData((prevData) => ({
             ...prevData,
-            colors: [...prevData.colors, { color: '', image: null }]
+            variants: [
+                ...prevData.variants,
+                { name: "", image: null, price: prevData.price, quantity: "" },
+            ],
         }));
     };
 
     const handleRemoveColor = (index) => {
-        const updatedColors = editedProductData.colors.filter((_, i) => i !== index);
-        setEditedProductData((prevData) => ({ ...prevData, colors: updatedColors }));
+        const updatedvariants = editedProductData.variants.filter(
+            (_, i) => i !== index
+        );
+        setEditedProductData((prevData) => ({
+            ...prevData,
+            variants: updatedvariants,
+        }));
     };
 
     const handleImageUpload = (index, file) => {
-        const updatedColors = [...editedProductData.colors];
-        updatedColors[index].image = file;
-        setEditedProductData((prevData) => ({ ...prevData, colors: updatedColors }));
+        const updatedvariants = [...editedProductData.variants];
+        updatedvariants[index].image = file;
+        setEditedProductData((prevData) => ({
+            ...prevData,
+            variants: updatedvariants,
+        }));
     };
 
     const handleSave = () => {
@@ -61,13 +91,16 @@ export default function EditProductDialog({ open, onClose, onSave, productData }
     };
 
     const isFormValid = () => {
-        const { productId, name, price, stockQuantity, colors } = editedProductData;
+        const { productId, name, price, stock, variants } = editedProductData;
         return (
             productId &&
             name &&
             price &&
-            stockQuantity &&
-            colors.every(colorData => colorData.color && colorData.image)
+            stock &&
+            variants.every(
+                (colorData) =>
+                    colorData.name && colorData.image && colorData.price
+            )
         );
     };
 
@@ -100,6 +133,39 @@ export default function EditProductDialog({ open, onClose, onSave, productData }
                     value={editedProductData.description}
                     onChange={handleChange}
                 />
+
+                <Autocomplete
+                    options={categories}
+                    getOptionLabel={(option) => option}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            label="Category"
+                            name="category"
+                            fullWidth
+                            margin="dense"
+                            InputProps={{
+                                ...params.InputProps,
+                                endAdornment: <></>, // Remove the clear and close buttons
+                            }}
+                        />
+                    )}
+                    value={editedProductData.category}
+                    onChange={(event, newValue) => {
+                        if (categories.includes(newValue)) {
+                            setEditedProductData((prevData) => ({
+                                ...prevData,
+                                category: newValue,
+                            }));
+                        } else {
+                            setEditedProductData((prevData) => ({
+                                ...prevData,
+                                category: "",
+                            }));
+                        }
+                    }}
+                    isOptionEqualToValue={(option, value) => option === value} // Ensure equality is based on value matching
+                />
                 <TextField
                     label="Price"
                     name="price"
@@ -111,39 +177,101 @@ export default function EditProductDialog({ open, onClose, onSave, productData }
                 />
                 <TextField
                     label="Stock Quantity"
-                    name="stockQuantity"
+                    name="stock"
                     type="number"
                     fullWidth
                     margin="dense"
-                    value={editedProductData.stockQuantity}
+                    value={editedProductData.stock}
                     onChange={handleChange}
                 />
 
-                <div style={{ marginTop: '20px' }}>
+                <Button variant="outlined" component="label">
+                    Main Image
+                    <input
+                        name="image"
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onChange={(e) =>
+                            setEditedProductData((prevData) => ({
+                                ...prevData,
+                                image: e.target.files[0],
+                            }))
+                        }
+                    />
+                </Button>
+
+                <div style={{ marginTop: "20px" }}>
                     <h4>Màu sắc và hình ảnh</h4>
-                    {editedProductData.colors.map((colorData, index) => (
-                        <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                    {editedProductData.variants.map((colorData, index) => (
+                        <div
+                            key={index}
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "10px",
+                                marginBottom: "10px",
+                            }}
+                        >
                             <TextField
                                 label="Color"
-                                name="color"
+                                name="name"
                                 fullWidth
-                                value={colorData.color}
-                                onChange={(e) => handleColorChange(index, 'color', e.target.value)}
+                                value={colorData.name || ""}
+                                onChange={(e) =>
+                                    handleColorChange(
+                                        index,
+                                        "name",
+                                        e.target.value
+                                    )
+                                }
                             />
-                            <Button
-                                variant="outlined"
-                                component="label"
-                            >
-                                Upload
+
+                            <TextField
+                                label="Price"
+                                name="price"
+                                type="number"
+                                value={colorData.price || ""}
+                                onChange={(e) =>
+                                    handleColorChange(
+                                        index,
+                                        "price",
+                                        e.target.value
+                                    )
+                                }
+                            />
+
+                            <TextField
+                                label="Stock Quantity"
+                                name="stock"
+                                type="number"
+                                value={colorData.stock || ""}
+                                onChange={(e) =>
+                                    handleColorChange(
+                                        index,
+                                        "stock",
+                                        e.target.value
+                                    )
+                                }
+                            />
+                            <Button variant="outlined" component="label">
+                                Image
                                 <input
                                     type="file"
                                     accept="image/*"
                                     hidden
-                                    onChange={(e) => handleImageUpload(index, e.target.files[0])}
+                                    onChange={(e) =>
+                                        handleImageUpload(
+                                            index,
+                                            e.target.files[0]
+                                        )
+                                    }
                                 />
                             </Button>
-                            {colorData.image && <span>{colorData.image.name || 'Current Image'}</span>}
-                            <IconButton color="error" onClick={() => handleRemoveColor(index)}>
+                            <IconButton
+                                color="error"
+                                onClick={() => handleRemoveColor(index)}
+                            >
                                 <RemoveCircle />
                             </IconButton>
                         </div>
@@ -159,8 +287,15 @@ export default function EditProductDialog({ open, onClose, onSave, productData }
                 </div>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} color="secondary">Cancel</Button>
-                <Button onClick={handleSave} color="primary" variant="contained" disabled={!isFormValid()}>
+                <Button onClick={handleClose} color="secondary">
+                    Cancel
+                </Button>
+                <Button
+                    onClick={handleSave}
+                    color="primary"
+                    variant="contained"
+                    disabled={!isFormValid()}
+                >
                     Save
                 </Button>
             </DialogActions>
