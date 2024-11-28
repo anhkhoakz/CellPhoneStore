@@ -52,7 +52,7 @@ export default function ProductsTable() {
     const [selectedProduct, setSelectedProduct] = React.useState(null);
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = React.useState(false); // State for confirm dialog
     const [productToDelete, setProductToDelete] = React.useState(null); // Product selected for deletion
-
+    
     React.useEffect(() => {
         fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/products`)
             .then((response) => response.json())

@@ -15,7 +15,7 @@ import { useEffect } from 'react';
 
 const LoginPage = () => {
     
-    const [cookies, setCookie] = useCookies(['userId']);
+    const [cookies, setCookie] = useCookies([]);
     const navigate = useNavigate();
 
     useEffect(() => {
