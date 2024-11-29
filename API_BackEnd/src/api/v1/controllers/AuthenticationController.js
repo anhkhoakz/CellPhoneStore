@@ -19,9 +19,9 @@ module.exports = {
     getAllUsers: async (req, res, next) => {
         try {
             const users = await User.find();
-            return res.status(200).json({
-                users,
-            });
+
+            console.log('Users:', users);
+            return res.status(200).json({ users });
         } catch (err) {
             next(err);
         }
@@ -199,10 +199,11 @@ module.exports = {
 
             res.cookie('accessToken', accessToken, {
                 maxAge: process.env.COOKIE_TOKEN_EXPIRY,
-                httpOnly: true,
-                // secure: process.env.NODE_ENV === 'production',
+                httpOnly: false,
+                // secure: true,
                 sameSite: 'lax',
             });
+
 
             res.cookie('userId', userId, {
                 maxAge: 365 * 24 * 60 * 60 * 1000,

@@ -13,6 +13,8 @@ const cors = require('cors');
 const createError = require('http-errors');
 const compression = require('compression');
 
+require('dotenv').config();
+
 // connect to database
 database.connect();
 
@@ -33,7 +35,7 @@ app.use(cookieParser());
 app.use(
     // allow all cors
     cors({
-        origin: 'http://localhost:3000',
+        origin: process.env.FRONTEND_URL,
         methods: ['GET', 'POST', 'PATCH', 'DELETE'],
         allowedHeaders: ['Content-Type', 'Authorization'],
         credentials: true,

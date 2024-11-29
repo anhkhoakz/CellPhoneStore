@@ -12,4 +12,6 @@ const {
 router.get('/', combinedAuthMiddleware, cartController.getCart);
 router.post('/', combinedAuthMiddleware, cartController.addToCart);
 
+router.post('/shipping-fee', combinedAuthMiddleware, cartController.getShippingFee);
+
 module.exports = router;

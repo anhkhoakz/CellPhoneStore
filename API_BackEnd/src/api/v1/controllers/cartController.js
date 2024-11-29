@@ -49,6 +49,7 @@ module.exports = {
         }
 
         if (product.variants.length > 0) {
+
             const variant = product.variants.find(
                 (v) => v._id.toString() === variantId,
             );
@@ -117,9 +118,12 @@ module.exports = {
                     { productId, quantity, variantId },
                 ];
             }
+            console.log('Setting cookie with cart:', JSON.stringify(cart));
             res.cookie('cart', JSON.stringify(cart), {
-                httpOnly: true,
+                httpOnly: false,
                 sameSite: 'none',
+                secure: false,
+                maxAge: 365 * 24 * 60 * 60 * 1000,
             });
 
             console.log('Cart saved cookie');
@@ -154,8 +158,7 @@ module.exports = {
 
     async getShippingFee(req, res) {
         const { shippingAddress } = req.body;
-        const districtData = await fs.promises.readFile(
-            './city_district.json',
+        const districtData = await fs.promises.readFile('src/api/v1/controllers/city_district.json', 
             'utf8',
         );
         const districts = JSON.parse(districtData);
@@ -175,11 +178,20 @@ module.exports = {
             if (district) districtId = district.DistrictID;
         }
 
+        if (!districtId) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid address',
+            });
+        }
+
         const data = {
             service_type_id: 2,
             to_district_id: districtId,
             weight: 1000,
         };
+
+        
 
         const vndToUsdRate = 23000;
         const standardVnd = await getShippingFee(data);

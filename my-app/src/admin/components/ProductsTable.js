@@ -52,7 +52,7 @@ export default function ProductsTable() {
     const [selectedProduct, setSelectedProduct] = React.useState(null);
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = React.useState(false); // State for confirm dialog
     const [productToDelete, setProductToDelete] = React.useState(null); // Product selected for deletion
-
+    
     React.useEffect(() => {
         fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/products`)
             .then((response) => response.json())
@@ -176,13 +176,12 @@ export default function ProductsTable() {
     const filteredRows = rows.filter((row) => {
         const matchesStatus =
             status === "all" ||
-            (status === "inStock" && row.stockQuantity > 0) ||
-            (status === "outOfStock" && row.stockQuantity === 0);
+            (status === "inStock" && row.stock > 0) ||
+            (status === "outOfStock" && row.stock === 0);
 
-        const matchesSearch = row.name
-            .toLowerCase()
-            .includes(search.toLowerCase());
-        // || row.productId.toLowerCase().includes(search.toLowerCase());
+        const matchesSearch = row.name?.toLowerCase()
+            .includes(search.toLowerCase()) || row.productId?.toString().includes(search.toLowerCase());
+            ;
 
         return matchesStatus && matchesSearch;
     });

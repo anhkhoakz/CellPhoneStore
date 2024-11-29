@@ -93,6 +93,10 @@ Content-Type: application/json
 DELETE http://localhost:8080/api/v1/users/logout
 Content-Type: application/json
 
+### get user
+GET http://localhost:8080/api/v1/users
+Authorization: Bearer undefined
+
 
 ### pageign products
 GET  http://localhost:8080/api/v1/products/page/
@@ -125,8 +129,20 @@ Content-Type: application/json
 
 {
 
-    "productId": "671b1fda58ec0d68f0625600",
-    "quantity": 324234,
+    "productId": "6746a87e968e3c7eaeb4d9a5",
+    "quantity": 3,
     "variantId": "671b1fda58ec0d68f0625601"
      
 }
+
+### get shipping
+POST  http://localhost:8080/api/v1/cart/shipping-fee
+Content-Type: application/json
+
+{
+    "shippingAddress": {
+        "city": "Bình Dương",
+        "district": "Huyện Dầu Tiếng"
+    }
+}
+

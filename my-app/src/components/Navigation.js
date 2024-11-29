@@ -28,7 +28,7 @@ const Navigation = () => {
             <Toolbar>
                 <IconButton component={Link} to="/" edge="start" color="inherit" aria-label="logo">
                     <img
-                        src="/image/logo.png"
+                        src="/image/logo1.png"
                         alt="Logo"
                         width="300"
                         height="50"

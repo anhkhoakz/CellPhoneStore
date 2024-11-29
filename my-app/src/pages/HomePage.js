@@ -31,6 +31,7 @@ const HomePage = () => {
         },
     ];
 
+
     return (
         <div>
             <TimedBanner /> 

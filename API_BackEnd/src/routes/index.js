@@ -75,7 +75,7 @@ const apiRouter = (app) => {
 
                 res.cookie('accessToken', token, {
                     maxAge: process.env.COOKIE_TOKEN_EXPIRY,
-                    httpOnly: true,
+                    httpOnly: false,
                     // secure: true,
                     sameSite: 'lax',
                 });

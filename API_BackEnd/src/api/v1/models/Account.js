@@ -55,6 +55,15 @@ const userSchema = new mongoose.Schema(
         role: { type: String, enum: userRoles, default: 'customer' },
         resetToken: { type: String, default: null },
         resetTokenExpiry: { type: Date, default: null },
+
+        status: {
+            type: String,
+            enum: ['active', 'inactive'],
+            default: 'active',
+        },
+
+        note: { type: String, trim: true },
+        
         createAt: {
             type: Date,
             default: Date.now,

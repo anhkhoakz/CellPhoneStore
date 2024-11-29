@@ -173,11 +173,13 @@ module.exports = {
             const accessToken = signAccessToken({
                 email: user.email,
                 userId: user._id,
+                role: user.role,
             });
 
             const refreshToken = await createRefreshToken({
                 email: user.email,
                 userId: user._id,
+                role: user.role,
             });
 
             return {
@@ -240,6 +242,7 @@ module.exports = {
             const accessToken = signAccessToken({
                 email: decoded.email,
                 userId: decoded.userId,
+                role: decoded.role,
             });
 
             // const _refreshToken = await createRefreshToken({
