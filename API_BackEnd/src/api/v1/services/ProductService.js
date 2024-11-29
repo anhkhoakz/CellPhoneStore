@@ -1,4 +1,5 @@
 const Product = require('~v1/models/Product');
+const client = require('~/config/elasticsearch');
 
 // /**
 //  * @implements {ProductServiceInterface}
@@ -79,21 +80,67 @@ class ProductService {
             });
         }
 
-        
-
         const result = await Product.create(data);
-        return { code: 201, message: 'Product created successfully', product: result };
+        await this.addProductToIndex(result);
+
+        return {
+            code: 201,
+            message: 'Product created successfully',
+            product: result,
+        };
+    }
+
+    async addProductToIndex(product) {
+        try {
+            const response = await client.index({
+                index: 'products',
+                id: product._id.toString(),
+                body: {
+                    name: product.name,
+                    description: product.description,
+                    category: product.category,
+                    price: product.price,
+                    imageUrl: product.imageUrl,
+                },
+            });
+            console.log('Product indexed:', response);
+        } catch (error) {
+            console.error('Error indexing product:', error);
+            throw new Error('Error indexing product');
+        }
+    }
+
+    async searchProducts(query) {
+        try {
+            const response = await client.search({
+                index: 'products',
+                body: {
+                    query: {
+                        multi_match: {
+                            query: query,
+                            fields: ['name', 'description'],
+                        },
+                    },
+                },
+            });
+            return { status: 200, data: response.body.hits.hits }; // Elasticsearch response
+        } catch (error) {
+            console.error('Error performing search', error);
+            return { status: 500, message: 'Error performing search', error };
+        }
     }
 
     async updateProduct(id, data, files) {
-
         const product = await Product.findOne({ productId: id });
 
         if (!product) {
             return { code: 404, message: 'Product not found' };
         }
 
-        const existing = await Product.findOne({ name: data.name, productId: { $ne: id } });
+        const existing = await Product.findOne({
+            name: data.name,
+            productId: { $ne: id },
+        });
 
         if (existing) {
             return { code: 401, message: 'Product already exists' };
@@ -126,17 +173,20 @@ class ProductService {
             });
         }
 
-        const updatedProduct = await Product.findByIdAndUpdate(product._id, data, {
-            new: true,
-            runValidators: true,
-        });
-    
+        const updatedProduct = await Product.findByIdAndUpdate(
+            product._id,
+            data,
+            {
+                new: true,
+                runValidators: true,
+            },
+        );
+
         if (!updatedProduct) {
             return { code: 500, message: 'Failed to update product' };
         }
 
-        
-        return { code: 200, message: 'Product updated successfully'};
+        return { code: 200, message: 'Product updated successfully' };
     }
 
     async deleteProduct(id) {

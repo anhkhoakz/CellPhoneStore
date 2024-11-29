@@ -13,7 +13,7 @@ const productSchema = new Schema({
         enum: categoryValues,
         required: true,
     },
-    productId: { type: Number,  unique: true},
+    productId: { type: Number, unique: true },
     stock: { type: Number, required: true },
     sold: { type: Number, default: 0 },
 
@@ -42,9 +42,8 @@ const productSchema = new Schema({
 });
 
 productSchema.plugin(mongooseSequence, {
-    inc_field: 'productId',  
-    start_seq: 1,          
+    inc_field: 'productId',
+    start_seq: 1,
 });
-
 
 module.exports = mongoose.model('Product', productSchema);

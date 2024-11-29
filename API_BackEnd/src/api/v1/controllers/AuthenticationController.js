@@ -96,8 +96,6 @@ module.exports = {
 
     verifyGoogleAccount: async (accessToken, refreshToken, profile, cb) => {
         try {
-
-
             const cred = await FederatedCredential.findOne({
                 provider: 'https://accounts.google.com',
                 subject: profile.id,

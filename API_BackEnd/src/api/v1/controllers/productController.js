@@ -36,15 +36,37 @@ class ProductController {
         const data = req.body;
         const files = req.files;
         try {
-            const { code, message, product } = await productService.createProduct(
-                data,
-                files,
-            );
+            const { code, message, product } =
+                await productService.createProduct(data, files);
             res.status(code).json({ message, product });
         } catch (error) {
             res.status(500).json({
                 success: false,
                 message: error.message,
+            });
+        }
+    }
+
+    async searchProducts(req, res) {
+        const { query } = req.query;
+
+        if (!query) {
+            return res
+                .status(400)
+                .json({ message: 'Query parameter is required.' });
+        }
+
+        try {
+            const searchResults = await productService.searchProducts(query);
+            if (searchResults.status === 200) {
+                res.status(200).json(searchResults.data);
+            } else {
+                res.status(searchResults.status).json(searchResults.message);
+            }
+        } catch (error) {
+            res.status(500).json({
+                message: 'Error searching products',
+                error,
             });
         }
     }
@@ -61,7 +83,7 @@ class ProductController {
                 files,
             );
 
-            res.status(code).json({ message: message, data});
+            res.status(code).json({ message: message, data });
         } catch (error) {
             res.status(500).json({
                 message: error.message,
@@ -79,28 +101,28 @@ class ProductController {
         }
     }
 
-    async searchProducts(req, res) {
-        const { q, sort, category, minPrice, maxPrice, minRating, maxRating } =
-            req.query;
+    // async searchProducts(req, res) {
+    //     const { q, sort, category, minPrice, maxPrice, minRating, maxRating } =
+    //         req.query;
 
-        try {
-            const products = await productService.searchProducts({
-                q,
-                sort,
-                category,
-                minPrice,
-                maxPrice,
-                minRating,
-                maxRating,
-            });
-            res.status(200).json({ success: true, products });
-        } catch (error) {
-            res.status(500).json({
-                success: false,
-                message: error.message,
-            });
-        }
-    }
+    //     try {
+    //         const products = await productService.searchProducts({
+    //             q,
+    //             sort,
+    //             category,
+    //             minPrice,
+    //             maxPrice,
+    //             minRating,
+    //             maxRating,
+    //         });
+    //         res.status(200).json({ success: true, products });
+    //     } catch (error) {
+    //         res.status(500).json({
+    //             success: false,
+    //             message: error.message,
+    //         });
+    //     }
+    // }
 }
 
 module.exports = new ProductController();

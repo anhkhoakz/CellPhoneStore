@@ -25,6 +25,8 @@ router.get('/page/', ProductController.List);
 
 router.get('/:id', ProductController.getProductById);
 
+router.get('/search', ProductController.searchProducts);
+
 router.get('/:category', ProductController.getProductsByCategory);
 
 router.post(
@@ -34,7 +36,12 @@ router.post(
     ProductController.createProduct,
 );
 
-router.patch('/:id', upload.any(), checkProuductValidation,ProductController.updateProduct);
+router.patch(
+    '/:id',
+    upload.any(),
+    checkProuductValidation,
+    ProductController.updateProduct,
+);
 
 router.delete('/:id', ProductController.deleteProduct);
 

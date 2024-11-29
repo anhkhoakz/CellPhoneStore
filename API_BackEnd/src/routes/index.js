@@ -4,7 +4,6 @@ const apiRouter_v1 = require('./v1');
 
 const User = require('~v1/models/Account');
 
-
 const AuthenticationController = require('~v1/controllers/AuthenticationController');
 
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
@@ -49,7 +48,6 @@ const apiRouter = (app) => {
     console.log('API Router');
     app.get('/login/google', passport.authenticate('google'));
 
-    
     app.get(
         '/oauth2/redirect/google',
         passport.authenticate('google', {
@@ -82,11 +80,8 @@ const apiRouter = (app) => {
                     sameSite: 'lax',
                 });
 
-
-
                 // res.status(200).json({ message: token });
                 res.redirect(`${process.env.FRONTEND_URL}`);
-
             } catch (error) {
                 // res.status(500).json({ error: error.message });
                 res.redirect(`${process.env.FRONTEND_URL}/login/error`);

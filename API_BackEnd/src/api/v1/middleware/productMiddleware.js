@@ -5,12 +5,11 @@ const checkProuductValidation = (req, res, next) => {
 
     // Check if the main image exists in req.files (which is an array)
 
-
     const hasMainImage =
-        (req.files && req.files.some((file) => file.fieldname === 'image') || image);
+        (req.files && req.files.some((file) => file.fieldname === 'image')) ||
+        image;
 
     if (!name || !price || !category || !stock || !hasMainImage) {
-
         console.log(name, price, category, stock, hasMainImage);
         return res.status(400).json({
             message: 'All fields including the main image are required',
@@ -51,26 +50,29 @@ const checkProuductValidation = (req, res, next) => {
         for (const variant of variants) {
             const { name, stock, price } = variant;
 
-
-
             if (!name || !stock || !price) {
-                return res
-                    .status(400)
-                    .json({ message: 'Name, stock, and price are required' , variant});
+                return res.status(400).json({
+                    message: 'Name, stock, and price are required',
+                    variant,
+                });
             }
 
             if (!validator.isLength(name, { min: 1, max: 255 })) {
-                return res
-                    .status(400)
-                    .json({ message: 'Name must be between 1 and 255 characters' });
+                return res.status(400).json({
+                    message: 'Name must be between 1 and 255 characters',
+                });
             }
 
             if (!validator.isNumeric(stock)) {
-                return res.status(400).json({ message: 'Stock must be a number' });
+                return res
+                    .status(400)
+                    .json({ message: 'Stock must be a number' });
             }
 
             if (!validator.isNumeric(price)) {
-                return res.status(400).json({ message: 'Price must be a number' });
+                return res
+                    .status(400)
+                    .json({ message: 'Price must be a number' });
             }
         }
     }
