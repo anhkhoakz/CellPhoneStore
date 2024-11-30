@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AppBar, Toolbar, IconButton, Typography, InputBase, Box, Drawer, List, ListItem, ListItemText } from "@mui/material";
-import { Search as SearchIcon, Menu as MenuIcon } from "@mui/icons-material";
+import { AppBar, Toolbar, IconButton, Typography, InputBase, Box, Drawer, List, ListItem, ListItemText, Menu, MenuItem } from "@mui/material";
+import { Search as SearchIcon, Menu as MenuIcon, Person as PersonIcon, ExitToApp as ExitToAppIcon } from "@mui/icons-material"; // Thêm các icon cần thiết
 
 const Navigation = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null); 
+    const [isLoggedIn, setIsLoggedIn] = useState(false); 
     const navigate = useNavigate();
 
     const handleSearch = (e) => {
@@ -21,6 +23,21 @@ const Navigation = () => {
             return;
         }
         setIsDrawerOpen(open);
+    };
+
+    const handleMenuOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleLogout = () => {
+        setIsLoggedIn(false); // Đánh dấu người dùng đã đăng xuất
+        setAnchorEl(null);
+        // Điều hướng đến trang đăng nhập hoặc trang chủ
+        navigate("/login");
     };
 
     return (
@@ -71,10 +88,39 @@ const Navigation = () => {
                         <i className="bi bi-cart"></i>
                         <Typography variant="body2" sx={{ ml: 1 }}>Cart</Typography>
                     </IconButton>
-                    <IconButton component={Link} to="/login" color="inherit">
-                        <i className="bi bi-person-circle"></i>
-                        <Typography variant="body2" sx={{ ml: 1 }}>Login</Typography>
-                    </IconButton>
+
+                    {/* Nếu đã đăng nhập thì hiển thị menu Profile */}
+                    {isLoggedIn ? (
+                        <div>
+                            <IconButton 
+                                color="inherit" 
+                                onClick={handleMenuOpen} 
+                                sx={{ display: 'flex', alignItems: 'center' }}
+                            >
+                                <PersonIcon />
+                                <Typography variant="body2" sx={{ ml: 1 }}>Profile</Typography>
+                            </IconButton>
+                            <Menu
+                                anchorEl={anchorEl}
+                                open={Boolean(anchorEl)}
+                                onClose={handleMenuClose}
+                            >
+                                <MenuItem component={Link} to="/profile" onClick={handleMenuClose}>
+                                    <PersonIcon sx={{ mr: 2 }} /> {/* Thêm biểu tượng Profile */}
+                                    Profile Manage
+                                </MenuItem>
+                                <MenuItem onClick={handleLogout}>
+                                    <ExitToAppIcon sx={{ mr: 2 }} /> {/* Thêm biểu tượng Logout */}
+                                    Logout
+                                </MenuItem>
+                            </Menu>
+                        </div>
+                    ) : (
+                        <IconButton component={Link} to="/login" color="inherit">
+                            <i className="bi bi-person-circle"></i>
+                            <Typography variant="body2" sx={{ ml: 1 }}>Login</Typography>
+                        </IconButton>
+                    )}
                 </Box>
 
                 <IconButton
@@ -122,9 +168,17 @@ const Navigation = () => {
                             <ListItem button component={Link} to="/cart" onClick={toggleDrawer(false)}>
                                 <ListItemText primary="Cart" />
                             </ListItem>
-                            <ListItem button component={Link} to="/login" onClick={toggleDrawer(false)}>
-                                <ListItemText primary="Login" />
-                            </ListItem>
+                            {isLoggedIn ? (
+                                <ListItem button onClick={handleLogout}>
+                                    <ExitToAppIcon sx={{ mr: 2 }} /> {/* Biểu tượng Logout */}
+                                    <ListItemText primary="Logout" />
+                                </ListItem>
+                            ) : (
+                                <ListItem button component={Link} to="/login" onClick={toggleDrawer(false)}>
+                                    <PersonIcon sx={{ mr: 2 }} /> {/* Biểu tượng Login */}
+                                    <ListItemText primary="Login" />
+                                </ListItem>
+                            )}
                         </List>
                     </Box>
                 </Drawer>

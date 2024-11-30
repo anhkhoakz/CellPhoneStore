@@ -1,58 +1,43 @@
+// src/components/Summary.js
 import React, { useState } from "react";
 import { TextField, Select, MenuItem, InputLabel, FormControl, Button, Typography, Box } from "@mui/material";
+import LoggedCustomerInfo from "./LoggedCustomerInfo"; // Import LoggedCustomerInfo
 
 const Summary = ({ subtotal, total, shipping, setShipping }) => {
-    const [name, setName] = useState("");
-    const [phone, setPhone] = useState("");
-    const [address, setAddress] = useState("");
+    // Customer state
+    const [name] = useState("John Doe"); // Example name (read-only)
+    const [phone, setPhone] = useState("+1 234 567 890"); // Example phone number (editable)
+    const [savedAddresses] = useState([
+        "123 Main St, City A",
+        "456 Oak St, City B",
+        "789 Pine St, City C",
+    ]); // Example list of saved addresses
+    const [selectedAddress, setSelectedAddress] = useState(savedAddresses[0]); // Default selected address
+
+    // Shipping state
+    const [shippingCost, setShippingCost] = useState(shipping);
 
     const handleSubmit = () => {
-        console.log("Customer Information:", { name, phone, address });
-        console.log("Shipping:", shipping);
+        console.log("Customer Information:", { name, phone, selectedAddress });
+        console.log("Shipping:", shippingCost);
         console.log("Total Price:", total);
     };
 
     return (
         <Box className="p-5">
-            <Typography variant="h5" component="h3" gutterBottom>
-                Customer Information
-            </Typography>
-
-            <TextField
-                fullWidth
-                variant="outlined"
-                label="Full Name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                margin="normal"
-            />
-
-            <TextField
-                fullWidth
-                variant="outlined"
-                label="Phone Number"
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                required
-                margin="normal"
-            />
-
-            <TextField
-                fullWidth
-                variant="outlined"
-                label="Shipping Address"
-                multiline
-                rows={3}
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                required
-                margin="normal"
+            {/* Logged customer info */}
+            <LoggedCustomerInfo
+                name={name}
+                phone={phone}
+                setPhone={setPhone}
+                savedAddresses={savedAddresses}
+                selectedAddress={selectedAddress}
+                setSelectedAddress={setSelectedAddress}
             />
 
             <hr className="my-4" />
 
+            {/* Summary Section */}
             <Typography variant="h5" component="h3" gutterBottom>
                 Summary
             </Typography>
@@ -63,8 +48,8 @@ const Summary = ({ subtotal, total, shipping, setShipping }) => {
             <FormControl fullWidth variant="outlined" margin="normal">
                 <InputLabel>Delivery Method</InputLabel>
                 <Select
-                    value={shipping}
-                    onChange={(e) => setShipping(Number(e.target.value))}
+                    value={shippingCost}
+                    onChange={(e) => setShippingCost(Number(e.target.value))}
                     label="Delivery Method"
                 >
                     <MenuItem value={5}>Standard Delivery - $5.00</MenuItem>
@@ -96,6 +81,7 @@ const Summary = ({ subtotal, total, shipping, setShipping }) => {
                 color="success"
                 onClick={handleSubmit}
                 sx={{ fontWeight: "bold", width: "100%" }}
+                href="/success"
             >
                 Register
             </Button>

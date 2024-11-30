@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Container, Typography, Paper } from '@mui/material';
+import { Container, Typography, Paper, Box } from '@mui/material';
 import OrderCard from "../components/OrderCard";
 import SearchBar from "../components/SearchBar";
 import OrderEmpty from "../components/OrderEmpty";
@@ -71,8 +71,8 @@ const OrderManagementPage = () => {
     const deliveredOrders = filteredByStatus.filter(order => order.status === 'Delivered');
 
     return (
-        <Container sx={{minHeight: "90vh"}}>
-            <Typography sx={{margin: "20px 0"}} variant="h4" align="center" gutterBottom>
+        <Container sx={{minHeight: "90vh", paddingTop: 4, paddingBottom: 4 }}>
+            <Typography sx={{margin: "20px 0", fontWeight: 'bold'}} variant="h4" align="center" gutterBottom>
                 Order Management
             </Typography>
             <SearchBar onSearch={handleSearch} onStatusChange={handleStatusChange} />
@@ -82,8 +82,8 @@ const OrderManagementPage = () => {
             ) : (
                 <>
                     {(statusFilter === 'All' || statusFilter === 'In Transit') && (
-                        <Paper style={{ padding: '16px', margin: '16px 0' }}>
-                            <Typography variant="h5" gutterBottom>
+                        <Paper sx={{ padding: 3, margin: '16px 0', backgroundColor: '#e8f5e9', borderRadius: 2 }}>
+                            <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', color: '#388e3c' }}>
                                 In Transit Orders
                             </Typography>
                             {inTransitOrders.length > 0 ? (
@@ -91,14 +91,14 @@ const OrderManagementPage = () => {
                                     <OrderCard key={order.id} order={order} />
                                 ))
                             ) : (
-                                <Typography align="center">No orders in transit.</Typography>
+                                <Typography align="center" color="textSecondary">No orders in transit.</Typography>
                             )}
                         </Paper>
                     )}
 
                     {(statusFilter === 'All' || statusFilter === 'Delivered') && (
-                        <Paper style={{ padding: '16px', margin: '16px 0' }}>
-                            <Typography variant="h5" gutterBottom>
+                        <Paper sx={{ padding: 3, margin: '16px 0', backgroundColor: '#fff3e0', borderRadius: 2 }}>
+                            <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', color: '#f57c00' }}>
                                 Delivered Orders
                             </Typography>
                             {deliveredOrders.length > 0 ? (
@@ -106,7 +106,7 @@ const OrderManagementPage = () => {
                                     <OrderCard key={order.id} order={order} />
                                 ))
                             ) : (
-                                <Typography align="center">No delivered orders.</Typography>
+                                <Typography align="center" color="textSecondary">No delivered orders.</Typography>
                             )}
                         </Paper>
                     )}

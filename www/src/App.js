@@ -14,10 +14,10 @@ import ProductDetailPage from './pages/ProductDetailPage';
 import OrderSuccessPage from './pages/OrderSuccessPage';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import SearchPage from './pages/SearchPage';
-import Page404 from './pages/Page404';
-import Page403 from './pages/Page403';
-import Profile from './pages/UserProfilePage'
-
+import Error404 from './pages/Error404';
+import Error403 from './pages/Error403';
+import Profile from './pages/UserProfilePage';
+import OtpPage from './pages/OTPPage';
 import AdminRoutes from './admin/AdminRoutes';
 
 function App() {
@@ -25,7 +25,7 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          {/* Routes cho người dùng */}
+          {/* Routes for the user */}
           <Route
             path="/*"
             element={
@@ -35,8 +35,6 @@ function App() {
                 <main>
                   <Routes>
                     <Route path="/" element={<HomePage />} />
-
-
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/orderManagement" element={<OrderManagementPage />} />
                     <Route path="/cart" element={<CartPage />} />
@@ -44,18 +42,17 @@ function App() {
                     <Route path="/product/:id" element={<ProductDetailPage />} />
                     <Route path="/success" element={<OrderSuccessPage />} />
                     <Route path="/search" element={<SearchPage />} />
-                    <Route path="/404" element={<Page404 />} />
-                    <Route path="/403" element={<Page403 />} />
-
                     <Route path="/profile" element={<Profile />} />
+                    <Route path="/verify" element={<OtpPage />} />
+                    <Route path="/*" element={<Error404 />} />
+                    <Route path="/403" element={<Error403 />} />
                   </Routes>
                 </main>
                 <Footer />
               </>
             }
           />
-
-          {/* Routes cho admin */}
+          
           <Route path="/admin/*" element={<AdminRoutes />} />
         </Routes>
       </div>

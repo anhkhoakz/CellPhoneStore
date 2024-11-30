@@ -3,8 +3,8 @@ import ProductNotFound from "../components/ProductNotFound";
 import { useParams } from "react-router-dom";
 import ProductList from "../components/ProductList";
 import { Box, Typography, Button, Grid, Divider, TextField, MenuItem } from "@mui/material";
-import Comment from "../components/Comment";
-import ShowComment from "../components/ShowComment";
+import ToastNoti from "../components/ToastNoti";
+import CommentsSection from "../components/CommentSection"; 
 
 const ProductDetailPage = () => {
   const product = {
@@ -29,19 +29,10 @@ const ProductDetailPage = () => {
   ];
 
   const { id } = useParams();
-  const [selectedColor, setSelectedColor] = useState(product.colors[0]); // Màu mặc định
-  const [comments, setComments] = useState([
-    {
-      username: "John Doe",
-      content: "Great product! I love it!",
-      date: "2024-11-05T12:00:00Z",
-    },
-    {
-      username: "Jane Smith",
-      content: "Good value for money, but could be better in some aspects.",
-      date: "2024-11-04T08:30:00Z",
-    },
-  ]);
+  const [selectedColor, setSelectedColor] = useState(product.colors[0]); // Default color
+
+  // This should be at the top, outside of any conditional or function
+  const [showToast, setShowToast] = useState(false);
 
   if (parseInt(id) !== product.id) {
     return <ProductNotFound />;
@@ -52,13 +43,14 @@ const ProductDetailPage = () => {
     setSelectedColor(color);
   };
 
-  const handleSubmitComment = (newCommentContent) => {
-    const newComment = {
-      username: "Current User", 
-      content: newCommentContent,
-      date: new Date().toISOString(),
-    };
-    setComments([newComment, ...comments]); 
+  const handleAddToCart = () => {
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000); // Hide toast after 3 seconds
+  };
+
+  const handleSubmitComment = (newComment) => {
+    // You can handle this to notify parent or log, or any other purpose
+    console.log("New comment submitted: ", newComment);
   };
 
   return (
@@ -129,7 +121,7 @@ const ProductDetailPage = () => {
               <Button variant="contained" color="success" sx={{ mr: 2 }}>
                 Buy now
               </Button>
-              <Button variant="contained" color="primary">
+              <Button variant="contained" color="primary" onClick={handleAddToCart}>
                 Add to cart
               </Button>
             </Box>
@@ -143,11 +135,25 @@ const ProductDetailPage = () => {
 
       {/* Comments Section */}
       <Box sx={{ marginTop: 5, maxWidth: "70%", margin: "20px auto" }}>
-        <Comment onSubmitComment={handleSubmitComment} />
-        {comments.map((comment, index) => (
-          <ShowComment key={index} comment={comment} />
-        ))}
+        <CommentsSection 
+          initialComments={[
+            {
+              username: "John Doe",
+              content: "Great product! I love it!",
+              date: "2024-11-05T12:00:00Z",
+            },
+            {
+              username: "Jane Smith",
+              content: "Good value for money, but could be better in some aspects.",
+              date: "2024-11-04T08:30:00Z",
+            },
+          ]}
+          onSubmitComment={handleSubmitComment}
+        />
       </Box>
+
+      {/* Toast Notification */}
+      {showToast && <ToastNoti message="The product has been added to the cart!" type="success" position="top-right" autoClose={3000} />}
     </Box>
   );
 };

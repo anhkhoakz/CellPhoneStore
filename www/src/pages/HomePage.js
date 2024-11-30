@@ -35,7 +35,6 @@ const HomePage = () => {
     return (
         <div>
             <TimedBanner /> 
-            <ProductList title="SALE PRODUCTS" products={products} />
             <ProductList title="HOT PRODUCTS" products={products} />
             <ProductList title="NEW PRODUCTS" products={products} />
         </div>

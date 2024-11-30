@@ -1,6 +1,6 @@
-// src/components/Register.js
 import React, { useState } from "react";
-import { Box, Button, TextField, Typography, Link } from "@mui/material";
+import { Box, Button, TextField, Typography, Link, IconButton } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const Register = () => {
     const [name, setName] = useState("");
@@ -10,14 +10,41 @@ const Register = () => {
 
     const [errorMessages, setErrorMessages] = useState("");
 
+    // State for showing/hiding passwords
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+    // Validation functions
+    const validateEmail = (email) => {
+        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return regex.test(email);
+    };
+
+    const validatePassword = (password) => {
+        return password.length >= 6;
+    };
+
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log("Name:", name);
-        console.log("Email:", email);
-        console.log("Password:", password);
-        // Xử lý đăng ký ở đây
+        setErrorMessages(""); // Clear any previous error messages
 
-        // Gọi API để đăng ký
+        // Validate fields
+        if (!validateEmail(email)) {
+            setErrorMessages("Please enter a valid email address.");
+            return;
+        }
+
+        if (!validatePassword(password)) {
+            setErrorMessages("Password must be at least 6 characters long.");
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            setErrorMessages("Passwords do not match.");
+            return;
+        }
+
+        // Proceed with the registration API call
         fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users/register`, {
             method: "POST",
             headers: {
@@ -32,15 +59,11 @@ const Register = () => {
         })
             .then((response) => response.json())
             .then((data) => {
-
                 if (data.code !== 201) {
-                    console.log("Error:", data);
                     setErrorMessages(data.message);
                     return;
                 }
-                
                 alert("Register success");
-
             })
             .catch((error) => {
                 console.error("Error:", error);
@@ -73,22 +96,50 @@ const Register = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                error={!validateEmail(email) && email.length > 0}
+                helperText={!validateEmail(email) && email.length > 0 ? "Invalid email format" : ""}
             />
             <TextField
                 label="Password"
                 variant="outlined"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                error={password && !validatePassword(password)}
+                helperText={password && !validatePassword(password) ? "Password must be at least 6 characters" : ""}
+                InputProps={{
+                    endAdornment: (
+                        <IconButton
+                            onClick={() => setShowPassword((prev) => !prev)}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                        >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                    ),
+                }}
             />
             <TextField
                 label="Confirm Password"
                 variant="outlined"
-                type="password"
+                type={showConfirmPassword ? "text" : "password"}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
+                error={confirmPassword && confirmPassword !== password}
+                helperText={confirmPassword && confirmPassword !== password ? "Passwords do not match" : ""}
+                InputProps={{
+                    endAdornment: (
+                        <IconButton
+                            onClick={() => setShowConfirmPassword((prev) => !prev)}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                        >
+                            {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                    ),
+                }}
             />
 
             {errorMessages && (

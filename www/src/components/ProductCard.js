@@ -1,39 +1,38 @@
 import React from "react";
-import { Card, CardMedia, CardContent, CardActions, Button, Typography } from "@mui/material";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { Card, CardMedia, CardContent, Typography } from "@mui/material";
+import { Link } from "react-router-dom"; // Import Link từ react-router-dom để điều hướng
 
 const ProductCard = ({ product }) => {
     return (
-        <Card sx={{ maxWidth: 345, boxShadow: 3, margin: 'auto' }}>
+        <Card sx={{ width: 200, height: 350, boxShadow: 3, margin: 'auto' }}>
             <CardMedia
                 component="img"
-                height="200"
+                height="250"
                 image={product.image}
                 alt={product.name}
             />
             <CardContent>
-                <Typography variant="h5" component="div">
-                    {product.name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Link 
+                    to={`/product/${product.id}`}  // Đảm bảo bạn có route cho chi tiết sản phẩm
+                    style={{ textDecoration: 'none' }}
+                >
+                    <Typography 
+                        variant="h6" 
+                        component="div" 
+                        sx={{ 
+                            textAlign: 'left', 
+                            fontSize: '20px', 
+                            '&:hover': { cursor: 'pointer' }, 
+                        }} 
+                        data-id={product.id} 
+                    >
+                        {product.name}
+                    </Typography>
+                </Link>
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '18px', textAlign:'left' }}>
                     ${product.price}
                 </Typography>
             </CardContent>
-            <CardActions sx={{ justifyContent: 'space-between' }}>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<ShoppingCartIcon />}
-                >
-                    Add to cart
-                </Button>
-                <Button
-                    variant="contained"
-                    color="success"
-                >
-                    Buy Now
-                </Button>
-            </CardActions>
         </Card>
     );
 };
