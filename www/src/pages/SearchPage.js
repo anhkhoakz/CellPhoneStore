@@ -78,7 +78,7 @@ const SearchPage = () => {
     }
 
     setResults(filteredResults);
-    // eslint-disable-next-line 
+     
   }, [location.search, filter, sort]);
 
   return (
