@@ -19,7 +19,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 	fontWeight: 600,
 	backgroundColor: theme.palette.primary.light,
 	color: theme.palette.primary.contrastText,
-	padding: "16px",
+	padding: "1em",
 	textAlign: "center",
 }));
 
@@ -153,11 +153,11 @@ export default function DiscountsTable() {
 									{columns.map((column) => {
 										const value = row[column.id];
 										return column.id === "discountValue" ? (
-											<TableCell key={column.id} align="center" style={{ padding: "16px" }}>
+											<TableCell key={column.id} align="center" style={{ padding: "1em" }}>
 												{value}
 											</TableCell>
 										) : column.id === "actions" ? (
-											<TableCell key={column.id} align="center" style={{ padding: "16px" }}>
+											<TableCell key={column.id} align="center" style={{ padding: "1em" }}>
 												<IconButton
 													aria-label="edit"
 													color="primary"
@@ -174,7 +174,7 @@ export default function DiscountsTable() {
 												</IconButton>
 											</TableCell>
 										) : (
-											<TableCell key={column.id} align="center" style={{ padding: "16px" }}>
+											<TableCell key={column.id} align="center" style={{ padding: "1em" }}>
 												{value}
 											</TableCell>
 										);
