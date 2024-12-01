@@ -16,6 +16,7 @@ const instance = axios.create({
 const methods = ["get", "post", "put", "delete"];
 
 const http = {};
+
 methods.forEach((method) => {
 	http[method] = (url, data, config) => {
 		return instance[method](url, data, config);
