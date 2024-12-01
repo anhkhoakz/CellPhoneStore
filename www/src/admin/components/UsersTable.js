@@ -20,7 +20,6 @@ import AddUserDialog from "../components/modal/AddUserDialog";
 import EditUserDialog from "../components/modal/EditUserDialog";
 import LockReasonDialog from "../components/modal/LockReasonDialog";
 import { useCookies } from "react-cookie";
-
 import { useNavigate } from "react-router-dom";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -40,13 +39,13 @@ const StyledTableRow = styled(TableRow)(({ theme, isEven }) => ({
 
 const columns = [
 	{ id: "_id", label: "User ID", minWidth: 150 },
-	{ id: "username", label: "Tên", minWidth: 150 },
+	{ id: "username", label: "Name", minWidth: 150 },
 	{ id: "email", label: "Email", minWidth: 150 },
-	{ id: "phone", label: "Số điện thoại", minWidth: 150 },
-	{ id: "note", label: "Ghi chú (Lý do khóa tài khoản)", minWidth: 170 },
-	{ id: "createAt", label: "Ngày tạo tài khoản", minWidth: 150 },
-	{ id: "status", label: "Thay đổi trạng thái", minWidth: 150 },
-	{ id: "edit", label: "Chỉnh sửa", minWidth: 100 },
+	{ id: "phone", label: "Phone Number", minWidth: 150 },
+	{ id: "note", label: "Note", minWidth: 170 },
+	{ id: "createAt", label: "Created date", minWidth: 150 },
+	{ id: "status", label: "Status", minWidth: 150 },
+	{ id: "edit", label: "Edit", minWidth: 100 },
 ];
 
 export default function UsersTable() {
@@ -55,18 +54,18 @@ export default function UsersTable() {
 	const [rowsPerPage, setRowsPerPage] = React.useState(10);
 	const [search, setSearch] = React.useState("");
 	const [status, setStatus] = React.useState("all");
-	const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false);
-	const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false);
-	const [isLockReasonDialogOpen, setIsLockReasonDialogOpen] = React.useState(false);
-	const [selectedUser, setSelectedUser] = React.useState(null);
-	const [selectedUserIndex, setSelectedUserIndex] = React.useState(null);
+	const [dialogState, setDialogState] = React.useState({
+		isAddDialogOpen: false,
+		isEditDialogOpen: false,
+		isLockReasonDialogOpen: false,
+		selectedUser: null,
+		selectedUserIndex: null,
+	});
 
 	const navigate = useNavigate();
-
 	const [cookies] = useCookies(["accessToken"]);
 
 	React.useEffect(() => {
-		console.log("cookies.accessToken:", cookies.accessToken);
 		fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users`, {
 			method: "GET",
 			credentials: "include",
@@ -86,21 +85,14 @@ export default function UsersTable() {
 					navigate("/login");
 					return;
 				}
-
-				console.log("Data:", data.users);
-
-				const rows = data.users;
-				setRows(rows);
+				setRows(data.users);
 			})
 			.catch((error) => {
 				console.error("Error:", error);
 			});
-	}, []);
+	}, [cookies.accessToken, navigate]);
 
-	const handleChangePage = (event, newPage) => {
-		setPage(newPage);
-	};
-
+	const handleChangePage = (event, newPage) => setPage(newPage);
 	const handleChangeRowsPerPage = (event) => {
 		setRowsPerPage(+event.target.value);
 		setPage(0);
@@ -111,8 +103,11 @@ export default function UsersTable() {
 		const updatedRows = [...rows];
 
 		if (newStatus === "Đã khóa" && updatedRows[index].userStatus === "Hoạt động") {
-			setSelectedUserIndex(index);
-			setIsLockReasonDialogOpen(true);
+			setDialogState((prevState) => ({
+				...prevState,
+				selectedUserIndex: index,
+				isLockReasonDialogOpen: true,
+			}));
 		} else {
 			updatedRows[index].userStatus = newStatus;
 			setRows(updatedRows);
@@ -121,36 +116,24 @@ export default function UsersTable() {
 
 	const handleEditClick = (userId) => {
 		const userToEdit = rows.find((row) => row.userId === userId);
-		setSelectedUser(userToEdit);
-		setIsEditDialogOpen(true);
+		setDialogState((prevState) => ({
+			...prevState,
+			selectedUser: userToEdit,
+			isEditDialogOpen: true,
+		}));
 	};
 
-	const handleSearchChange = (value) => {
-		setSearch(value);
-	};
-
-	const handleStatusChange = (value) => {
-		setStatus(value);
-	};
-
-	const handleOpenAddDialog = () => {
-		setIsAddDialogOpen(true);
-	};
-
-	const handleCloseAddDialog = () => {
-		setIsAddDialogOpen(false);
-	};
-
+	const handleSearchChange = (value) => setSearch(value);
+	const handleStatusChange = (value) => setStatus(value);
+	const handleOpenAddDialog = () => setDialogState((prevState) => ({ ...prevState, isAddDialogOpen: true }));
+	const handleCloseAddDialog = () => setDialogState((prevState) => ({ ...prevState, isAddDialogOpen: false }));
 	const handleSaveNewUser = (newUser) => {
 		setRows((prevRows) => [...prevRows, newUser]);
 		handleCloseAddDialog();
 	};
 
-	const handleCloseEditDialog = () => {
-		setIsEditDialogOpen(false);
-		setSelectedUser(null);
-	};
-
+	const handleCloseEditDialog = () =>
+		setDialogState((prevState) => ({ ...prevState, isEditDialogOpen: false, selectedUser: null }));
 	const handleSaveEditedUser = (updatedUser) => {
 		setRows((prevRows) => prevRows.map((row) => (row.userId === updatedUser.userId ? updatedUser : row)));
 		handleCloseEditDialog();
@@ -158,15 +141,14 @@ export default function UsersTable() {
 
 	const handleSaveLockReason = (reason) => {
 		const updatedRows = [...rows];
-		updatedRows[selectedUserIndex].userStatus = "Đã khóa";
-		updatedRows[selectedUserIndex].note = reason;
+		updatedRows[dialogState.selectedUserIndex].userStatus = "Đã khóa";
+		updatedRows[dialogState.selectedUserIndex].note = reason;
 		setRows(updatedRows);
-		setIsLockReasonDialogOpen(false);
+		setDialogState((prevState) => ({ ...prevState, isLockReasonDialogOpen: false }));
 	};
 
-	const handleCloseLockReasonDialog = () => {
-		setIsLockReasonDialogOpen(false);
-	};
+	const handleCloseLockReasonDialog = () =>
+		setDialogState((prevState) => ({ ...prevState, isLockReasonDialogOpen: false }));
 
 	const filteredRows = rows.filter((row) => {
 		const matchesSearch =
@@ -278,17 +260,21 @@ export default function UsersTable() {
 				onRowsPerPageChange={handleChangeRowsPerPage}
 			/>
 
-			<AddUserDialog open={isAddDialogOpen} onClose={handleCloseAddDialog} onSave={handleSaveNewUser} />
+			<AddUserDialog
+				open={dialogState.isAddDialogOpen}
+				onClose={handleCloseAddDialog}
+				onSave={handleSaveNewUser}
+			/>
 
 			<EditUserDialog
-				open={isEditDialogOpen}
+				open={dialogState.isEditDialogOpen}
 				onClose={handleCloseEditDialog}
 				onSave={handleSaveEditedUser}
-				userData={selectedUser}
+				userData={dialogState.selectedUser}
 			/>
 
 			<LockReasonDialog
-				open={isLockReasonDialogOpen}
+				open={dialogState.isLockReasonDialogOpen}
 				onClose={handleCloseLockReasonDialog}
 				onSave={handleSaveLockReason}
 			/>

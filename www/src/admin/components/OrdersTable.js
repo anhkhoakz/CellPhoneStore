@@ -18,7 +18,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 	fontWeight: 600,
 	backgroundColor: theme.palette.primary.light,
 	color: theme.palette.primary.contrastText,
-	padding: "1em",
+	padding: "16px",
 	textAlign: "center",
 }));
 
@@ -40,7 +40,7 @@ const StatusTableCell = styled(TableCell)(({ theme, status }) => ({
 			? "#FF9800"
 			: theme.palette.text.primary,
 	fontWeight: "bold",
-	padding: "1em",
+	padding: "16px",
 }));
 
 const columns = [
@@ -107,24 +107,27 @@ export default function OrdersTable() {
 			setIsCanceledReasonDialogOpen(true);
 			setSelectedOrderId(orderId);
 		} else {
-			const orderIndex = updatedRows.findIndex((order) => order.orderId === orderId);
-			if (orderIndex !== -1) {
-				updatedRows[orderIndex].orderStatus = newStatus;
-				setRows(updatedRows);
-			}
+			updateOrderStatus(updatedRows, orderId, newStatus);
+		}
+	};
+
+	const updateOrderStatus = (updatedRows, orderId, newStatus) => {
+		const orderIndex = updatedRows.findIndex((order) => order.orderId === orderId);
+		if (orderIndex !== -1) {
+			updatedRows[orderIndex].orderStatus = newStatus;
+			setRows(updatedRows);
 		}
 	};
 
 	const handleSaveCanceledReason = (reason) => {
 		if (selectedOrderId) {
 			const updatedRows = [...rows];
+			updateOrderStatus(updatedRows, selectedOrderId, "Canceled");
 			const orderIndex = updatedRows.findIndex((order) => order.orderId === selectedOrderId);
-
 			if (orderIndex !== -1) {
-				updatedRows[orderIndex].orderStatus = "Canceled";
 				updatedRows[orderIndex].cancelReason = reason;
-				setRows(updatedRows);
 			}
+			setRows(updatedRows);
 		}
 		setIsCanceledReasonDialogOpen(false);
 		setSelectedOrderId(null);
@@ -161,49 +164,52 @@ export default function OrdersTable() {
 		setSelectedOrder(null);
 	};
 
-	const filteredRows = rows.filter((row) => {
-		const matchesStatus = status === "all" || row.orderStatus === status;
-		const matchesSearch =
-			row.customerName.toLowerCase().includes(search.toLowerCase()) ||
-			row.orderId.toLowerCase().includes(search.toLowerCase());
+	const filterRows = (rows, search, status, dateRange, customStartDate, customEndDate) => {
+		return rows.filter((row) => {
+			const matchesStatus = status === "all" || row.orderStatus === status;
+			const matchesSearch =
+				row.customerName.toLowerCase().includes(search.toLowerCase()) ||
+				row.orderId.toLowerCase().includes(search.toLowerCase());
 
-		// Date Filtering Logic
-		let matchesDateRange = true;
-		const orderDate = new Date(row.orderDate);
+			let matchesDateRange = true;
+			const orderDate = new Date(row.orderDate);
 
-		if (dateRange === "all") {
-		} else if (dateRange === "today") {
-			const today = new Date();
-			matchesDateRange = orderDate.toDateString() === today.toDateString();
-		} else if (dateRange === "yesterday") {
-			const yesterday = new Date();
-			yesterday.setDate(yesterday.getDate() - 1);
-			matchesDateRange = orderDate.toDateString() === yesterday.toDateString();
-		} else if (dateRange === "thisWeek") {
-			const today = new Date();
-			const startOfWeek = new Date(today);
-			startOfWeek.setDate(today.getDate() - today.getDay()); // Start of the week (Sunday)
-			matchesDateRange = orderDate >= startOfWeek && orderDate <= today;
-		} else if (dateRange === "thisMonth") {
-			const today = new Date();
-			matchesDateRange =
-				orderDate.getMonth() === today.getMonth() && orderDate.getFullYear() === today.getFullYear();
-		} else if (dateRange === "custom" && customStartDate && customEndDate) {
-			const startDate = new Date(customStartDate);
-			const endDate = new Date(customEndDate);
-			matchesDateRange = orderDate >= startDate && orderDate <= endDate;
-		}
+			if (dateRange === "all") {
+			} else if (dateRange === "today") {
+				const today = new Date();
+				matchesDateRange = orderDate.toDateString() === today.toDateString();
+			} else if (dateRange === "yesterday") {
+				const yesterday = new Date();
+				yesterday.setDate(yesterday.getDate() - 1);
+				matchesDateRange = orderDate.toDateString() === yesterday.toDateString();
+			} else if (dateRange === "thisWeek") {
+				const today = new Date();
+				const startOfWeek = new Date(today);
+				startOfWeek.setDate(today.getDate() - today.getDay());
+				matchesDateRange = orderDate >= startOfWeek && orderDate <= today;
+			} else if (dateRange === "thisMonth") {
+				const today = new Date();
+				matchesDateRange =
+					orderDate.getMonth() === today.getMonth() && orderDate.getFullYear() === today.getFullYear();
+			} else if (dateRange === "custom" && customStartDate && customEndDate) {
+				const startDate = new Date(customStartDate);
+				const endDate = new Date(customEndDate);
+				matchesDateRange = orderDate >= startDate && orderDate <= endDate;
+			}
 
-		return matchesStatus && matchesSearch && matchesDateRange;
-	});
+			return matchesStatus && matchesSearch && matchesDateRange;
+		});
+	};
+
+	const filteredRows = filterRows(rows, search, status, dateRange, customStartDate, customEndDate);
 
 	return (
 		<Paper sx={{ width: "100%", overflow: "hidden", padding: 2 }}>
 			<OrderBar
 				search={search}
-				onSearchChange={handleSearchChange}
+				onSearchChange={setSearch}
 				status={status}
-				onStatusChange={handleStatusChange}
+				onStatusChange={setStatus}
 				dateRange={dateRange}
 				onDateRangeChange={handleDateRangeChange}
 				customStartDate={customStartDate}
@@ -240,19 +246,19 @@ export default function OrdersTable() {
 												{value}
 											</StatusTableCell>
 										) : column.id === "seeDetail" ? (
-											<TableCell key={column.id} align="center" style={{ padding: "1em" }}>
+											<TableCell key={column.id} align="center" style={{ padding: "16px" }}>
 												<Visibility
 													style={{ cursor: "pointer", fontSize: 20 }}
 													onClick={() => handleOpenOrderDetailDialog(row)}
 												/>
 											</TableCell>
 										) : column.id === "changeStatus" ? (
-											<TableCell key={column.id} align="center" style={{ padding: "1em" }}>
+											<TableCell key={column.id} align="center" style={{ padding: "16px" }}>
 												<FormControl fullWidth>
 													<Select
-														labelId={`status-label-${row.orderId}`} // Tạo ID duy nhất dựa trên orderId
+														labelId={`status-label-${row.orderId}`}
 														value={row.orderStatus}
-														onChange={(e) => handleChangeStatus(e, row.orderId)} // Truyền orderId
+														onChange={(e) => handleChangeStatus(e, row.orderId)}
 														sx={{
 															border: "none",
 															".MuiSelect-select": {
@@ -268,7 +274,7 @@ export default function OrdersTable() {
 												</FormControl>
 											</TableCell>
 										) : (
-											<TableCell key={column.id} align="center" style={{ padding: "1em" }}>
+											<TableCell key={column.id} align="center" style={{ padding: "16px" }}>
 												{column.format && typeof value === "number"
 													? column.format(value)
 													: value}

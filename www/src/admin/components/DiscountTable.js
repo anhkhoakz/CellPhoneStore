@@ -41,17 +41,15 @@ const columns = [
 	{ id: "actions", label: "Actions", minWidth: 150 },
 ];
 
-const createData = (discountCode, description, discountValue, condition, expiryDate, openQuantity, usedQuantity) => {
-	return {
-		discountCode,
-		description,
-		discountValue,
-		condition,
-		expiryDate,
-		openQuantity,
-		usedQuantity,
-	};
-};
+const createData = (discountCode, description, discountValue, condition, expiryDate, openQuantity, usedQuantity) => ({
+	discountCode,
+	description,
+	discountValue,
+	condition,
+	expiryDate,
+	openQuantity,
+	usedQuantity,
+});
 
 const initialRows = [
 	createData("DISC10", "10% off on orders over $50", "10%", "Order > $50", "2024-12-31", 100, 25),
@@ -119,6 +117,26 @@ export default function DiscountsTable() {
 		);
 	});
 
+	const renderTableCell = (column, value, row) => {
+		if (column.id === "discountValue" || column.id !== "actions") {
+			return (
+				<TableCell key={column.id} align="center" style={{ padding: "1em" }}>
+					{value}
+				</TableCell>
+			);
+		}
+		return (
+			<TableCell key={column.id} align="center" style={{ padding: "1em" }}>
+				<IconButton aria-label="edit" color="primary" onClick={() => handleEditClick(row.discountCode)}>
+					<Edit />
+				</IconButton>
+				<IconButton aria-label="delete" color="error" onClick={() => handleDeleteClick(row)}>
+					<Delete />
+				</IconButton>
+			</TableCell>
+		);
+	};
+
 	return (
 		<Paper sx={{ width: "100%", overflow: "hidden", padding: 2 }}>
 			<SearchBar
@@ -150,35 +168,7 @@ export default function DiscountsTable() {
 									key={row.discountCode}
 									isEven={isEven}
 								>
-									{columns.map((column) => {
-										const value = row[column.id];
-										return column.id === "discountValue" ? (
-											<TableCell key={column.id} align="center" style={{ padding: "1em" }}>
-												{value}
-											</TableCell>
-										) : column.id === "actions" ? (
-											<TableCell key={column.id} align="center" style={{ padding: "1em" }}>
-												<IconButton
-													aria-label="edit"
-													color="primary"
-													onClick={() => handleEditClick(row.discountCode)}
-												>
-													<Edit />
-												</IconButton>
-												<IconButton
-													aria-label="delete"
-													color="error"
-													onClick={() => handleDeleteClick(row)}
-												>
-													<Delete />
-												</IconButton>
-											</TableCell>
-										) : (
-											<TableCell key={column.id} align="center" style={{ padding: "1em" }}>
-												{value}
-											</TableCell>
-										);
-									})}
+									{columns.map((column) => renderTableCell(column, row[column.id], row))}
 								</StyledTableRow>
 							);
 						})}

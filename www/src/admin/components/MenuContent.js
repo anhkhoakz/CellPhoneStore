@@ -29,32 +29,31 @@ const secondaryListItems = [
 	{ text: "Feedback", icon: <HelpRoundedIcon /> },
 ];
 
-export default function MenuContent() {
+function RenderListItems({ items, isMain }) {
 	const location = useLocation();
+	return (
+		<List dense>
+			{items.map((item, index) => (
+				<ListItem key={index} disablePadding sx={{ display: "block" }}>
+					<ListItemButton
+						component={isMain ? Link : "div"}
+						to={isMain ? item.path : undefined}
+						selected={isMain && location.pathname === item.path}
+					>
+						<ListItemIcon>{item.icon}</ListItemIcon>
+						<ListItemText primary={item.text} />
+					</ListItemButton>
+				</ListItem>
+			))}
+		</List>
+	);
+}
 
+export default function MenuContent() {
 	return (
 		<Stack sx={{ flexGrow: 1, p: 1, justifyContent: "space-between" }}>
-			<List dense>
-				{mainListItems.map((item, index) => (
-					<ListItem key={index} disablePadding sx={{ display: "block" }}>
-						<ListItemButton component={Link} to={item.path} selected={location.pathname === item.path}>
-							<ListItemIcon>{item.icon}</ListItemIcon>
-							<ListItemText primary={item.text} />
-						</ListItemButton>
-					</ListItem>
-				))}
-			</List>
-
-			<List dense>
-				{secondaryListItems.map((item, index) => (
-					<ListItem key={index} disablePadding sx={{ display: "block" }}>
-						<ListItemButton>
-							<ListItemIcon>{item.icon}</ListItemIcon>
-							<ListItemText primary={item.text} />
-						</ListItemButton>
-					</ListItem>
-				))}
-			</List>
+			<RenderListItems items={mainListItems} isMain />
+			<RenderListItems items={secondaryListItems} />
 		</Stack>
 	);
 }
