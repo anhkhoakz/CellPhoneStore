@@ -1,83 +1,101 @@
 // src/components/Summary.js
 import React, { useState } from "react";
-import { TextField, Select, MenuItem, InputLabel, FormControl, Button, Typography, Box } from "@mui/material";
+import {
+    TextField,
+    Select,
+    MenuItem,
+    InputLabel,
+    FormControl,
+    Button,
+    Typography,
+    Box,
+} from "@mui/material";
 import LoggedCustomerInfo from "./LoggedCustomerInfo"; // Import LoggedCustomerInfo
 
 const Summary = ({ subtotal, total, shipping, setShipping }) => {
-	// Customer state
-	const [name] = useState("John Doe"); // Example name (read-only)
-	const [phone, setPhone] = useState("+1 234 567 890"); // Example phone number (editable)
-	const [savedAddresses] = useState(["123 Main St, City A", "456 Oak St, City B", "789 Pine St, City C"]); // Example list of saved addresses
-	const [selectedAddress, setSelectedAddress] = useState(savedAddresses[0]); // Default selected address
+    // Customer state
+    const [name] = useState("John Doe"); // Example name (read-only)
+    const [phone, setPhone] = useState("+1 234 567 890"); // Example phone number (editable)
+    const [savedAddresses] = useState([
+        "123 Main St, City A",
+        "456 Oak St, City B",
+        "789 Pine St, City C",
+    ]); // Example list of saved addresses
+    const [selectedAddress, setSelectedAddress] = useState(savedAddresses[0]); // Default selected address
 
-	// Shipping state
-	const [shippingCost, setShippingCost] = useState(shipping);
+    // Shipping state
+    const [shippingCost, setShippingCost] = useState(shipping);
 
-	const handleSubmit = () => {
-		console.log("Customer Information:", { name, phone, selectedAddress });
-		console.log("Shipping:", shippingCost);
-		console.log("Total Price:", total);
-	};
+    const handleSubmit = () => {
+        console.log("Customer Information:", { name, phone, selectedAddress });
+        console.log("Shipping:", shippingCost);
+        console.log("Total Price:", total);
+    };
 
-	return (
-		<Box className="p-5">
-			{/* Logged customer info */}
-			<LoggedCustomerInfo
-				name={name}
-				phone={phone}
-				setPhone={setPhone}
-				savedAddresses={savedAddresses}
-				selectedAddress={selectedAddress}
-				setSelectedAddress={setSelectedAddress}
-			/>
+    return (
+        <Box className="p-5">
+            {/* Logged customer info */}
+            <LoggedCustomerInfo
+                name={name}
+                phone={phone}
+                setPhone={setPhone}
+                savedAddresses={savedAddresses}
+                selectedAddress={selectedAddress}
+                setSelectedAddress={setSelectedAddress}
+            />
 
-			<hr className="my-4" />
+            <hr className="my-4" />
 
-			{/* Summary Section */}
-			<Typography variant="h5" component="h3" gutterBottom>
-				Summary
-			</Typography>
+            {/* Summary Section */}
+            <Typography variant="h5" component="h3" gutterBottom>
+                Summary
+            </Typography>
 
-			<Typography variant="h6" gutterBottom>
-				Shipping
-			</Typography>
-			<FormControl fullWidth variant="outlined" margin="normal">
-				<InputLabel>Delivery Method</InputLabel>
-				<Select
-					value={shippingCost}
-					onChange={(e) => setShippingCost(Number(e.target.value))}
-					label="Delivery Method"
-				>
-					<MenuItem value={5}>Standard Delivery - $5.00</MenuItem>
-					<MenuItem value={10}>Express Delivery - $10.00</MenuItem>
-				</Select>
-			</FormControl>
+            <Typography variant="h6" gutterBottom>
+                Shipping
+            </Typography>
+            <FormControl fullWidth variant="outlined" margin="normal">
+                <InputLabel>Delivery Method</InputLabel>
+                <Select
+                    value={shippingCost}
+                    onChange={(e) => setShippingCost(Number(e.target.value))}
+                    label="Delivery Method"
+                >
+                    <MenuItem value={5}>Standard Delivery - $5.00</MenuItem>
+                    <MenuItem value={10}>Express Delivery - $10.00</MenuItem>
+                </Select>
+            </FormControl>
 
-			<Typography variant="h6" gutterBottom>
-				Discount Code
-			</Typography>
-			<TextField fullWidth variant="outlined" label="Enter your code" margin="normal" />
+            <Typography variant="h6" gutterBottom>
+                Discount Code
+            </Typography>
+            <TextField
+                fullWidth
+                variant="outlined"
+                label="Enter your code"
+                margin="normal"
+            />
 
-			<hr className="my-4" />
+            <hr className="my-4" />
 
-			<Box display="flex" justifyContent="space-between" mb={5}>
-				<Typography variant="h6" className="text-uppercase">
-					Total price
-				</Typography>
-				<Typography variant="h6">${total.toFixed(2)}</Typography>
-			</Box>
+            <Box display="flex" justifyContent="space-between" mb={5}>
+                <Typography variant="h6" className="text-uppercase">
+                    Total price
+                </Typography>
+                <Typography variant="h6">${total.toFixed(2)}</Typography>
+            </Box>
 
-			<Button
-				variant="contained"
-				color="success"
-				onClick={handleSubmit}
-				sx={{ fontWeight: "bold", width: "100%" }}
-				href="/success"
-			>
-				Register
-			</Button>
-		</Box>
-	);
+            <Button
+                variant="contained"
+                color="success"
+                onClick={handleSubmit}
+                sx={{ fontWeight: "bold", width: "100%" }}
+                href="/success"
+            >
+                Register
+            </Button>
+        </Box>
+    );
 };
 
 export default Summary;

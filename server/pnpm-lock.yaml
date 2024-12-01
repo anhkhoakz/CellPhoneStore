@@ -95,6 +95,9 @@ importers:
             eslint:
                 specifier: ^9.15.0
                 version: 9.15.0
+            eslint-config-prettier:
+                specifier: ^9.1.0
+                version: 9.1.0(eslint@9.15.0)
             globals:
                 specifier: ^15.12.0
                 version: 15.12.0
@@ -110,6 +113,9 @@ importers:
             nodemon:
                 specifier: ^3.1.7
                 version: 3.1.7
+            prettier:
+                specifier: 3.4.1
+                version: 3.4.1
 
 packages:
     '@biomejs/biome@1.9.4':
@@ -1035,6 +1041,15 @@ packages:
                 integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==,
             }
         engines: { node: '>=10' }
+
+    eslint-config-prettier@9.1.0:
+        resolution:
+            {
+                integrity: sha512-NSWl5BFQWEPi1j4TjVNItzYV7dZXZ+wP6I6ZhrBGpChQhZRUaElihE9uRRkcbRnNb76UMKDF3r+WTmNcGPKsqw==,
+            }
+        hasBin: true
+        peerDependencies:
+            eslint: '>=7.0.0'
 
     eslint-scope@8.2.0:
         resolution:
@@ -2260,6 +2275,14 @@ packages:
             }
         engines: { node: '>= 0.8.0' }
 
+    prettier@3.4.1:
+        resolution:
+            {
+                integrity: sha512-G+YdqtITVZmOJje6QkXQWzl3fSfMxFwm1tjTyo9exhkmWSqC4Yhd1+lug++IlR2mvRVAxEDDWYkQdeSztajqgg==,
+            }
+        engines: { node: '>=14' }
+        hasBin: true
+
     process-nextick-args@2.0.1:
         resolution:
             {
@@ -3391,6 +3414,10 @@ snapshots:
 
     escape-string-regexp@4.0.0: {}
 
+    eslint-config-prettier@9.1.0(eslint@9.15.0):
+        dependencies:
+            eslint: 9.15.0
+
     eslint-scope@8.2.0:
         dependencies:
             esrecurse: 4.3.0
@@ -4104,6 +4131,8 @@ snapshots:
     pidtree@0.6.0: {}
 
     prelude-ls@1.2.1: {}
+
+    prettier@3.4.1: {}
 
     process-nextick-args@2.0.1: {}
 

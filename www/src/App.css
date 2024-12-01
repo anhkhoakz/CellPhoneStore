@@ -1,8 +1,8 @@
 /* CSS */
 body {
-	overflow-y: scroll; /* Cho phép cuộn dọc */
+    overflow-y: scroll; /* Cho phép cuộn dọc */
 }
 
 body::-webkit-scrollbar {
-	display: none; /* Chrome, Safari, và Edge */
+    display: none; /* Chrome, Safari, và Edge */
 }

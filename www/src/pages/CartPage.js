@@ -8,122 +8,144 @@ import ExpressCheckout from "../components/ExpressCheckout";
 import ToastNoti from "../components/ToastNoti"; // Import ToastNoti
 
 const CartPage = () => {
-	const [items, setItems] = useState([
-		{
-			id: 1,
-			name: "iPhone 13 Pro",
-			category: "Smartphone",
-			quantity: 1,
-			price: 999,
-			image: "https://techland.com.vn/wp-content/uploads/2021/09/iphone-13-pro-graphite-select.png",
-		},
-		{
-			id: 2,
-			name: "Samsung Galaxy S21",
-			category: "Smartphone",
-			quantity: 1,
-			price: 799,
-			image: "https://cdn.tgdd.vn/Products/Images/42/236128/samsung-galaxy-s21-plus-256gb-bac-600x600-600x600.jpg",
-		},
-		{
-			id: 3,
-			name: "Google Pixel 6",
-			category: "Smartphone",
-			quantity: 1,
-			price: 699,
-			image: "https://cdn.tgdd.vn/Products/Images/42/233009/google-pixel-6-600x600.jpg",
-		},
-	]);
+    const [items, setItems] = useState([
+        {
+            id: 1,
+            name: "iPhone 13 Pro",
+            category: "Smartphone",
+            quantity: 1,
+            price: 999,
+            image: "https://techland.com.vn/wp-content/uploads/2021/09/iphone-13-pro-graphite-select.png",
+        },
+        {
+            id: 2,
+            name: "Samsung Galaxy S21",
+            category: "Smartphone",
+            quantity: 1,
+            price: 799,
+            image: "https://cdn.tgdd.vn/Products/Images/42/236128/samsung-galaxy-s21-plus-256gb-bac-600x600-600x600.jpg",
+        },
+        {
+            id: 3,
+            name: "Google Pixel 6",
+            category: "Smartphone",
+            quantity: 1,
+            price: 699,
+            image: "https://cdn.tgdd.vn/Products/Images/42/233009/google-pixel-6-600x600.jpg",
+        },
+    ]);
 
-	const [shipping, setShipping] = useState(5);
-	const [showToast, setShowToast] = useState(false); // State để lưu thông báo toast
+    const [shipping, setShipping] = useState(5);
+    const [showToast, setShowToast] = useState(false); // State để lưu thông báo toast
 
-	const handleQuantityChange = (id, value) => {
-		const newItems = items.map((item) =>
-			item.id === id ? { ...item, quantity: Math.max(0, item.quantity + value) } : item
-		);
-		setItems(newItems);
-	};
+    const handleQuantityChange = (id, value) => {
+        const newItems = items.map((item) =>
+            item.id === id
+                ? { ...item, quantity: Math.max(0, item.quantity + value) }
+                : item,
+        );
+        setItems(newItems);
+    };
 
-	const handleRemoveItem = (id) => {
-		const itemName = items.find((item) => item.id === id).name; // Lấy tên sản phẩm
-		const newItems = items.filter((item) => item.id !== id);
-		setItems(newItems);
-		setShowToast(true); // Hiển thị thông báo khi xóa sản phẩm
-		setTimeout(() => setShowToast(false), 3000); // Ẩn thông báo sau 3 giây
-	};
+    const handleRemoveItem = (id) => {
+        const itemName = items.find((item) => item.id === id).name; // Lấy tên sản phẩm
+        const newItems = items.filter((item) => item.id !== id);
+        setItems(newItems);
+        setShowToast(true); // Hiển thị thông báo khi xóa sản phẩm
+        setTimeout(() => setShowToast(false), 3000); // Ẩn thông báo sau 3 giây
+    };
 
-	const subtotal = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
-	const total = subtotal + shipping;
+    const subtotal = items.reduce(
+        (acc, item) => acc + item.price * item.quantity,
+        0,
+    );
+    const total = subtotal + shipping;
 
-	return (
-		<Box sx={{ flexGrow: 1, padding: 4 }}>
-			<Grid container spacing={4}>
-				{/* Kiểm tra xem giỏ hàng có trống không */}
-				{items.length === 0 ? (
-					<Grid item xs={12}>
-						<CartEmpty />
-					</Grid>
-				) : (
-					<>
-						{/* Cột bên trái - Giỏ hàng */}
-						<Grid item xs={12} md={8}>
-							<Card variant="outlined" sx={{ padding: 2 }}>
-								<Typography variant="h4" gutterBottom>
-									Shopping Cart
-								</Typography>
-								<Typography variant="body1" color="textSecondary">
-									{items.length} items
-								</Typography>
-								<Divider sx={{ my: 2 }} />
-								{items.map((item) => (
-									<CartItem
-										key={item.id}
-										item={item}
-										onQuantityChange={handleQuantityChange}
-										onRemoveItem={handleRemoveItem}
-									/>
-								))}
-								<Grid container justifyContent="space-between" sx={{ my: 2 }}>
-									<Typography variant="h6">Price</Typography>
-									<Typography variant="h6">${subtotal.toFixed(2)}</Typography>
-								</Grid>
-								<Divider sx={{ my: 2 }} />
-								<Button component={Link} to="/" variant="contained" color="primary">
-									Go back to products
-								</Button>
-							</Card>
-						</Grid>
+    return (
+        <Box sx={{ flexGrow: 1, padding: 4 }}>
+            <Grid container spacing={4}>
+                {/* Kiểm tra xem giỏ hàng có trống không */}
+                {items.length === 0 ? (
+                    <Grid item xs={12}>
+                        <CartEmpty />
+                    </Grid>
+                ) : (
+                    <>
+                        {/* Cột bên trái - Giỏ hàng */}
+                        <Grid item xs={12} md={8}>
+                            <Card variant="outlined" sx={{ padding: 2 }}>
+                                <Typography variant="h4" gutterBottom>
+                                    Shopping Cart
+                                </Typography>
+                                <Typography
+                                    variant="body1"
+                                    color="textSecondary"
+                                >
+                                    {items.length} items
+                                </Typography>
+                                <Divider sx={{ my: 2 }} />
+                                {items.map((item) => (
+                                    <CartItem
+                                        key={item.id}
+                                        item={item}
+                                        onQuantityChange={handleQuantityChange}
+                                        onRemoveItem={handleRemoveItem}
+                                    />
+                                ))}
+                                <Grid
+                                    container
+                                    justifyContent="space-between"
+                                    sx={{ my: 2 }}
+                                >
+                                    <Typography variant="h6">Price</Typography>
+                                    <Typography variant="h6">
+                                        ${subtotal.toFixed(2)}
+                                    </Typography>
+                                </Grid>
+                                <Divider sx={{ my: 2 }} />
+                                <Button
+                                    component={Link}
+                                    to="/"
+                                    variant="contained"
+                                    color="primary"
+                                >
+                                    Go back to products
+                                </Button>
+                            </Card>
+                        </Grid>
 
-						{/* Cột bên phải - Summary */}
-						<Grid item xs={12} md={4}>
-							<Card variant="outlined" sx={{ padding: 2, marginBottom: 2 }}>
-								<ExpressCheckout />
-							</Card>
-							<Card variant="outlined" sx={{ padding: 2 }}>
-								<Summary
-									subtotal={subtotal}
-									total={total}
-									shipping={shipping}
-									setShipping={setShipping}
-								/>
-							</Card>
-						</Grid>
-					</>
-				)}
-			</Grid>
+                        {/* Cột bên phải - Summary */}
+                        <Grid item xs={12} md={4}>
+                            <Card
+                                variant="outlined"
+                                sx={{ padding: 2, marginBottom: 2 }}
+                            >
+                                <ExpressCheckout />
+                            </Card>
+                            <Card variant="outlined" sx={{ padding: 2 }}>
+                                <Summary
+                                    subtotal={subtotal}
+                                    total={total}
+                                    shipping={shipping}
+                                    setShipping={setShipping}
+                                />
+                            </Card>
+                        </Grid>
+                    </>
+                )}
+            </Grid>
 
-			{/* Toast Notification */}
-			{showToast && (
-				<ToastNoti
-					message="The product has been removed from your cart."
-					type="success"
-					position="top-right"
-					autoClose={3000}
-				/>
-			)}
-		</Box>
-	);
+            {/* Toast Notification */}
+            {showToast && (
+                <ToastNoti
+                    message="The product has been removed from your cart."
+                    type="success"
+                    position="top-right"
+                    autoClose={3000}
+                />
+            )}
+        </Box>
+    );
 };
 
 export default CartPage;

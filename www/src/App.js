@@ -21,43 +21,79 @@ import OtpPage from "./pages/OTPPage";
 import AdminRoutes from "./admin/AdminRoutes";
 
 function App() {
-	return (
-		<Router>
-			<div className="App">
-				<Routes>
-					{/* Routes for the user */}
-					<Route
-						path="/*"
-						element={
-							<>
-								<Header />
-								<Navigation />
-								<main>
-									<Routes>
-										<Route path="/" element={<HomePage />} />
-										<Route path="/login" element={<LoginPage />} />
-										<Route path="/orderManagement" element={<OrderManagementPage />} />
-										<Route path="/cart" element={<CartPage />} />
-										<Route path="/register" element={<RegisterPage />} />
-										<Route path="/product/:id" element={<ProductDetailPage />} />
-										<Route path="/success" element={<OrderSuccessPage />} />
-										<Route path="/search" element={<SearchPage />} />
-										<Route path="/profile" element={<Profile />} />
-										<Route path="/verify" element={<OtpPage />} />
-										<Route path="/*" element={<Error404 />} />
-										<Route path="/403" element={<Error403 />} />
-									</Routes>
-								</main>
-								<Footer />
-							</>
-						}
-					/>
+    return (
+        <Router>
+            <div className="App">
+                <Routes>
+                    {/* Routes for the user */}
+                    <Route
+                        path="/*"
+                        element={
+                            <>
+                                <Header />
+                                <Navigation />
+                                <main>
+                                    <Routes>
+                                        <Route
+                                            path="/"
+                                            element={<HomePage />}
+                                        />
+                                        <Route
+                                            path="/login"
+                                            element={<LoginPage />}
+                                        />
+                                        <Route
+                                            path="/orderManagement"
+                                            element={<OrderManagementPage />}
+                                        />
+                                        <Route
+                                            path="/cart"
+                                            element={<CartPage />}
+                                        />
+                                        <Route
+                                            path="/register"
+                                            element={<RegisterPage />}
+                                        />
+                                        <Route
+                                            path="/product/:id"
+                                            element={<ProductDetailPage />}
+                                        />
+                                        <Route
+                                            path="/success"
+                                            element={<OrderSuccessPage />}
+                                        />
+                                        <Route
+                                            path="/search"
+                                            element={<SearchPage />}
+                                        />
+                                        <Route
+                                            path="/profile"
+                                            element={<Profile />}
+                                        />
+                                        <Route
+                                            path="/verify"
+                                            element={<OtpPage />}
+                                        />
+                                        <Route
+                                            path="/*"
+                                            element={<Error404 />}
+                                        />
+                                        <Route
+                                            path="/403"
+                                            element={<Error403 />}
+                                        />
+                                    </Routes>
+                                </main>
+                                <Footer />
+                            </>
+                        }
+                    />
 
-					<Route path="/admin/*" element={<AdminRoutes />} />
-				</Routes>
-			</div>
-		</Router>
-	);
+                    <Route path="/admin/*" element={<AdminRoutes />} />
+                </Routes>
+            </div>
+        </Router>
+    );
 }
 
 export default App;

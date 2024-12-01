@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -111,20 +111,26 @@
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ productId, variantId, quantity }),
+                        body: JSON.stringify({
+                            productId,
+                            variantId,
+                            quantity,
+                        }),
                     });
 
                     const result = await response.json();
 
                     if (result.success) {
-                        console.log('Product added to cart:' , result.cart);
+                        console.log('Product added to cart:', result.cart);
                         alert('Product added to cart successfully!');
                     } else {
                         alert(`Error: ${result.message}`);
                     }
                 } catch (error) {
                     console.error('Error adding to cart:', error);
-                    alert('Failed to add product to cart. Please try again later.');
+                    alert(
+                        'Failed to add product to cart. Please try again later.',
+                    );
                 }
             }
 

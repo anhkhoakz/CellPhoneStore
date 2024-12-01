@@ -49,7 +49,6 @@ module.exports = {
         }
 
         if (product.variants.length > 0) {
-
             const variant = product.variants.find(
                 (v) => v._id.toString() === variantId,
             );
@@ -158,7 +157,8 @@ module.exports = {
 
     async getShippingFee(req, res) {
         const { shippingAddress } = req.body;
-        const districtData = await fs.promises.readFile('src/api/v1/controllers/city_district.json', 
+        const districtData = await fs.promises.readFile(
+            'src/api/v1/controllers/city_district.json',
             'utf8',
         );
         const districts = JSON.parse(districtData);
@@ -190,8 +190,6 @@ module.exports = {
             to_district_id: districtId,
             weight: 1000,
         };
-
-        
 
         const vndToUsdRate = 23000;
         const standardVnd = await getShippingFee(data);

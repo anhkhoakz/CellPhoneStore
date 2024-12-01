@@ -63,7 +63,7 @@ const userSchema = new mongoose.Schema(
         },
 
         note: { type: String, trim: true },
-        
+
         createAt: {
             type: Date,
             default: Date.now,

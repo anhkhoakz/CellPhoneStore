@@ -11,13 +11,11 @@ const axios = require('axios');
 // Middleware for verifying access token and auto-refreshing
 const verifyAccessToken = async (req, res, next) => {
     try {
-
         const cookieToken = req.cookies['accessToken'];
         const authHeader = req.headers['authorization'];
         const authToken = authHeader?.split(' ')[1];
 
         if (!cookieToken && !req.cookies['userId']) {
-
             return next(CreateError.Unauthorized('Access token not found 1'));
         }
 
@@ -51,7 +49,6 @@ const verifyAccessToken = async (req, res, next) => {
 
             // Request a new access token using the refresh token
             try {
-
                 const response = await axios.post(
                     ` ${process.env.BACKEND_URL}/api/v1/users/refresh-token`,
                     { refreshToken },
@@ -76,7 +73,6 @@ const verifyAccessToken = async (req, res, next) => {
 
                 return next();
             } catch (error) {
-
                 console.log('Refresh token error:', error.response.data);
                 return next(
                     CreateError.Unauthorized('Unable to refresh access token'),

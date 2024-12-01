@@ -202,9 +202,8 @@ module.exports = {
             const userId = req.cookies['userId'];
             const refreshToken = await getAsync(userId.toString());
 
-            const { success, decoded, error } = await verifyAndRefreshToken(
-                refreshToken,
-            );
+            const { success, decoded, error } =
+                await verifyAndRefreshToken(refreshToken);
 
             if (!success || !decoded) {
                 return {

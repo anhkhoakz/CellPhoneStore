@@ -205,7 +205,6 @@ module.exports = {
                 sameSite: 'lax',
             });
 
-
             res.cookie('userId', userId, {
                 maxAge: 365 * 24 * 60 * 60 * 1000,
                 httpOnly: false,
@@ -225,28 +224,27 @@ module.exports = {
 
     checkLogin: async (req, res, next) => {
         try {
-            
             console.log('Cookies:', req.cookies);
             const userId = req.cookies['userId'];
 
             console.log('User ID:', userId);
-    
+
             if (!userId) {
                 return res.status(401).json({
                     message: 'Unauthorized: No user ID provided.',
                 });
             }
-    
+
             const user = await User.findById(userId);
 
             console.log('User:', user);
-    
+
             if (user) {
                 return res.status(200).json({
                     true: true,
                 });
             }
-    
+
             return res.status(401).json({
                 message: 'Unauthorized: User not found.',
             });
@@ -257,7 +255,6 @@ module.exports = {
             });
         }
     },
-    
 
     logout: async (req, res, next) => {
         try {

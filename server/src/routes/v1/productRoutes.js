@@ -29,7 +29,6 @@ router.get('/:id', ProductController.getProductById);
 
 router.get('/:category', ProductController.getProductsByCategory);
 
-
 router.post(
     '/',
     upload.any(),
