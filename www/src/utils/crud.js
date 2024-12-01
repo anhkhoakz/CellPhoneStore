@@ -1,4 +1,4 @@
-import http from "@/utils/axios";
+import http from "./axios";
 
 const createCRUDOperations = (baseURL) => ({
 	getAll: async () => {
