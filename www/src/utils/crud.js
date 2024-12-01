@@ -1,4 +1,4 @@
-import http from "@/utils/axios";
+import http from "./axios";
 
 const createCRUDOperations = (baseURL) => ({
 	getAll: async () => {
@@ -36,14 +36,15 @@ const createCRUDOperations = (baseURL) => ({
 			const response = await http.put(`${baseURL}/${id}`, data);
 			return response.data;
 		} catch (error) {
-			console.error(`Error updating ${id} from ${baseURL}:`, error);
+			console.error(`Error updating ${id} on ${baseURL}:`, error);
 			throw new Error(`Failed to update resource with ID ${id}`);
 		}
 	},
 
 	delete: async (id) => {
 		try {
-			await http.delete(`${baseURL}/${id}`);
+			const response = await http.delete(`${baseURL}/${id}`);
+			return response.data;
 		} catch (error) {
 			console.error(`Error deleting ${id} from ${baseURL}:`, error);
 			throw new Error(`Failed to delete resource with ID ${id}`);
