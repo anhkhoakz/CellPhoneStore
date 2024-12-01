@@ -18,7 +18,7 @@ passport.use(
         {
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: 'http://localhost:8080/oauth2/redirect/google',
+            callbackURL: `${process.env.BACKEND_URL}/oauth2/redirect/google`,
             scope: ['profile', 'email'],
             state: true,
         },

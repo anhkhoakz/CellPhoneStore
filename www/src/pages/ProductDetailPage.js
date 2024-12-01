@@ -9,13 +9,14 @@ import CommentsSection from "../components/CommentSection";
 const ProductDetailPage = () => {
 	const product = {
 		id: 1,
+		productId: "674c7ddf8fc7a9a9bf476246",
 		name: "iPhone 13",
 		price: 999,
 		description:
-			"The iPhone 13 is one of Apple's standout smartphones, launched in September 2021. With its sleek design, the iPhone 13 features an aluminum frame and a glass back, available in a variety of colors including Black, White, Blue, and Green.",
-		colors: [
-			{ name: "Black", image: "https://phongapple.vn/wp-content/uploads/2021/10/13bl.png" },
-			{ name: "White", image: "https://mega.com.vn/media/product/20113_iphone_13_256gb_white.jpg" },
+			"The iPhone 13 is one of Apple's standout smartphones, launched in September 2021. With its sleek design, the iPhone 13 features an aluminum frame and a glass back, available in a variety of variants including Black, White, Blue, and Green.",
+		variants: [
+			{ name: "Black", image: "https://phongapple.vn/wp-content/uploads/2021/10/13bl.png", _id: "674c7ddf8fc7a9a9bf476247" },
+			{ name: "White", image: "https://mega.com.vn/media/product/20113_iphone_13_256gb_white.jpg", _id: "674c7ddf8fc7a9a9bf476248" },
 			{
 				name: "Blue",
 				image: "https://product.hstatic.net/200000456405/product/1_3d5d4ed67e884776aa5a003142b23346.jpg",
@@ -32,7 +33,7 @@ const ProductDetailPage = () => {
 	];
 
 	const { id } = useParams();
-	const [selectedColor, setSelectedColor] = useState(product.colors[0]); // Default color
+	const [selectedColor, setSelectedColor] = useState(product.variants[0]); // Default color
 
 	// This should be at the top, outside of any conditional or function
 	const [showToast, setShowToast] = useState(false);
@@ -42,11 +43,30 @@ const ProductDetailPage = () => {
 	}
 
 	const handleColorChange = (event) => {
-		const color = product.colors.find((c) => c.name === event.target.value);
+		const color = product.variants.find((c) => c.name === event.target.value);
 		setSelectedColor(color);
 	};
 
 	const handleAddToCart = () => {
+
+		fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/cart`, {
+			method: "POST",
+			credentials: "include",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				productId: product.productId,
+				quantity: 1,
+				variantId: selectedColor._id,
+			}),
+		})
+			.then((response) => response.json())
+			.then((data) => {
+				console.log(data);
+			}
+			)
+
 		setShowToast(true);
 		setTimeout(() => setShowToast(false), 3000); // Hide toast after 3 seconds
 	};
@@ -118,7 +138,7 @@ const ProductDetailPage = () => {
 										"& .MuiOutlinedInput-root": { height: "35px" },
 									}}
 								>
-									{product.colors.map((color) => (
+									{product.variants.map((color) => (
 										<MenuItem key={color.name} value={color.name}>
 											{color.name}
 										</MenuItem>

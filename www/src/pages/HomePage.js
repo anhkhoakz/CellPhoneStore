@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useEffect, useState }  from "react";
 import ProductList from "../components/ProductList";
 import TimedBanner from "../components/TimedBanner";
+
+
+
 
 const HomePage = () => {
 	// Sample data for products
@@ -30,6 +33,23 @@ const HomePage = () => {
 			image: "/image/ip16.jpg",
 		},
 	];
+
+	// const [hotProducts, setHotProducts] = useState([]);
+	// const [newProducts, setNewProducts] = useState([]);
+
+
+	// useEffect(() => {
+	// 	// Fetch hot products
+	// 	fetch("http://localhost:3000/products/hot")
+	// 		.then((response) => response.json())
+	// 		.then((data) => setHotProducts(data));
+
+	// 	// Fetch new products
+	// 	fetch("http://localhost:3000/products/new")
+	// 		.then((response) => response.json())
+	// 		.then((data) => setNewProducts(data));
+	// }
+	// , []);
 
 	return (
 		<div>

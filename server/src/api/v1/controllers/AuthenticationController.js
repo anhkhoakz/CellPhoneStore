@@ -14,6 +14,7 @@ const CreateError = require('http-errors');
 
 const User = require('~v1/models/Account');
 const FederatedCredential = require('~v1/models/federatedCredential');
+const { checkValidateLogin } = require('../middleware/userMiddleware');
 
 module.exports = {
     getAllUsers: async (req, res, next) => {
@@ -221,6 +222,43 @@ module.exports = {
             next(err);
         }
     },
+
+    checkLogin: async (req, res, next) => {
+        try {
+            
+            console.log('Cookies:', req.cookies);
+            const userId = req.cookies['userId'];
+
+            console.log('User ID:', userId);
+    
+            if (!userId) {
+                return res.status(401).json({
+                    message: 'Unauthorized: No user ID provided.',
+                });
+            }
+    
+            const user = await User.findById(userId);
+
+            console.log('User:', user);
+    
+            if (user) {
+                return res.status(200).json({
+                    true: true,
+                });
+            }
+    
+            return res.status(401).json({
+                message: 'Unauthorized: User not found.',
+            });
+        } catch (err) {
+            console.error('Error in checkLogin:', err);
+            return res.status(500).json({
+                message: 'Internal Server Error',
+            });
+        }
+    },
+    
+
     logout: async (req, res, next) => {
         try {
             const { code, message } = await logout(req);

@@ -3,11 +3,14 @@ import { Box, Button, TextField, Typography, Link } from "@mui/material";
 import { red } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
 
+import { useCookies } from "react-cookie";
 const OtpPage = () => {
 	const [otp, setOtp] = useState(["", "", "", "", "", ""]);
 	const [errorMessage, setErrorMessage] = useState("");
 	const [isOtpSent, setIsOtpSent] = useState(true); // Flag to check if OTP is sent
 	const navigate = useNavigate();
+
+	const [cookies] = useCookies([]);
 
 	// Handle OTP input change
 	const handleOtpChange = (e, index) => {
@@ -32,19 +35,27 @@ const OtpPage = () => {
 
 		if (otpValue.length === 6) {
 			console.log("OTP entered:", otpValue);
+
+			const email = cookies.email; // Get email from cookies
+
+			console.log("Email:", email);
 			// Send OTP for verification
-			fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users/verify-otp`, {
+			fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users/verifyAccount`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({ otp: otpValue }),
+				body: JSON.stringify({ otp: otpValue, email }),
+
 			})
 				.then((res) => res.json())
 				.then((data) => {
-					if (data.code === 200) {
+
+					console.log(data);
+
+					if (data.code === 201) {
 						console.log("OTP verified successfully");
-						navigate("/"); // Redirect to home page or other
+						navigate("/login");
 					} else {
 						console.log(data.message);
 						setErrorMessage(data.message);

@@ -121,9 +121,9 @@ module.exports = {
             console.log('Setting cookie with cart:', JSON.stringify(cart));
             res.cookie('cart', JSON.stringify(cart), {
                 httpOnly: false,
-                sameSite: 'none',
+                sameSite: 'lax',
                 secure: false,
-                maxAge: 365 * 24 * 60 * 60 * 1000,
+                // maxAge: 365 * 24 * 60 * 60 * 1000,
             });
 
             console.log('Cart saved cookie');

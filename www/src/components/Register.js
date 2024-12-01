@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { Box, Button, TextField, Typography, Link, IconButton } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
+import { useNavigate } from "react-router-dom";
+
+import { useCookies } from "react-cookie";
+
 const Register = () => {
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
@@ -9,6 +13,11 @@ const Register = () => {
 	const [confirmPassword, setConfirmPassword] = useState("");
 
 	const [errorMessages, setErrorMessages] = useState("");
+
+	const navigate = useNavigate();
+
+	const [cookies, setCookie] = useCookies([]);
+
 
 	// State for showing/hiding passwords
 	const [showPassword, setShowPassword] = useState(false);
@@ -59,11 +68,19 @@ const Register = () => {
 		})
 			.then((response) => response.json())
 			.then((data) => {
+
 				if (data.code !== 201) {
 					setErrorMessages(data.message);
 					return;
 				}
-				alert("Register success");
+				
+				setCookie("email", email, {
+					maxAge: 60 * 5,
+					httpOnly: false,
+					sameSite: "lax",
+				});
+
+				navigate("/verify");
 			})
 			.catch((error) => {
 				console.error("Error:", error);

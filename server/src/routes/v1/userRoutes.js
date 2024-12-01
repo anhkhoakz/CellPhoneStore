@@ -18,6 +18,8 @@ const roleAuth = require('~/api/v1/middleware/roleAuth');
 
 router.get('/', AuthenticationController.getAllUsers);
 
+router.get('/login', AuthenticationController.checkLogin);
+
 router.get('/:id', verifyAccessToken, AuthenticationController.getUser);
 
 router.post('/resetPassword', AuthenticationController.resetPassword);
@@ -28,6 +30,9 @@ router.post(
     checkValidateRegister,
     AuthenticationController.register,
 );
+
+
+
 
 router.post('/login', checkValidateLogin, AuthenticationController.login);
 router.post('/verifyAccount', AuthenticationController.verifyAccount);

@@ -25,9 +25,10 @@ router.get('/page/', ProductController.List);
 
 router.get('/:id', ProductController.getProductById);
 
-router.get('/search', ProductController.searchProducts);
+// router.get('/search', ProductController.searchProducts);
 
 router.get('/:category', ProductController.getProductsByCategory);
+
 
 router.post(
     '/',

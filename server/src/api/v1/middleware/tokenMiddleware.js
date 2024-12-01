@@ -2,6 +2,8 @@ const CreateError = require('http-errors');
 const { verifyToken } = require('~v1/auth/authUtils');
 const { getAsync } = require('~/config/redis');
 
+const Account = require('~v1/models/Account');
+
 require('dotenv').config();
 
 const axios = require('axios');
@@ -32,6 +34,13 @@ const verifyAccessToken = async (req, res, next) => {
         if (cookieToken === undefined) {
             // Handle token refresh if expired
             const userId = req.cookies['userId'];
+
+            const user = await Account.findById(userId);
+
+            if (!user) {
+                return next(CreateError.Unauthorized('User not found'));
+            }
+
             const refreshToken = await getAsync(userId.toString()); // Retrieve refresh token from Redis
 
             if (!refreshToken) {

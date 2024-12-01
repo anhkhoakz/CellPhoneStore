@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema(
             type: String,
             min: 8,
             max: 124,
-            required: true,
+            // required: true,
         },
 
         phone: {
