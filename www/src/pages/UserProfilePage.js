@@ -10,6 +10,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+import ToastNoti from '../components/ToastNoti'; // Import ToastNoti
 
 const UserProfilePage = () => {
   const [user, setUser] = useState({
@@ -23,6 +24,7 @@ const UserProfilePage = () => {
   });
 
   const [open, setOpen] = useState(false);
+  const [toast, setToast] = useState({ message: '', type: '', show: false });
 
   const handleUserInfoChange = (updatedUserInfo) => {
     setUser((prevUser) => ({ ...prevUser, ...updatedUserInfo }));
@@ -44,17 +46,35 @@ const UserProfilePage = () => {
         { id: prevUser.addresses.length + 1, isDefault: false, ...newAddress }
       ]
     }));
+    setToast({ message: 'The address has been added successfully!', type: 'success', show: true });
+    setTimeout(() => setToast((prev) => ({ ...prev, show: false })), 3000); // Hide toast after 3 seconds
   };
 
-  // Hàm đặt địa chỉ mặc định
   const handleSetDefaultAddress = (id) => {
     setUser((prevUser) => ({
       ...prevUser,
       addresses: prevUser.addresses.map((addr) =>
         addr.id === id ? { ...addr, isDefault: true } : { ...addr, isDefault: false }
       )
-      
     }));
+    setToast({ message: 'The default address has been changed!', type: 'success', show: true });
+    setTimeout(() => setToast((prev) => ({ ...prev, show: false })), 3000); // Hide toast after 3 seconds
+  };
+
+  // Handle address removal
+  const handleRemoveAddress = (id) => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      addresses: prevUser.addresses.filter((addr) => addr.id !== id)
+    }));
+    setToast({ message: 'The address has been successfully deleted!', type: 'success', show: true });
+    setTimeout(() => setToast((prev) => ({ ...prev, show: false })), 3000); // Hide toast after 3 seconds
+  };
+
+  const handlePasswordChangeSuccess = () => {
+    setOpen(false);  // Close modal
+    setToast({ message: 'Password changed successfully!', type: 'success', show: true });
+    setTimeout(() => setToast((prev) => ({ ...prev, show: false })), 3000); // Hide toast after 3 seconds
   };
 
   return (
@@ -68,39 +88,43 @@ const UserProfilePage = () => {
       marginTop={3}
     >
       <Typography variant="h4" gutterBottom align="center">
-        Quản lý thông tin cá nhân
+        User Profile
       </Typography>
 
       <Grid item xs={12} md={6}>
         <Paper elevation={3} sx={{ padding: '20px', width: '80vh', maxWidth: '80vh' }}>
           <UserInfo user={user} onUserInfoChange={handleUserInfoChange} />
           <Button variant="contained" color="secondary" onClick={handleClickOpen} sx={{ marginTop: '20px' }}>
-            Đổi mật khẩu
+            Change Password
           </Button>
         </Paper>
       </Grid>
 
       <Grid item xs={12} md={6} mb={2}>
         <Paper elevation={3} sx={{ padding: '20px', width: '80vh', maxWidth: '80vh' }}>
-          <AddressManagement 
-            addresses={user.addresses} 
-            onAddAddress={handleAddAddress} 
-            onSetDefaultAddress={handleSetDefaultAddress} 
+          <AddressManagement
+            addresses={user.addresses}
+            onAddAddress={handleAddAddress}
+            onSetDefaultAddress={handleSetDefaultAddress}
+            onRemoveAddress={handleRemoveAddress} 
           />
         </Paper>
       </Grid>
 
       <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-        <DialogTitle>Đổi mật khẩu</DialogTitle>
+        <DialogTitle>Change Password</DialogTitle>
         <DialogContent>
-          <ChangePassword user={user} />
+          <ChangePassword user={user} onPasswordChangeSuccess={handlePasswordChangeSuccess} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
-            Đóng
+            Close
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Hiển thị Toast khi lưu thành công */}
+      {toast.show && <ToastNoti message={toast.message} type={toast.type} position="top-right" autoClose={3000} />}
     </Grid>
   );
 };

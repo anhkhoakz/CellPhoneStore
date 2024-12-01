@@ -1,30 +1,57 @@
 import React, { useState } from "react";
-import { Box, Button, TextField, Typography, Link } from "@mui/material";
+import { Box, Button, TextField, Typography, Link, IconButton } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+
 import { red } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
-
 import { useCookies } from "react-cookie";
-
-
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
     const [errorMessage, setErrorMessage] = useState("");
     const [cookies] = useCookies(["accessToken"]);
     const navigate = useNavigate();
 
+    // Validation state
+    const [emailError, setEmailError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
 
+    const [showPassword, setShowPassword] = useState(false);
+
+
+    // Function to validate email format
+    const validateEmail = (email) => {
+        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return regex.test(email);
+    };
+
+    // Function to validate password (minimum length of 6 characters)
+    const validatePassword = (password) => {
+        return password.length >= 6;
+    };
+
+    // Handle form submission
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        console.log("Email:", email);
-        console.log("Password:", password);
+        // Reset error messages
+        setEmailError("");
+        setPasswordError("");
+        setErrorMessage("");
 
-       
-        // Xử lý đăng nhập ở đây
+        // Validate fields
+        if (!validateEmail(email)) {
+            setEmailError("Please enter a valid email address.");
+            return;
+        }
 
+        if (!validatePassword(password)) {
+            setPasswordError("Password must be at least 6 characters.");
+            return;
+        }
+
+        // Proceed with login API call
         fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users/login`, {
             method: "POST",
             headers: {
@@ -33,29 +60,18 @@ const Login = () => {
             credentials: "include",
             body: JSON.stringify({ email, password }),
         })
-            .then((res) => {
-                // if (!res.ok) {
-                //     throw new Error("Network response was not ok");
-                // }
-                return res.json();
-            })
+            .then((res) => res.json())
             .then((data) => {
                 if (data.code === 200) {
-                    console.log(data);
-                    console.log("Login success");
+                    console.log("Login success", data);
                     navigate("/");
-
                 } else {
-                    console.log(data.message);
                     setErrorMessage(data.message);
-                    console.log("Login failed");
+                    console.log("Login failed", data.message);
                 }
             })
             .catch((error) => {
-                console.error(
-                    "There was a problem with the fetch operation:",
-                    error
-                );
+                console.error("There was a problem with the fetch operation:", error);
             });
     };
 
@@ -77,14 +93,29 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                error={!!emailError}
+                helperText={emailError}
             />
             <TextField
                 label="Password"
                 variant="outlined"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                error={!!passwordError}
+                helperText={passwordError}
+                InputProps={{
+                    endAdornment: (
+                        <IconButton
+                            onClick={() => setShowPassword((prev) => !prev)}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                        >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                    ),
+                }}
             />
 
             {errorMessage && (

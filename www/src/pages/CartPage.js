@@ -1,11 +1,11 @@
-// CartPage.js
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Box, Grid, Typography, Card, Divider, Button } from "@mui/material";
 import CartItem from "../components/CartItem";
 import CartEmpty from "../components/CartEmpty";
 import Summary from "../components/Summary";
 import { Link } from "react-router-dom";
 import ExpressCheckout from "../components/ExpressCheckout";
+import ToastNoti from "../components/ToastNoti"; // Import ToastNoti
 
 const CartPage = () => {
     const [items, setItems] = useState([
@@ -35,21 +35,8 @@ const CartPage = () => {
         },
     ]);
 
-
-
     const [shipping, setShipping] = useState(5);
-    // const [items, setItems] = useState([]);
-
-    // useEffect(() => {
-    //     fetch(" http://localhost:8080/api/v1/cart")
-    //         .then((response) => response.json())
-    //         .then((data) => {
-    //             setItems(data);
-    //         })
-    //         .catch((error) => {
-    //             console.error("Error:", error);
-    //         });
-    // }, []);
+    const [showToast, setShowToast] = useState(false); // State để lưu thông báo toast
 
     const handleQuantityChange = (id, value) => {
         const newItems = items.map((item) =>
@@ -61,8 +48,11 @@ const CartPage = () => {
     };
 
     const handleRemoveItem = (id) => {
+        const itemName = items.find((item) => item.id === id).name; // Lấy tên sản phẩm
         const newItems = items.filter((item) => item.id !== id);
         setItems(newItems);
+        setShowToast(true); // Hiển thị thông báo khi xóa sản phẩm
+        setTimeout(() => setShowToast(false), 3000); // Ẩn thông báo sau 3 giây
     };
 
     const subtotal = items.reduce(
@@ -113,7 +103,7 @@ const CartPage = () => {
                         {/* Cột bên phải - Summary */}
                         <Grid item xs={12} md={4}>
                             <Card variant="outlined" sx={{ padding: 2, marginBottom: 2 }}>
-                                <ExpressCheckout/>
+                                <ExpressCheckout />
                             </Card>
                             <Card variant="outlined" sx={{ padding: 2 }}>
                                 <Summary
@@ -127,6 +117,9 @@ const CartPage = () => {
                     </>
                 )}
             </Grid>
+
+            {/* Toast Notification */}
+            {showToast && <ToastNoti message="The product has been removed from your cart." type="success" position="top-right" autoClose={3000} />}
         </Box>
     );
 };
