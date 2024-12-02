@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Grid, Typography, Card, Divider, Button } from "@mui/material";
 import CartItem from "../components/CartItem";
 import CartEmpty from "../components/CartEmpty";
@@ -7,33 +7,65 @@ import { Link } from "react-router-dom";
 import ExpressCheckout from "../components/ExpressCheckout";
 import ToastNoti from "../components/ToastNoti"; // Import ToastNoti
 
+import { useCookies } from "react-cookie";
+
 const CartPage = () => {
-    const [items, setItems] = useState([
-        {
-            id: 1,
-            name: "iPhone 13 Pro",
-            category: "Smartphone",
-            quantity: 1,
-            price: 999,
-            image: "https://techland.com.vn/wp-content/uploads/2021/09/iphone-13-pro-graphite-select.png",
-        },
-        {
-            id: 2,
-            name: "Samsung Galaxy S21",
-            category: "Smartphone",
-            quantity: 1,
-            price: 799,
-            image: "https://cdn.tgdd.vn/Products/Images/42/236128/samsung-galaxy-s21-plus-256gb-bac-600x600-600x600.jpg",
-        },
-        {
-            id: 3,
-            name: "Google Pixel 6",
-            category: "Smartphone",
-            quantity: 1,
-            price: 699,
-            image: "https://cdn.tgdd.vn/Products/Images/42/233009/google-pixel-6-600x600.jpg",
-        },
-    ]);
+    const [items, setItems] = useState([]);
+    const [cookies] = useCookies(["accessToken"]);
+
+    useEffect(() => {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/cart`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.accessToken}`,
+            },
+            credentials: "include",
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (!data.items || !Array.isArray(data.items)) {
+                    console.error("Invalid data structure:", data);
+                    return;
+                }
+
+                console.log(data)
+
+                const transformedItems = data.items.map((item) => {
+
+                    const variant =
+                        item.variantId &&
+                        item.productDetails.variants.find(
+                            (v) => v._id === item.variantId
+                        );
+
+                    const id = variant ? variant._id : item.productDetails._id; // Variant ID or product ID
+                    const productId = item.productDetails.productId;
+                    const category = item.productDetails.category; // Category
+                    const name = variant
+                        ? `${item.productDetails.name} (${variant.name})`
+                        : item.productDetails.name;
+                    const quantity = item.quantity; // Quantity
+                    const price = variant
+                        ? variant.price
+                        : item.productDetails.price; // Variant or product price
+                    const image = variant
+                        ? variant.image
+                        : item.productDetails.image; // Variant or product image
+
+                    return {
+                        id,
+                        productId,
+                        name,
+                        category,
+                        quantity,
+                        price,
+                        image,
+                    };
+                });
+                setItems(transformedItems);
+            });
+    }, []);
 
     const [shipping, setShipping] = useState(5);
     const [showToast, setShowToast] = useState(false); // State để lưu thông báo toast
@@ -42,14 +74,34 @@ const CartPage = () => {
         const newItems = items.map((item) =>
             item.id === id
                 ? { ...item, quantity: Math.max(0, item.quantity + value) }
-                : item,
+                : item
         );
         setItems(newItems);
     };
 
     const handleRemoveItem = (id) => {
-        const itemName = items.find((item) => item.id === id).name; // Lấy tên sản phẩm
         const newItems = items.filter((item) => item.id !== id);
+
+        const productId = items.find((item) => item.id === id).productId;
+
+        // Xóa sản phẩm khỏi giỏ hàng
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/cart`, {
+            method: "DELETE",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.accessToken}`,
+            },
+            body: JSON.stringify({
+                productId,
+                variantId: id,
+            }),
+        }).then((res) => {
+            if (res.ok) {
+                console.log("Item removed from cart");
+            }
+        });
+
         setItems(newItems);
         setShowToast(true); // Hiển thị thông báo khi xóa sản phẩm
         setTimeout(() => setShowToast(false), 3000); // Ẩn thông báo sau 3 giây
@@ -57,7 +109,7 @@ const CartPage = () => {
 
     const subtotal = items.reduce(
         (acc, item) => acc + item.price * item.quantity,
-        0,
+        0
     );
     const total = subtotal + shipping;
 

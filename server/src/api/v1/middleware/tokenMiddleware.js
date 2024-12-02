@@ -99,7 +99,7 @@ const verifyAccessToken = async (req, res, next) => {
 };
 
 const optionalAuthenticateToken = (req, res, next) => {
-    if (req.cookies['accessToken']) {
+    if (req.cookies['userId']) {
         const token = req.cookies['accessToken'];
         try {
             const decoded = verifyToken(token);
@@ -110,13 +110,10 @@ const optionalAuthenticateToken = (req, res, next) => {
 };
 
 const combinedAuthMiddleware = (req, res, next) => {
-    optionalAuthenticateToken(req, res, () => {
-        if (req.user) {
+        if (req.cookies['userId']) {
             return verifyAccessToken(req, res, next);
         }
-
         next();
-    });
 };
 
 module.exports = {
