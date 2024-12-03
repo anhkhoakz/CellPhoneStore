@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Container, Typography, Paper } from "@mui/material";
-import OrderCard from "../components/OrderCard";
-import SearchBar from "../components/SearchBar";
-import OrderEmpty from "../components/OrderEmpty";
+import OrderCard from "../components/order/OrderCard";
+import SearchBar from "../components/navigation/SearchBar";
+import OrderEmpty from "../components/order/OrderEmpty";
 
 import { useCookies } from "react-cookie";
 

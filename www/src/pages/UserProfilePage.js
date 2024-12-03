@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import UserInfo from "../components/user-components/UserInfo";
-import AddressManagement from "../components/user-components/AddressManagement";
-import ChangePassword from "../components/user-components/ChangePassword";
+import UserInfo from "../components/user/UserInfo";
+import AddressManagement from "../components/user/AddressManagement";
+import ChangePassword from "../components/user/ChangePassword";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
-import ToastNoti from "../components/ToastNoti"; // Import ToastNoti
+import ToastNoti from "../components/toast-noti/ToastNoti"; // Import ToastNoti
 
 import { useCookies } from "react-cookie";
 

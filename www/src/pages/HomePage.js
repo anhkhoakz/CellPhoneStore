@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import ProductList from "../components/ProductList";
-import TimedBanner from "../components/TimedBanner";
+import ProductList from "../components/product/ProductList";
+import TimedBanner from "../components/banner/TimedBanner";
 
 const HomePage = () => {
     // Sample data for products

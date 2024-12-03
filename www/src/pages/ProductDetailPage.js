@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
-import ProductNotFound from "../components/ProductNotFound";
+import ProductNotFound from "../components/product/ProductNotFound";
 import { useParams } from "react-router-dom";
-import ProductList from "../components/ProductList";
+import ProductList from "../components/product/ProductList";
 import {
     Box,
     Typography,
@@ -12,8 +12,8 @@ import {
     TextField,
     MenuItem,
 } from "@mui/material";
-import ToastNoti from "../components/ToastNoti";
-import CommentsSection from "../components/CommentSection";
+import ToastNoti from "../components/toast-noti/ToastNoti";
+import CommentsSection from "../components/product/CommentSection";
 
 const ProductDetailPage = () => {
     const [product, setProduct] = useState(null);

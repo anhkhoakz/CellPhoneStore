@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Box, Grid, Typography, Card, Divider, Button } from "@mui/material";
-import CartItem from "../components/CartItem";
-import CartEmpty from "../components/CartEmpty";
-import Summary from "../components/Summary";
+import CartItem from "../components/cart/CartItem";
+import CartEmpty from "../components/cart/CartEmpty";
+import Summary from "../components/cart/Summary";
 import { Link } from "react-router-dom";
-import ExpressCheckout from "../components/ExpressCheckout";
-import ToastNoti from "../components/ToastNoti"; // Import ToastNoti
+import ExpressCheckout from "../components/cart/ExpressCheckout";
+import ToastNoti from "../components/toast-noti/ToastNoti"; // Import ToastNoti
 
 import { useCookies } from "react-cookie";
 

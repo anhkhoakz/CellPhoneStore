@@ -9,7 +9,7 @@ import {
     FormControl,
     InputLabel,
 } from "@mui/material";
-import ProductCard from "../components/ProductCard";
+import ProductCard from "../components/product/ProductCard";
 import NoResult from "../components/NoResult";
 
 const SearchPage = () => {

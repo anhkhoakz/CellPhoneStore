@@ -18,10 +18,10 @@ const NoResult = () => {
                 sx={{ fontSize: 60, color: "text.secondary", mb: 2 }}
             />
             <Typography variant="h6" color="text.secondary" sx={{ mb: 2 }}>
-                Không có sản phẩm nào phù hợp với tìm kiếm của bạn.
+                There are no products matching your search.
             </Typography>
             <Button variant="contained" color="primary" component={Link} to="/">
-                Về trang chủ
+                Back to home page
             </Button>
         </Box>
     );

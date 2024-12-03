@@ -1,9 +1,9 @@
 // src/App.js
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import Navigation from "./components/Navigation";
+import Header from "./components/header/Header";
+import Footer from "./components/footer/Footer";
+import Navigation from "./components/navigation/Navigation";
 import HomePage from "./pages/HomePage";
 import OrderManagementPage from "./pages/OrderManagementPage";
 import CartPage from "./pages/CartPage";

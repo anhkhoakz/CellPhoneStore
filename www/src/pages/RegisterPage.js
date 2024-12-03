@@ -1,8 +1,8 @@
 // src/pages/RegisterPage.js
 import React from "react";
 import { Box, Divider, Typography } from "@mui/material";
-import Register from "../components/Register";
-import GoogleLogin from "../components/GoogleLogin";
+import Register from "../components/register/Register";
+import GoogleLogin from "../components/login/GoogleLogin";
 
 const RegisterPage = () => {
     return (
