@@ -6,30 +6,35 @@ import Typography from "@mui/material/Typography";
 import { IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
+import { useCookies } from "react-cookie";
+
 const ChangePassword = ({ user, onPasswordChangeSuccess }) => {
+    
+    const [cookies] = useCookies([]);
+
     // State để lưu trữ giá trị các trường nhập liệu
-    const [currentPassword, setCurrentPassword] = useState("");
-    const [newPassword, setNewPassword] = useState("");
+    const [oldPassword, setOldPassword] = useState("");
+    const [password, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
     // State để lưu trữ lỗi
     const [errors, setErrors] = useState({
-        currentPassword: "",
-        newPassword: "",
+        oldPassword: "",
+        password: "",
         confirmPassword: "",
     });
 
     // State để kiểm tra ẩn/hiện mật khẩu
     const [showPassword, setShowPassword] = useState({
-        currentPassword: false,
-        newPassword: false,
+        oldPassword: false,
+        password: false,
         confirmPassword: false,
     });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        if (name === "currentPassword") setCurrentPassword(value);
-        if (name === "newPassword") setNewPassword(value);
+        if (name === "oldPassword") setOldPassword(value);
+        if (name === "password") setNewPassword(value);
         if (name === "confirmPassword") setConfirmPassword(value);
     };
 
@@ -45,18 +50,18 @@ const ChangePassword = ({ user, onPasswordChangeSuccess }) => {
         let errorMessages = {};
 
         // Kiểm tra mật khẩu hiện tại
-        if (!currentPassword) {
-            errorMessages.currentPassword =
+        if (!oldPassword) {
+            errorMessages.oldPassword =
                 "Mật khẩu hiện tại không được để trống";
             valid = false;
         }
 
         // Kiểm tra mật khẩu mới
-        if (!newPassword) {
-            errorMessages.newPassword = "Mật khẩu mới không được để trống";
+        if (!password) {
+            errorMessages.password = "Mật khẩu mới không được để trống";
             valid = false;
-        } else if (newPassword.length < 6) {
-            errorMessages.newPassword = "Mật khẩu mới phải có ít nhất 6 ký tự";
+        } else if (password.length < 6) {
+            errorMessages.password = "Mật khẩu mới phải có ít nhất 6 ký tự";
             valid = false;
         }
 
@@ -65,7 +70,7 @@ const ChangePassword = ({ user, onPasswordChangeSuccess }) => {
             errorMessages.confirmPassword =
                 "Xác nhận mật khẩu không được để trống";
             valid = false;
-        } else if (confirmPassword !== newPassword) {
+        } else if (confirmPassword !== password) {
             errorMessages.confirmPassword = "Xác nhận mật khẩu không khớp";
             valid = false;
         }
@@ -76,10 +81,55 @@ const ChangePassword = ({ user, onPasswordChangeSuccess }) => {
         return valid;
     };
 
-    const handleSubmit = () => {
+
+    const changePassword = async () => {
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_BACKEND_URL}/api/v1/users/${user._id}`,
+                {
+                    method: "PATCH",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${cookies.accessToken}`,
+                    },
+
+                    body: JSON.stringify({
+                        password: password,
+                        oldPassword: oldPassword,
+                        confirmPassword: confirmPassword,
+                    }),
+                }
+            );
+
+            const data = await response.json();
+            console.log(data);
+            return data.code;
+
+        } catch (error) {
+            console.error(error);
+            return 503;
+        }
+    }
+
+
+    const handleSubmit = async () => {
         if (validate()) {
-            console.log("Mật khẩu đã được thay đổi thành công!");
-            onPasswordChangeSuccess(); // Call the callback to close the modal
+
+            // Gọi hàm thay đổi mật khẩu
+            const check =  await changePassword();
+
+            // Gọi hàm callback để đóng modal
+
+            if (check === 200)
+            {
+                
+                console.log("Mật khẩu đã được thay đổi thành công!");
+                onPasswordChangeSuccess(); // Call the callback to close the modal
+            }
+
+            console.log("Mật khẩu không thể thay đổi!");
+
         }
     };
 
@@ -89,24 +139,24 @@ const ChangePassword = ({ user, onPasswordChangeSuccess }) => {
         >
             <TextField
                 label="Enter Current Password"
-                type={showPassword.currentPassword ? "text" : "password"}
-                name="currentPassword"
-                value={currentPassword}
+                type={showPassword.oldPassword ? "text" : "password"}
+                name="oldPassword"
+                value={oldPassword}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
-                error={!!errors.currentPassword}
-                helperText={errors.currentPassword}
+                error={!!errors.oldPassword}
+                helperText={errors.oldPassword}
                 InputProps={{
                     endAdornment: (
                         <InputAdornment position="end">
                             <IconButton
                                 onClick={() =>
-                                    handleClickShowPassword("currentPassword")
+                                    handleClickShowPassword("oldPassword")
                                 }
                                 edge="end"
                             >
-                                {showPassword.currentPassword ? (
+                                {showPassword.oldPassword ? (
                                     <VisibilityOff />
                                 ) : (
                                     <Visibility />
@@ -118,24 +168,24 @@ const ChangePassword = ({ user, onPasswordChangeSuccess }) => {
             />
             <TextField
                 label="Enter New Password"
-                type={showPassword.newPassword ? "text" : "password"}
-                name="newPassword"
-                value={newPassword}
+                type={showPassword.password ? "text" : "password"}
+                name="password"
+                value={password}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
-                error={!!errors.newPassword}
-                helperText={errors.newPassword}
+                error={!!errors.password}
+                helperText={errors.password}
                 InputProps={{
                     endAdornment: (
                         <InputAdornment position="end">
                             <IconButton
                                 onClick={() =>
-                                    handleClickShowPassword("newPassword")
+                                    handleClickShowPassword("password")
                                 }
                                 edge="end"
                             >
-                                {showPassword.newPassword ? (
+                                {showPassword.password ? (
                                     <VisibilityOff />
                                 ) : (
                                     <Visibility />

@@ -44,10 +44,11 @@ const userSchema = new mongoose.Schema(
 
         addresses: [
             {
-                street: { type: String, trim: true },
+                village: { type: String, trim: true },
                 city: { type: String, trim: true },
                 district: { type: String, trim: true },
-                postalCode: { type: String, trim: true },
+                detail: { type: String, trim: true },
+                isDefault: { type: Boolean, default: false },
             },
         ],
         points: { type: Number, default: 0 },
@@ -64,11 +65,6 @@ const userSchema = new mongoose.Schema(
 
         note: { type: String, trim: true },
 
-        createAt: {
-            type: Date,
-            default: Date.now,
-            immutable: true,
-        },
     },
     {
         timestamps: true,

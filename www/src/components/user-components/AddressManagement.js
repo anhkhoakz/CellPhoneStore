@@ -62,7 +62,7 @@ const AddressManagement = ({
                         }}
                     >
                         <span>
-                            {addr.address} {addr.isDefault ? "(Default)" : ""}
+                            {addr.detail} {addr.isDefault ? "(Default)" : ""}
                         </span>
                         {!addr.isDefault && (
                             <IconButton

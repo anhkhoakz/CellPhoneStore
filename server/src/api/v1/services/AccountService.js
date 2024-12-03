@@ -23,6 +23,7 @@ const { delAsync, getAsync } = require('~/config/redis');
 const hashPassword = require('~v1/helpers/hashPassword');
 
 const generateResetToken = require('~v1/helpers/generateKey');
+const { set } = require('~/app');
 
 require('dotenv').config();
 
@@ -264,9 +265,9 @@ module.exports = {
             };
         }
     },
-    update: async (data) => {
+    update: async (updateData, id) => {
         try {
-            const user = await _user.findOne({ email: data.email });
+            const user = await _user.findById({ _id: id });
 
             if (!user) {
                 return {
@@ -275,14 +276,12 @@ module.exports = {
                 };
             }
 
-            const { _id, email, ...updateData } = data;
-
             if (updateData.password) {
-                if (!updateData.oldPassword) {
+                if (!updateData.oldPassword || !updateData.confirmPassword) {
                     return {
                         code: 400,
                         message:
-                            'Old password is required to update the password',
+                            'Old password and confirm password are required',
                     };
                 }
 
@@ -297,11 +296,24 @@ module.exports = {
                     };
                 }
 
+                if (updateData.password === updateData.oldPassword) {
+                    return {
+                        code: 400,
+                        message: 'New password must be different from old password',
+                    };
+                }
+
+                if (updateData.password !== updateData.confirmPassword) {
+                    return {
+                        code: 400,
+                        message: 'Passwords do not match',
+                    };
+                }
+
                 updateData.password = await hashPassword(updateData.password);
             }
 
-            const updatedUser = await _user.findOneAndUpdate(
-                { _id: user._id },
+            const updatedUser = await user.updateOne(
                 updateData,
                 { new: true },
             );
@@ -391,4 +403,81 @@ module.exports = {
             };
         }
     },
+
+    addAddress: async (data, id) => {
+        try {
+            const user = await _user.findById({ _id: id });
+
+            if (!user) {
+                return {
+                    code: 404,
+                    message: 'User not found',
+                };
+            }
+
+            if (!user.addresses) {
+                user.addresses = [];
+            }
+
+
+            if(user.addresses.length === 0){
+                data.isDefault = true;
+            }
+
+            user.addresses.push(data);
+
+            const updatedUser = await user.save();
+
+            return {
+                code: 200,
+                message: 'Address added successfully!',
+                detail: data.detail,
+            };
+        } catch (error) {
+            console.error(error);
+            return {
+                code: 500,
+                message: 'Internal server error',
+            };
+        }
+    },
+
+    setDefaultAddress: async (data, id) => {
+        try {
+            const user = await _user.findById({ _id: id });
+
+            if (!user) {
+                return {
+                    code: 404,
+                    message: 'User not found',
+                };
+            }
+
+            if (!user.addresses) {
+                user.addresses = [];
+            }
+
+            user.addresses.forEach((address) => {
+                if (address.id === data.id) {
+                    address.isDefault = true;
+                } else {
+                    address.isDefault = false;
+                }
+            });
+
+            const updatedUser = await user.save();
+
+            return {
+                code: 200,
+                message: 'Default address set successfully!',
+                elements: updatedUser,
+            };
+        } catch (error) {
+            console.error(error);
+            return {
+                code: 500,
+                message: 'Internal server error',
+            };
+        }
+    }
 };

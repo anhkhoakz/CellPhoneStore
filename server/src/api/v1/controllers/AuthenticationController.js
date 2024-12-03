@@ -7,6 +7,8 @@ const {
     update,
     forgotPassword,
     resetPassword,
+    addAddress,
+    setDefaultAddress,
 } = require('~/api/v1/services/AccountService');
 
 require('dotenv').config();
@@ -31,14 +33,15 @@ module.exports = {
     getUser: async (req, res, next) => {
         try {
             const { id } = req.params;
-            const user = await User.findById(id);
+            const user = await User.findById(id).select('-password');   
+
             if (!user) {
                 return res.status(404).json({
                     message: 'User not found',
                 });
             }
             return res.status(200).json({
-                user,
+                message: user,
             });
         } catch (err) {
             next(err);
@@ -298,17 +301,48 @@ module.exports = {
 
     update: async (req, res, next) => {
         try {
-            if (!req.body.email) {
-                const { email } = req.user;
-                req.body.email = email;
-            }
+            const { id } = req.params;
 
-            const { code, message, elements } = await update(req.body);
+            const { code, message, elements } = await update(req.body, id);
 
             return res.status(code).json({
                 code,
                 message,
                 elements,
+            });
+        } catch (err) {
+            console.error(err);
+            next(err);
+        }
+    },
+
+    addAddress: async (req, res, next) => {
+        try {
+            const { id } = req.params;
+            const { code, message, elements, detail } = await addAddress(req.body,id);
+
+            return res.status(code).json({
+                code,
+                message,
+                elements,
+                detail
+            });
+        } catch (err) {
+            console.error(err);
+            next(err);
+        }
+    },
+
+    setDefaultAddress: async (req, res, next) => {
+        try {
+            const { id } = req.params;
+            const { code, message, elements , detail} = await setDefaultAddress(req.body, id);
+
+            return res.status(code).json({
+                code,
+                message,
+                elements,
+                detail
             });
         } catch (err) {
             console.error(err);

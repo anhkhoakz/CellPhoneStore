@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -12,16 +12,44 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import ToastNoti from "../components/ToastNoti"; // Import ToastNoti
 
+import { useCookies } from "react-cookie";
+
 const UserProfilePage = () => {
-    const [user, setUser] = useState({
-        name: "Nguyễn Văn A",
-        email: "email@example.com",
-        phone: "0123456789",
-        addresses: [
-            { id: 1, address: "123 Đường A, Quận 1, TP.HCM", isDefault: true },
-            { id: 2, address: "456 Đường B, Quận 2, TP.HCM", isDefault: false },
-        ],
-    });
+
+    const [cookies] = useCookies([]);
+    const [user, setUser] = useState({});
+
+
+    useEffect(() => {
+        // Fetch user data from the server
+
+         const fetchUserData = async () => {
+                try {
+                    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users/${cookies.userId}`, 
+                        { 
+                            method: "GET",
+                            credentials: "include",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${cookies.accessToken}`,
+                            },
+                        });
+
+                    if (response.ok) {
+                        const userData = await response.json();
+                        console.log(userData);
+                        setUser(userData.message);
+                    } else {
+                        throw new Error("Failed to fetch user data");
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            };
+
+            fetchUserData();
+    }
+    , []);
 
     const [open, setOpen] = useState(false);
     const [toast, setToast] = useState({ message: "", type: "", show: false });
@@ -89,6 +117,7 @@ const UserProfilePage = () => {
         setTimeout(() => setToast((prev) => ({ ...prev, show: false })), 3000); // Hide toast after 3 seconds
     };
 
+
     const handlePasswordChangeSuccess = () => {
         setOpen(false); // Close modal
         setToast({
@@ -139,7 +168,7 @@ const UserProfilePage = () => {
                     sx={{ padding: "1.25em", width: "80vh", maxWidth: "80vh" }}
                 >
                     <AddressManagement
-                        addresses={user.addresses}
+                        addresses={user.addresses || []}
                         onAddAddress={handleAddAddress}
                         onSetDefaultAddress={handleSetDefaultAddress}
                         onRemoveAddress={handleRemoveAddress}

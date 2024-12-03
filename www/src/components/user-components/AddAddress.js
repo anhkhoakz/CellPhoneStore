@@ -8,8 +8,12 @@ import InputLabel from "@mui/material/InputLabel";
 import Box from "@mui/material/Box";
 import FormHelperText from "@mui/material/FormHelperText";
 import PropTypes from "prop-types";
+import { useCookies } from "react-cookie";
+import { Details } from "@mui/icons-material";
 
 const AddAddress = ({ onAddAddress, onClose }) => {
+    const [cookies] = useCookies([]);
+
     const [address, setAddress] = useState("");
     const [province, setProvince] = useState("");
     const [district, setDistrict] = useState("");
@@ -74,8 +78,35 @@ const AddAddress = ({ onAddAddress, onClose }) => {
             !formErrors.ward
         ) {
             const fullAddress = `${address}, ${ward}, ${district}, ${province}`;
-            onAddAddress({ address: fullAddress, ward, district, province });
-            onClose();
+
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users/addAddress/${cookies.userId}`, {
+                method: "PATCH",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${cookies.accessToken}`,
+                },
+                body: JSON.stringify({
+                    detail: fullAddress,
+                    city: province,
+                    district: district,
+                    village: ward,
+                }),
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error("Failed to add address");
+                })
+                .then((data) => {
+                    console.log(data);
+                    onAddAddress(data.detail);
+                    onClose();
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
         }
     };
 

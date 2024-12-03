@@ -3,10 +3,12 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import ToastNoti from "../ToastNoti";
+import { useCookies } from "react-cookie";
 
 const UserInfo = ({ user, onUserInfoChange }) => {
+    const [cookie] = useCookies([]);
     const [errors, setErrors] = useState({
-        name: "",
+        username: "",
         email: "",
         phone: "",
     });
@@ -23,7 +25,7 @@ const UserInfo = ({ user, onUserInfoChange }) => {
         let errorMessages = {};
 
         // Kiểm tra tên
-        if (!user.name) {
+        if (!user.username) {
             errorMessages.name = "Name cannot be blank";
             valid = false;
         }
@@ -52,8 +54,43 @@ const UserInfo = ({ user, onUserInfoChange }) => {
         return valid;
     };
 
-    const handleSaveChanges = () => {
+    const saveUserInfo = async () => {
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_BACKEND_URL}/api/v1/users/${user._id}`,
+                {
+                    method: "PATCH",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${cookie.accessToken}`,
+                    },
+
+                    body: JSON.stringify({
+                        username: user.username,
+                        email: user.email,
+                        phone: user.phone,
+                    }),
+                }
+            );
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+            } else {
+                throw new Error("Failed to save user information");
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+
+    const handleSaveChanges = async () => {
         if (validate()) {
+            // Gửi request lưu thông tin
+            await saveUserInfo();
+
             setToastMessage("Information has been saved successfully!");
             setToastType("success");
         } else {
@@ -72,7 +109,7 @@ const UserInfo = ({ user, onUserInfoChange }) => {
             <TextField
                 label="Name"
                 name="name"
-                value={user.name}
+                value={user.username}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
