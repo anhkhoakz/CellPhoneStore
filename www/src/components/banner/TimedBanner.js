@@ -47,7 +47,7 @@ const TimedBanner = () => {
                 justifyContent: "center",
                 alignItems: "center",
                 margin: "1.25em auto",
-                maxWidth: "80%",
+                maxWidth: "70%",
                 height: "auto",
                 maxHeight: 400,
                 overflow: "hidden",

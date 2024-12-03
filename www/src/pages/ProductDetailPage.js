@@ -47,7 +47,6 @@ const ProductDetailPage = () => {
                 const data = await res.json();
 
                 setProduct(data);
-                // setSelectedColor(data.variants[0]);
                 setLoading(false);
             } catch (err) {
                 console.error("Error fetching product:", err);
@@ -59,12 +58,29 @@ const ProductDetailPage = () => {
         fetchProduct();
     }, [id]);
 
+    // Mock data for related products
+
     const relaProducts = [
         { id: 1, name: "Product 1", price: 29.99, image: "/image/ip16.jpg" },
         { id: 2, name: "Product 2", price: 39.99, image: "/image/ip16.jpg" },
         { id: 3, name: "Product 3", price: 19.99, image: "/image/ip16.jpg" },
         { id: 4, name: "Product 4", price: 19.99, image: "/image/ip16.jpg" },
     ];
+
+    // Mock data for product images
+
+    const tempImages = [
+        "https://placehold.co/100x100",
+        "https://placehold.co/100x100",
+        "https://placehold.co/100x100",
+        "https://placehold.co/100x100"
+    ];
+
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    const handleImageChange = (index) => {
+        setCurrentImageIndex(index);
+    };
 
     const handleColorChange = (event) => {
         const color = product.variants.find(
@@ -147,6 +163,24 @@ const ProductDetailPage = () => {
 
                             />
                         </Box>
+                        <Box sx={{ marginTop: "10px", display: "flex", justifyContent: "center", gap: "10px" }}>
+                            {tempImages.map((image, index) => (
+                                <Button key={index} onClick={() => handleImageChange(index)}>
+                                    <img
+                                        src={image}
+                                        alt={`Thumbnail ${index + 1}`}
+                                        style={{
+                                            width: "50px",
+                                            height: "50px",
+                                            objectFit: "cover",
+                                            border: currentImageIndex === index ? "2px solid #00796b" : "none",
+                                            borderRadius: "8px",
+                                        }}
+                                    />
+                                </Button>
+                            ))}
+                        </Box>
+
                     </Grid>
 
                     {/* Content Section */}

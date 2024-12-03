@@ -1,65 +1,36 @@
-import * as React from "react";
-import PropTypes from "prop-types";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import OutlinedInput from "@mui/material/OutlinedInput";
+import React, { useState } from "react";
+import { Box, Typography, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import EmailForm from "../components/forgot-password/EmailForm";
+import Notification from "../components/forgot-password/Notification";
 
-function ForgotPasswordPage({ open, handleClose }) {
+const ForgotPasswordPage = () => {
+    const [emailSent, setEmailSent] = useState(false);
+    const navigate = useNavigate();
+
+    const handleBackToVerify = () => {
+        navigate("/verify");
+    };
+
+    const handleEmailSent = () => {
+        setEmailSent(true);
+    };
+
     return (
-        <Dialog
-            open={open}
-            onClose={handleClose}
-            PaperProps={{
-                component: "form",
-                onSubmit: (event) => {
-                    event.preventDefault();
-                    handleClose();
-                },
-                sx: { backgroundImage: "none" },
-            }}
-        >
-            <DialogTitle>Reset password</DialogTitle>
-            <DialogContent
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 2,
-                    width: "100%",
-                }}
-            >
-                <DialogContentText>
-                    Enter your account&apos;s email address, and we&apos;ll send
-                    you a link to reset your password.
-                </DialogContentText>
-                <OutlinedInput
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="email"
-                    name="email"
-                    label="Email address"
-                    placeholder="Email address"
-                    type="email"
-                    fullWidth
+        <Box sx={{ maxWidth: 400, margin: "auto", padding: 3, minHeight: "80vh" }}>
+            <Typography variant="h5" align="center" sx={{ marginBottom: 2 }}>
+                Forgot Password
+            </Typography>
+            {!emailSent ? (
+                <EmailForm onEmailSent={handleEmailSent} />
+            ) : (
+                <Notification
+                    message="A password reset link has been sent to your email."
+                    onBackToLogin={handleBackToVerify}
                 />
-            </DialogContent>
-            <DialogActions sx={{ pb: 3, px: 3 }}>
-                <Button onClick={handleClose}>Cancel</Button>
-                <Button variant="contained" type="submit">
-                    Continue
-                </Button>
-            </DialogActions>
-        </Dialog>
+            )}
+        </Box>
     );
-}
-
-ForgotPasswordPage.propTypes = {
-    handleClose: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired,
 };
 
 export default ForgotPasswordPage;

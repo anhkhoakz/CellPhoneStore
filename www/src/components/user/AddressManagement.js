@@ -19,8 +19,9 @@ const AddressManagement = ({
 }) => {
     const [open, setOpen] = useState(false);
     const [defaultAddress, setDefaultAddress] = useState(
-        addresses.find((addr) => addr.isDefault)?.id || "",
+        addresses.find((addr) => addr.isDefault)?.id || ""
     );
+    const [selectedAddress, setSelectedAddress] = useState(null);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -34,6 +35,10 @@ const AddressManagement = ({
         const selectedId = event.target.value;
         setDefaultAddress(selectedId);
         onSetDefaultAddress(selectedId);
+
+        // Update selected address to display its contact info
+        const selectedAddr = addresses.find((addr) => addr.id === selectedId);
+        setSelectedAddress(selectedAddr);
     };
 
     const handleRemoveAddress = (e, id) => {
@@ -75,6 +80,19 @@ const AddressManagement = ({
                     </MenuItem>
                 ))}
             </Select>
+
+            {/* Hiển thị thông tin liên hệ của địa chỉ đã chọn */}
+            {selectedAddress && (
+                <div style={{ marginTop: "20px" }}>
+                    <Typography variant="subtitle1">Contact Information</Typography>
+                    <Typography variant="body2">
+                        <strong>Name:</strong> {selectedAddress.contactName}
+                    </Typography>
+                    <Typography variant="body2">
+                        <strong>Phone:</strong> {selectedAddress.contactPhone}
+                    </Typography>
+                </div>
+            )}
 
             <Button
                 variant="contained"

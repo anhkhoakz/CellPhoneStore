@@ -13,32 +13,34 @@ import { ChevronLeft, ChevronRight } from "@mui/icons-material"; // Thay thế b
 
 const ProductList = ({ title, products }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [itemsPerPage, setItemsPerPage] = useState(3);
 
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down("md"));
+    const isLargeScreen = useMediaQuery(theme.breakpoints.up("lg"));
 
-    useEffect(() => {
+    // Tính số lượng cột trên mỗi kích thước màn hình
+    const getItemsPerRow = () => {
         if (isSmallScreen) {
-            setItemsPerPage(1);
+            return 1; // Màn hình nhỏ: 1 cột
         } else if (isMediumScreen) {
-            setItemsPerPage(2);
+            return 2; // Màn hình vừa: 2 cột
+        } else if (isLargeScreen) {
+            return 4; // Màn hình lớn: 4 cột
         } else {
-            setItemsPerPage(4);
+            return 3; // Màn hình trung bình: 3 cột
         }
-    }, [isSmallScreen, isMediumScreen]);
+    };
 
-    const visibleProducts = Array.from({ length: itemsPerPage }).map(
-        (_, i) => products[(currentIndex + i) % products.length],
-    );
+    const itemsPerRow = getItemsPerRow();
+    const visibleProducts = products.slice(currentIndex, currentIndex + itemsPerRow); // Hiển thị sản phẩm theo số lượng cột
 
     const handleNext = () => {
-        setCurrentIndex((currentIndex + 1) % products.length);
+        setCurrentIndex((currentIndex + itemsPerRow) % products.length);
     };
 
     const handlePrevious = () => {
-        setCurrentIndex((currentIndex - 1 + products.length) % products.length);
+        setCurrentIndex((currentIndex - itemsPerRow + products.length) % products.length);
     };
 
     return (
@@ -66,7 +68,7 @@ const ProductList = ({ title, products }) => {
                     position: "relative",
                 }}
             >
-                {/* Nút Previous ở bên trái với biểu tượng ChevronLeft */}
+                {/* Nút Previous */}
                 <IconButton
                     onClick={handlePrevious}
                     sx={{
@@ -91,13 +93,13 @@ const ProductList = ({ title, products }) => {
                     sx={{ flex: "1 1 auto", maxWidth: "80%" }}
                 >
                     {visibleProducts.map((product, index) => (
-                        <Grid item key={index}>
+                        <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
                             <ProductCard product={product} />
                         </Grid>
                     ))}
                 </Grid>
 
-                {/* Nút Next ở bên phải với biểu tượng ChevronRight */}
+                {/* Nút Next */}
                 <IconButton
                     onClick={handleNext}
                     sx={{
