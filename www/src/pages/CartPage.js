@@ -18,7 +18,7 @@ const CartPage = () => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${cookies.accessToken}`,
+                Authorization: `Bearer ${cookies.accessToken}`,
             },
             credentials: "include",
         })
@@ -29,10 +29,9 @@ const CartPage = () => {
                     return;
                 }
 
-                console.log(data)
+                console.log(data);
 
                 const transformedItems = data.items.map((item) => {
-
                     const variant =
                         item.variantId &&
                         item.productDetails.variants.find(
@@ -71,12 +70,44 @@ const CartPage = () => {
     const [showToast, setShowToast] = useState(false); // State để lưu thông báo toast
 
     const handleQuantityChange = (id, value) => {
-        const newItems = items.map((item) =>
-            item.id === id
-                ? { ...item, quantity: Math.max(0, item.quantity + value) }
-                : item
-        );
-        setItems(newItems);
+
+        // const quantity = items.find((item) => item.id === id).quantity;
+
+        const item = items.find((item) => item.id === id);
+
+        const { quantity, productId } = item;
+
+        const newQuantity = quantity + value;
+
+
+
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/cart`, {
+            method: "PATCH",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${cookies.accessToken}`,
+            },
+            body: JSON.stringify({
+                productId,
+                variantId: id,
+                quantity: newQuantity,
+            }),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.success) {
+                    console.log("Quantity updated");
+                    const newItems = items.map((item) =>
+                        item.id === id
+                            ? { ...item, quantity: Math.max(0, item.quantity + value) }
+                            : item
+                    );
+                    setItems(newItems);
+                }
+            });
+
+       
     };
 
     const handleRemoveItem = (id) => {
@@ -90,7 +121,7 @@ const CartPage = () => {
             credentials: "include",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${cookies.accessToken}`,
+                Authorization: `Bearer ${cookies.accessToken}`,
             },
             body: JSON.stringify({
                 productId,
@@ -180,6 +211,7 @@ const CartPage = () => {
                                     total={total}
                                     shipping={shipping}
                                     setShipping={setShipping}
+                                    items={items}
                                 />
                             </Card>
                         </Grid>

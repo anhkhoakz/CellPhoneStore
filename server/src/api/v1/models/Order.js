@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Coupon = require('./Coupon');
 
 const statusValue = ['pending', 'confirmed', 'shipping', 'delivered'];
 const shippingOption = ['standard', 'express'];
@@ -7,13 +8,14 @@ const orderSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     items: [
         {
-            productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+            productId: { type: Number, ref: 'Product' },
             quantity: Number,
             variantId: mongoose.Schema.Types.ObjectId,
             price: Number,
         },
     ],
-    totalAmount: Number,
+
+    totalAmount: {type: Number, required: true},
 
     status: {
         type: String,
@@ -34,10 +36,13 @@ const orderSchema = new mongoose.Schema({
     shippingAddress: {
         city: String,
         district: String,
-        street: String,
-        zip: String,
-        contactNumber: String,
+        village: String,
+        detail: String,
     },
+
+    phone: { type: String, required: true},
+
+    coupon: { type: mongoose.Schema.Types.ObjectId, ref: 'Coupon' },
 });
 
 module.exports = mongoose.model('Order', orderSchema);

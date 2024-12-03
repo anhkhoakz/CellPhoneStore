@@ -14,6 +14,8 @@ router.post('/', combinedAuthMiddleware, cartController.addToCart);
 
 router.delete('/', combinedAuthMiddleware, cartController.removeFromCart);
 
+router.patch('/', combinedAuthMiddleware, cartController.updateQuantity);
+
 router.post(
     '/shipping-fee',
     combinedAuthMiddleware,

@@ -15,6 +15,7 @@ const productSchema = new Schema({
     },
     productId: { type: Number, unique: true },
     stock: { type: Number, required: true },
+
     sold: { type: Number, default: 0 },
 
     variants: [

@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import LoggedCustomerInfo from "./LoggedCustomerInfo"; // Import LoggedCustomerInfo
 
-const Summary = ({ subtotal, total, shipping, setShipping }) => {
+const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
     // Customer state
     const [name] = useState("John Doe"); // Example name (read-only)
     const [phone, setPhone] = useState("+1 234 567 890"); // Example phone number (editable)
@@ -30,6 +30,38 @@ const Summary = ({ subtotal, total, shipping, setShipping }) => {
         console.log("Customer Information:", { name, phone, selectedAddress });
         console.log("Shipping:", shippingCost);
         console.log("Total Price:", total);
+
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/checkout`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                couponCode: "",
+                shippingAddress: {
+                    street: "Street",
+                    city: "City",
+                    district: "District",
+                    village: "Village",
+                    detail: selectedAddress,
+                },
+                items: items,
+                email: "khanhmh2004@gmail.com",
+                phone,
+                name,
+                shippingOption: shippingCost === 5 ? "standard" : "express",
+                total,
+            }),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+
     };
 
     return (
@@ -90,7 +122,7 @@ const Summary = ({ subtotal, total, shipping, setShipping }) => {
                 color="success"
                 onClick={handleSubmit}
                 sx={{ fontWeight: "bold", width: "100%" }}
-                href="/success"
+                // href="/success"
             >
                 Register
             </Button>

@@ -7,6 +7,8 @@ const couponSchema = new mongoose.Schema(
     {
         code: { type: String, unique: true },
 
+        quantity: { type: Number, default: 1 },
+
         type: {
             type: String,
             enum: typeValues,
@@ -16,7 +18,7 @@ const couponSchema = new mongoose.Schema(
         discount: {
             type: Number,
             validate: {
-                validator: (value) => {
+                validator: function (value)  {
                     if (this.type === 'percentage') {
                         return value <= 50 && value > 0;
                     } else if (this.type === 'fixed') {
@@ -39,11 +41,24 @@ const couponSchema = new mongoose.Schema(
                 message: 'Expiration date must be in the future!',
             },
         },
-        isUsed: { type: Boolean, default: false },
+
+        usedBy: {
+            type: [mongoose.Schema.Types.ObjectId],
+            ref: 'User',
+            default: [],
+        },
     },
     {
         timestamps: true,
     },
 );
+
+
+couponSchema.pre('save', function (next) {
+    if (this.expirationDate && this.expirationDate < Date.now()) {
+        return next(new Error('Expiration date must be in the future!'));
+    }
+    next();
+});
 
 module.exports = mongoose.model('Coupon', couponSchema);
