@@ -4,13 +4,12 @@ import process from "process";
 const defaultHeaders = {
     Accept: "application/json, text/plain, */*; charset=utf-8",
     "Content-Type": "application/json; charset=utf-8",
-    Pragma: "no-cache",
-    "Cache-Control": "no-cache",
 };
 
 const instance = axios.create({
     baseURL: process.env.REACT_APP_API_BASE_URL || "http://localhost:5000",
     headers: defaultHeaders,
+    timeout: 5000, // 5s
 });
 
 const methods = ["get", "post", "put", "delete"];
