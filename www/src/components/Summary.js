@@ -122,7 +122,7 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
                 color="success"
                 onClick={handleSubmit}
                 sx={{ fontWeight: "bold", width: "100%" }}
-                // href="/success"
+                href="/success"
             >
                 Register
             </Button>

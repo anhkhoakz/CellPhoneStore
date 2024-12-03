@@ -196,7 +196,7 @@ module.exports = {
     logout: async (req) => {
         try {
             if (!req.cookies['userId']) {
-                return { code: 400, message: 'redirect to login page' };
+                return { code: 401, message: 'redirect to login page' };
             }
 
             const userId = req.cookies['userId'];

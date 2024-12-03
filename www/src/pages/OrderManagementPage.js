@@ -4,7 +4,11 @@ import OrderCard from "../components/OrderCard";
 import SearchBar from "../components/SearchBar";
 import OrderEmpty from "../components/OrderEmpty";
 
+import { useCookies } from "react-cookie";
+
 const OrderManagementPage = () => {
+    const [cookies] = useCookies([]);
+    
     const [orders] = useState([
         {
             id: 1,

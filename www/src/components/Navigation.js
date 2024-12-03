@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
+import { useCookies } from "react-cookie";
 import {
     AppBar,
     Toolbar,
@@ -27,6 +29,14 @@ const Navigation = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const navigate = useNavigate();
+    const [cookies] = useCookies([]);
+
+    // Kiểm tra xem người dùng đã đăng nhập hay chưa
+    useEffect(() => {
+        if (cookies.userId) {
+            setIsLoggedIn(true);
+        }
+    }, [cookies]);
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -55,6 +65,16 @@ const Navigation = () => {
     };
 
     const handleLogout = () => {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users/logout`, {
+            method: "DELETE",
+            credentials: "include",
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            console.log(data.message);
+        })
+
+
         setIsLoggedIn(false); // Đánh dấu người dùng đã đăng xuất
         setAnchorEl(null);
         // Điều hướng đến trang đăng nhập hoặc trang chủ

@@ -1,3 +1,5 @@
+import Order from '~v1/models/Order';
+
 module.exports = {
     async trackOrder(req, res) {
         try {
@@ -14,12 +16,17 @@ module.exports = {
         }
     },
 
-    async getOrderHistory(req, res) {
+    async getOrders(req, res) {
         try {
-            const orders = await Order.find({ userId: req.user._id }).select(
-                'orderNumber date totalAmount status',
-            );
-            res.status(200).json({ success: true, orders });
+            const userId = req.user._id;
+            const orders = await Order.find({ userId }).sort({ createdAt: -1 });
+
+            if (!orders)
+                return res
+                    .status(404)
+                    .json({ success: false, message: 'No orders found' });
+
+            res.status(200).json({success: true, message: orders});
         } catch (error) {
             res.status(500).json({ success: false, message: error.message });
         }

@@ -106,8 +106,6 @@ module.exports = {
                 }
             }
 
-
-
             const emailTemplate = Checkout_Email_Template.replace(
                 '{name}',
                 user.username,
@@ -130,4 +128,6 @@ module.exports = {
             res.status(500).json({ success: false, message: error.message });
         }
     },
+
+
 };
