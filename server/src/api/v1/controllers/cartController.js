@@ -40,7 +40,7 @@ module.exports = {
     async addToCart(req, res) {
         const { productId, quantity, variantId } = req.body;
 
-        const product = await Product.findById(productId);
+        const product = await Product.findOne({productId});
         if (!product) {
             return res.status(400).json({
                 success: false,
@@ -76,7 +76,7 @@ module.exports = {
                 new Cart({ userId: req.user.userId });
             const existingItem = cart.items.find(
                 (item) =>
-                    item.productId.toString() === productId &&
+                    item.productId === productId &&
                     item.variantId?.toString() === variantId,
             );
 
@@ -130,6 +130,72 @@ module.exports = {
 
         res.status(200).json({ success: true, cart });
     },
+
+
+    async removeFromCart(req, res) {
+        try {
+
+            const { productId, variantId } = req.body;
+    
+            if (!productId) {
+                return res.status(400).json({ success: false, message: "Product ID is required." });
+            }
+    
+            let updatedCart;
+    
+            if (req.user) {
+                // Handle logged-in user case
+                const cart = await Cart.findOne({ userId: req.user.userId });
+                if (!cart) {
+                    return res.status(404).json({ success: false, message: "Cart not found." });
+                }
+    
+                const itemIndex = cart.items.findIndex(
+                    (item) =>
+                        item.productId === productId &&
+                        (!variantId || item.variantId?.toString() === variantId)
+                );
+    
+                if (itemIndex >= 0) {
+                    cart.items.splice(itemIndex, 1);
+                    updatedCart = await cart.save();
+                } else {
+                    return res.status(404).json({ success: false, message: "Item not found in cart." });
+                }
+            } else {
+                // Handle cookie-based cart for guest users
+                const cookieCart = req.cookies.cart ? JSON.parse(req.cookies.cart) : { items: [] };
+                
+                console.log(req.body)
+                const itemIndex = cookieCart.items.findIndex(
+                    (item) =>
+                        item.productId === productId &&
+                        (!variantId || item.variantId === variantId || !item.variantId)
+                );
+    
+                if (itemIndex >= 0) {
+                    cookieCart.items.splice(itemIndex, 1);
+    
+                    res.cookie("cart", JSON.stringify(cookieCart), {
+                        httpOnly: false,
+                        sameSite: "lax",
+                        secure: false,
+                        // maxAge: 365 * 24 * 60 * 60 * 1000,
+                    });
+    
+                    updatedCart = cookieCart;
+                } else {
+                    return res.status(404).json({ success: false, message: "Item not found in cart." });
+                }
+            }
+    
+            return res.status(200).json({ success: true, cart: updatedCart });
+        } catch (error) {
+            console.error("Error removing item from cart:", error);
+            return res.status(500).json({ success: false, message: "Internal Server Error." });
+        }
+    },
+    
 
     async checkCoupon(req, res) {
         const { couponCode } = req.body;

@@ -49,7 +49,18 @@ class ProductService {
     }
 
     async getProductById(id) {
-        return await Product.findById(id).populate('category', 'name');
+
+        try {
+
+            const product = await Product.findOne({ productId: id });
+            if (!product) {
+                return { code: 404, message: 'Product not found' };
+            }
+
+            return { code: 200, message: product };
+        } catch (error) {
+            return { code: 500, message: 'Server error', error };
+        }
     }
 
     async createProduct(data, files) {

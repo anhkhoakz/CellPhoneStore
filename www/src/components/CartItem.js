@@ -58,7 +58,7 @@ const CartItem = ({ item, onQuantityChange, onRemoveItem }) => {
                     }}
                 >
                     <img
-                        src={item.image}
+                        src={`${process.env.REACT_APP_BACKEND_URL}/images/${item.image}`}
                         alt={item.name}
                         style={{
                             marginTop: "1em",
