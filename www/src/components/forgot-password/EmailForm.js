@@ -24,8 +24,9 @@ const EmailForm = ({ onEmailSent }) => {
             return;
         }
 
+
         // Simulate API call to send reset link
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users/forgot-password`, {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users/forgotPassword`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

@@ -22,6 +22,8 @@ router.get('/login', AuthenticationController.checkLogin);
 
 router.get('/:id', verifyAccessToken, AuthenticationController.getUser);
 
+router.get('/checkValidToken/:token', AuthenticationController.checkValidateResetToken);
+
 router.post('/resetPassword', AuthenticationController.resetPassword);
 router.post('/forgotPassword', AuthenticationController.forgotPassword);
 

@@ -85,6 +85,10 @@ function App() {
                                             path="/forgot-password"
                                             element={<ForgotPasswordPage />}
                                         />
+                                        <Route 
+                                            path="/forgot-password/:token" 
+                                            element={<ForgotPasswordPage />} 
+                                        />
                                         <Route
                                             path="/catagory/:category"
                                             element={<CategoryPage />}

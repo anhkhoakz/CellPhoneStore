@@ -9,6 +9,7 @@ const {
     resetPassword,
     addAddress,
     setDefaultAddress,
+    checkValidateResetToken
 } = require('~/api/v1/services/AccountService');
 
 require('dotenv').config();
@@ -73,7 +74,12 @@ module.exports = {
 
     resetPassword: async (req, res, next) => {
         try {
-            const { password, token } = req.body;
+            const { password, confirmPassword, token } = req.body;
+
+            if (password !== confirmPassword) {
+                return res.status(400).json({ message: 'Passwords do not match' });
+            }
+
 
             if (!password || !token) {
                 return res
@@ -82,10 +88,6 @@ module.exports = {
             }
 
             const { code, message, elements } = await resetPassword(req.body);
-
-            if (code === 200) {
-                return res.redirect(process.env.FRONTEND_URL + '/login');
-            }
 
             return res.status(code).json({
                 code,
@@ -97,6 +99,26 @@ module.exports = {
             next(err);
         }
     },
+
+
+    checkValidateResetToken: async (req, res, next) => {
+        try {
+            const { token } = req.params;
+
+            if (!token) {
+                return res.status(400).json({ message: 'Token is required' });
+            }
+
+            const { code, message, elements } = await checkValidateResetToken(token);
+
+            return res.status(code).json({ code, message, elements });
+        } catch (err) {
+            console.error(err);
+            next(err);
+        }
+    },
+
+
 
     verifyGoogleAccount: async (accessToken, refreshToken, profile, cb) => {
         try {

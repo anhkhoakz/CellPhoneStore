@@ -342,7 +342,7 @@ module.exports = {
                 };
             }
 
-            const resetToken = generateResetToken();
+            const resetToken = generateResetToken() + user._id;
             const resetTokenExpiry = Date.now() + 15 * 60 * 1000;
 
             // Save the reset token and expiry to the user's document in the database
@@ -351,7 +351,7 @@ module.exports = {
                 { resetToken, resetTokenExpiry },
             );
 
-            const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+            const resetLink = `${process.env.FRONTEND_URL}/forgot-password/${resetToken}`;
 
             const emailTemplate = Forgot_Password_Template.replaceAll(
                 '{resetLink}',
@@ -378,6 +378,7 @@ module.exports = {
                 resetTokenExpiry: { $gt: Date.now() },
             });
 
+
             if (!user) {
                 return {
                     code: 404,
@@ -396,6 +397,36 @@ module.exports = {
                 message: 'Password reset successfully!',
             };
         } catch (error) {
+            console.error(error);
+            return {
+                code: 500,
+                message: 'Internal server error',
+            };
+        }
+    },
+
+    checkValidateResetToken: async (token) => {
+
+        try {
+
+            const user = await _user.findOne({
+                resetToken: token,
+                resetTokenExpiry: { $gt: Date.now() },
+            });
+
+            if (!user) {
+                return {
+                    code: 404,
+                    message: 'Invalid or expired reset token',
+                };
+            }
+
+            return {
+                code: 200,
+                message: 'Valid reset token',
+            };
+        }
+        catch (error) {
             console.error(error);
             return {
                 code: 500,

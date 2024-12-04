@@ -68,6 +68,17 @@ module.exports = {
 
                 userId = user._id;
             }
+
+
+            if(couponCode){
+                var coupon = await Coupon.findOne({ code: couponCode, quantity: { $gt: 0 },  usedBy: { $ne: userId } });
+                if (!coupon) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Invalid coupon code',
+                    });
+                }
+            }
             
 
             const orderData = {
@@ -77,11 +88,12 @@ module.exports = {
                 shippingOption,
                 totalAmount: total,
                 phone,
+                coupon: coupon ? coupon._id : null,
             };
             const order = await Order.create(orderData);
 
             if (req.user) {
-                await Cart.deleteOne({ userId: req.user._id });
+                await Cart.deleteOne({ userId: req.user.userId });
             } else {
                 res.clearCookie('cart');
             }
@@ -94,16 +106,11 @@ module.exports = {
                 );
             }
 
-            if (couponCode) {
-                const coupon = await Coupon.findOne({
-                    code: couponCode,
-                    isUsed: false,
-                });
+           
 
-                if (coupon) {
-                    coupon.isUsed = true;
-                    await coupon.save();
-                }
+            if (coupon) {
+                coupon.quantity -= 1;
+                await coupon.save();
             }
 
             const emailTemplate = Checkout_Email_Template.replace(
