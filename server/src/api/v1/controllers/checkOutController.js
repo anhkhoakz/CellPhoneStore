@@ -4,6 +4,7 @@ const Order = require('~v1/models/Order');
 const User = require('~v1/models/Account');
 const Product = require('~v1/models/Product');
 const Cart = require('~v1/models/Cart');
+const Loyalty = require('~v1/models/Loyalty');
 
 const generatePassword = require('~v1/helpers/passwordGenerator');
 const hashPassword = require('~v1/helpers/hashPassword');
@@ -19,6 +20,7 @@ module.exports = {
         try {
             const {
                 couponCode,
+                pointsRedeemed,
                 shippingAddress,
                 items,
                 email,
@@ -36,7 +38,7 @@ module.exports = {
             }
 
             
-            let userId = req.user ? req.user._id : null;
+            let userId = req.user ? req.user.userId : null;
 
             let user = await User.findOne({ email: email });
 
@@ -106,6 +108,12 @@ module.exports = {
                 );
             }
 
+            if(pointsRedeemed){
+                const loyalty = await Loyalty.findOne({ userId });
+                loyalty.pointsRedeemed += pointsRedeemed;
+                loyalty.pointsEarned -= pointsRedeemed;
+                await loyalty.save();
+            }
            
 
             if (coupon) {
@@ -155,7 +163,7 @@ module.exports = {
                 });
             }
 
-            const {items, coupon} = order;
+            const {items, coupon, pointsRedeemed} = order;
 
             for (const item of items) {
                 const product = await Product.findOne({ productId: item.productId });
@@ -178,6 +186,15 @@ module.exports = {
                 await coupon.save();
             }
 
+            if(pointsRedeemed) {
+
+                const loyalty = await Loyalty.findOne({ userId });
+                loyalty.pointsRedeemed -= pointsRedeemed;
+                loyalty.pointsEarned += pointsRedeemed;
+                await loyalty.save();
+            }
+
+
             order.status = 'cancelled';
 
             await order.save();
@@ -185,6 +202,66 @@ module.exports = {
             res.json({
                 success: true,
                 message: 'Order cancelled successfully',
+            });
+
+        }
+        catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    },
+
+    async updateOrderStatus(req, res) {
+        try {
+            const { orderId } = req.params;
+            const { status } = req.body;
+
+            const order = await Order.findById(orderId);
+            if (!order) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Order not found',
+                });
+            }
+
+            if (order.status === 'cancelled') {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Order is already cancelled',
+                });
+            }
+
+            if (order.status === 'delivered') {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Order is already delivered',
+                });
+            }
+
+
+            if(status === 'delivered'){
+                const userId = order.userId.toString();
+
+                const loyalty = await Loyalty.findOne({ userId });
+
+                if (!loyalty) {
+                    await Loyalty.create({
+                        userId,
+                        pointsEarned: Math.floor(order.totalAmount / 100),
+                        pointsRedeemed: 0,
+                    });
+                } else {
+                    loyalty.pointsEarned += Math.floor(order.totalAmount / 100);
+                    await loyalty.save();
+                }
+            }
+
+
+            order.status = status;
+            await order.save();
+
+            res.json({
+                success: true,
+                message: 'Order status updated successfully',
             });
 
         }

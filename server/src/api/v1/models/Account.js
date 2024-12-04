@@ -48,10 +48,13 @@ const userSchema = new mongoose.Schema(
                 city: { type: String, trim: true },
                 district: { type: String, trim: true },
                 detail: { type: String, trim: true },
+
+                receiver: { type: String, trim: true },
+                phone: { type: String, min: 10, max:10, trim: true },
+                
                 isDefault: { type: Boolean, default: false },
             },
         ],
-        points: { type: Number, default: 0 },
 
         role: { type: String, enum: userRoles, default: 'customer' },
         resetToken: { type: String, default: null },

@@ -42,6 +42,8 @@ const orderSchema = new mongoose.Schema({
 
     phone: { type: String, required: true},
 
+    pointsRedeemed: { type: Number, default: 0 },
+
     coupon: { type: mongoose.Schema.Types.ObjectId, ref: 'Coupon' },
 });
 
