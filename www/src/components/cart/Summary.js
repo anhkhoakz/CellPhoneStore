@@ -1,7 +1,5 @@
-// src/components/Summary.js
 import React, { useState } from "react";
 import {
-    TextField,
     Select,
     MenuItem,
     InputLabel,
@@ -10,25 +8,30 @@ import {
     Typography,
     Box,
 } from "@mui/material";
-import LoggedCustomerInfo from "./LoggedCustomerInfo"; // Import LoggedCustomerInfo
+import LoggedCustomerInfo from "./LoggedCustomerInfo";
 
 const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
     // Customer state
-    const [name] = useState("John Doe"); // Example name (read-only)
-    const [phone, setPhone] = useState("+1 234 567 890"); // Example phone number (editable)
+    const [name] = useState("John Doe");
+    const [phone, setPhone] = useState("+1 234 567 890");
     const [savedAddresses] = useState([
         "123 Main St, City A",
         "456 Oak St, City B",
         "789 Pine St, City C",
-    ]); // Example list of saved addresses
-    const [selectedAddress, setSelectedAddress] = useState(savedAddresses[0]); // Default selected address
+    ]);
+    const [selectedAddress, setSelectedAddress] = useState(savedAddresses[0]);
 
     // Shipping state
     const [shippingCost, setShippingCost] = useState(shipping);
 
+    // Discount Code State
+    const [discountCode, setDiscountCode] = useState("");
+    const [availableCoupons] = useState(["DISCOUNT10", "FREESHIP", "SUMMER2023"]); // Available coupons
+
     const handleSubmit = () => {
         console.log("Customer Information:", { name, phone, selectedAddress });
         console.log("Shipping:", shippingCost);
+        console.log("Discount Code:", discountCode);
         console.log("Total Price:", total);
 
         fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/checkout`, {
@@ -38,7 +41,7 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                couponCode: "",
+                couponCode: discountCode,
                 shippingAddress: {
                     street: "Street",
                     city: "City",
@@ -61,7 +64,10 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
             .catch((error) => {
                 console.error("Error:", error);
             });
+    };
 
+    const handleCouponSelect = (e) => {
+        setDiscountCode(e.target.value); // Update the discount code when selecting a coupon
     };
 
     return (
@@ -98,15 +104,31 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
                 </Select>
             </FormControl>
 
+            {/* Discount Code Section */}
             <Typography variant="h6" gutterBottom>
                 Discount Code
             </Typography>
-            <TextField
-                fullWidth
-                variant="outlined"
-                label="Enter your code"
-                margin="normal"
-            />
+            <FormControl fullWidth margin="normal">
+                <InputLabel>Select Coupon</InputLabel>
+                <Select
+                    value={discountCode}
+                    onChange={handleCouponSelect}
+                    label="Select Coupon"
+                >
+                    <MenuItem value="">None</MenuItem>
+                    {availableCoupons.map((coupon) => (
+                        <MenuItem key={coupon} value={coupon}>
+                            {coupon}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
+
+            {/* Customer Point Section */}
+            <Typography variant="h6" gutterBottom>
+                Loyalty Points
+            </Typography>
+            
 
             <hr className="my-4" />
 

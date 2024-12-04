@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Container, Typography, Paper } from "@mui/material";
 import OrderCard from "../components/order/OrderCard";
-import SearchBar from "../components/navigation/SearchBar";
+import SearchBar from "../components/order/SearchBar";
 import OrderEmpty from "../components/order/OrderEmpty";
 
 import { useCookies } from "react-cookie";
@@ -171,9 +171,9 @@ const OrderManagementPage = () => {
     );
 
     return (
-        <Container sx={{ minHeight: "90vh", paddingTop: 4, paddingBottom: 4 }}>
+        <Container sx={{ minHeight: "90vh", paddingTop: 4, paddingBottom: 4, marginTop:"4em" }}>
             <Typography
-                sx={{ margin: "1.25em 0", fontWeight: "bold" }}
+                sx={{ marginBottom: "1em", fontWeight: "bold" }}
                 variant="h4"
                 align="center"
                 gutterBottom

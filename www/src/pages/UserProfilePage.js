@@ -136,9 +136,9 @@ const UserProfilePage = () => {
             justifyContent="center"
             alignItems="center"
             direction="column"
-            marginTop={3}
+            sx={{ marginTop: "6em" }}
         >
-            <Typography variant="h4" gutterBottom align="center">
+            <Typography variant="h4" gutterBottom align="center" sx={{fontWeight: "bold"}}>
                 User Profile
             </Typography>
 

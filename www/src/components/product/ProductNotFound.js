@@ -20,6 +20,7 @@ const NotFound = () => {
                 borderRadius: "10px",
                 padding: "1.25em",
                 boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+                marginTop:"4em"
             }}
         >
             <ErrorOutlineIcon sx={{ fontSize: 80, mb: 2, color: "#721c24" }} />

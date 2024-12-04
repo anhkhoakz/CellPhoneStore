@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import EmailForm from "../components/forgot-password/EmailForm";
 import Notification from "../components/forgot-password/Notification";
@@ -56,7 +56,7 @@ const ForgotPasswordPage = () => {
     };
 
     return (
-        <Box sx={{ maxWidth: 400, margin: "auto", padding: 3, minHeight: "80vh" }}>
+        <Box sx={{ maxWidth: 400, margin: "5em auto auto auto", padding: 3, minHeight: "80vh" }}>
             <Typography variant="h5" align="center" sx={{ marginBottom: 2 }}>
                 {token ? "Reset Your Password" : "Forgot Password"}
             </Typography>

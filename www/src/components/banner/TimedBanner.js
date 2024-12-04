@@ -5,19 +5,19 @@ import { Box } from "@mui/material";
 const bannerData = [
     {
         id: 1,
-        image: "https://cdn2.cellphones.com.vn/insecure/rs:fill:690:300/q:90/plain/https://dashboard.cellphones.com.vn/storage/tecno-camon-30s-banner-home.jpg",
+        image: "/image/banner/banner1.jpg",
         altText: "Banner 1",
         displayDuration: 5000, // 5 seconds
     },
     {
         id: 2,
-        image: "https://cdn2.cellphones.com.vn/insecure/rs:fill:690:300/q:90/plain/https://dashboard.cellphones.com.vn/storage/samsung-galaxy-s24-ultra-home-15-11.png",
+        image: "/image/banner/banner2.jpg",
         altText: "Banner 2",
         displayDuration: 7000, // 7 seconds
     },
     {
         id: 3,
-        image: "https://cdn2.cellphones.com.vn/insecure/rs:fill:690:300/q:90/plain/https://dashboard.cellphones.com.vn/storage/tai-nghe-sony-wf-c510-home-18-11.png",
+        image: "/image/banner/banner3.jpg",
         altText: "Banner 3",
         displayDuration: 3000, // 3 seconds
     },
@@ -46,7 +46,7 @@ const TimedBanner = () => {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                margin: "1.25em auto",
+                margin: "5em auto 2em auto",
                 maxWidth: "70%",
                 height: "auto",
                 maxHeight: 400,

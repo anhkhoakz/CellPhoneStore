@@ -60,7 +60,7 @@ const BuyPage = () => {
     const total = subtotal + shipping;
 
     return (
-        <Box sx={{ flexGrow: 1, padding: 4 }}>
+        <Box sx={{ flexGrow: 1, padding: 4,  marginTop:"5em" }}>
             <Grid container spacing={4}>
                 {/* Kiểm tra xem giỏ hàng có trống không */}
                 {items.length === 0 ? (

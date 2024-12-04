@@ -145,7 +145,7 @@ const CartPage = () => {
     const total = subtotal + shipping;
 
     return (
-        <Box sx={{ flexGrow: 1, padding: 4 }}>
+        <Box sx={{ flexGrow: 1, padding: 4,  marginTop:"5em" }}>
             <Grid container spacing={4}>
                 {/* Kiểm tra xem giỏ hàng có trống không */}
                 {items.length === 0 ? (
@@ -157,7 +157,7 @@ const CartPage = () => {
                         {/* Cột bên trái - Giỏ hàng */}
                         <Grid item xs={12} md={8}>
                             <Card variant="outlined" sx={{ padding: 2 }}>
-                                <Typography variant="h4" gutterBottom>
+                                <Typography variant="h4" gutterBottom sx={{fontWeight: "bold"}}>
                                     Shopping Cart
                                 </Typography>
                                 <Typography

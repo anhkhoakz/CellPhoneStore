@@ -79,7 +79,7 @@ const CategoryPage = () => {
     }, [category]);
 
     return (
-        <Box sx={{ maxWidth: "1200px", margin: "auto", padding: 2, minHeight:"80vh" }}>
+        <Box sx={{ maxWidth: "1200px", margin: "5em auto auto auto", padding: 2, minHeight:"80vh" }}>
             <Typography variant="h4" gutterBottom>
                 {category.charAt(0).toUpperCase() + category.slice(1)} Products
             </Typography>

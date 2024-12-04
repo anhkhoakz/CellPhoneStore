@@ -132,7 +132,7 @@ const ProductDetailPage = () => {
     }
 
     return (
-        <Box sx={{ padding: "1.25em" }}>
+        <Box sx={{ padding: "1.25em", marginTop:"4em" }}>
             {/* Product Detail */}
             <Box
                 sx={{ minHeight: "70vh", width: "80%", margin: "1.25em auto" }}

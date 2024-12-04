@@ -27,7 +27,7 @@ const Navigation = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
-    const [isLoggedIn, setIsLoggedIn] = useState(true);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const navigate = useNavigate();
     const [cookies] = useCookies([]);
 
@@ -69,10 +69,10 @@ const Navigation = () => {
             method: "DELETE",
             credentials: "include",
         })
-        .then((res) => res.json())
-        .then((data) => {
-            console.log(data.message);
-        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data.message);
+            })
 
 
         setIsLoggedIn(false); // Đánh dấu người dùng đã đăng xuất
@@ -82,7 +82,7 @@ const Navigation = () => {
     };
 
     return (
-        <AppBar position="static" className="custom-navbar">
+        <AppBar position="fixed" className="custom-navbar" >
             <Toolbar>
                 <IconButton
                     component={Link}
@@ -150,6 +150,12 @@ const Navigation = () => {
                         <i className="bi bi-cart"></i>
                         <Typography variant="body2" sx={{ ml: 1 }}>
                             Cart
+                        </Typography>
+                    </IconButton>
+                    <IconButton component={Link} to="/coupon" color="inherit">
+                        <i className="bi bi-gift"></i> {/* Replace with the coupon icon */}
+                        <Typography variant="body2" sx={{ ml: 1 }}>
+                            Coupon
                         </Typography>
                     </IconButton>
 

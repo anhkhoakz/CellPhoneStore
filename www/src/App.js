@@ -22,6 +22,9 @@ import AdminRoutes from "./admin/AdminRoutes";
 import BuyPage from "./pages/BuyPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import CategoryPage from "./pages/CategoryPage";
+import PaymentGuide from "./pages/PaymentGuidePage";
+import InvoicePage from "./pages/InvoicePage";
+import ProductRatingPage from "./pages/ProductRatingPage";
 
 function App() {
     return (
@@ -84,6 +87,18 @@ function App() {
                                         <Route
                                             path="/forgot-password"
                                             element={<ForgotPasswordPage />}
+                                        />
+                                        <Route
+                                            path="/payment-guide"
+                                            element={<PaymentGuide />}
+                                        />
+                                        <Route
+                                            path="/invoice"
+                                            element={<InvoicePage />}
+                                        />
+                                        <Route
+                                            path="/product/:id/rating"
+                                            element={<ProductRatingPage />}
                                         />
                                         <Route 
                                             path="/forgot-password/:token" 
