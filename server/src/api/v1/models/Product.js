@@ -36,7 +36,6 @@ const productSchema = new Schema({
 
     comment: [
         {
-            user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
             comment: String,
             createAt: { type: Date, default: Date.now },
         },
