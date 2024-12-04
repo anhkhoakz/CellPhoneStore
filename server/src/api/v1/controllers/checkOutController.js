@@ -136,5 +136,62 @@ module.exports = {
         }
     },
 
+    async cancelOrder(req, res) {
+        try {
+            const { orderId } = req.params;
+
+            const order = await Order.findById(orderId);
+            if (!order) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Order not found',
+                });
+            }
+
+            if (order.status !== 'pending') {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Order cannot be cancelled',
+                });
+            }
+
+            const {items, coupon} = order;
+
+            for (const item of items) {
+                const product = await Product.findOne({ productId: item.productId });
+                if (!product) {
+                    continue;
+                }
+
+
+                product.stock += item.quantity;
+                product.sold -= item.quantity;
+
+                await product.save();
+            }
+
+            if (coupon) {
+                const coupon = await Coupon.findById(order.coupon);
+                coupon.quantity += 1;
+                coupon.usedBy = coupon.usedBy.filter((id) => id.toString() !== order.userId.toString());
+
+                await coupon.save();
+            }
+
+            order.status = 'cancelled';
+
+            await order.save();
+
+            res.json({
+                success: true,
+                message: 'Order cancelled successfully',
+            });
+
+        }
+        catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    }
+
 
 };

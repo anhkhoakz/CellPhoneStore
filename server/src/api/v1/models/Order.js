@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Coupon = require('./Coupon');
 
-const statusValue = ['pending', 'confirmed', 'shipping', 'delivered'];
+const statusValue = ['pending', 'confirmed', 'shipping', 'delivered', 'cancelled'];
 const shippingOption = ['standard', 'express'];
 
 const orderSchema = new mongoose.Schema({
