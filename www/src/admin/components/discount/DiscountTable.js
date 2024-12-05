@@ -31,32 +31,32 @@ const StyledTableRow = styled(TableRow)(({ theme, isEven }) => ({
 }));
 
 const columns = [
-    { id: "discountCode", label: "Discount Code", minWidth: 150 },
+    { id: "code", label: "Discount Code", minWidth: 150 },
     { id: "description", label: "Description", minWidth: 200 },
-    { id: "discountValue", label: "Discount Value", minWidth: 150 },
+    { id: "type", label: "Discount Value", minWidth: 150 },
     { id: "condition", label: "Condition", minWidth: 200 },
     { id: "expiryDate", label: "Expiry Date", minWidth: 150 },
-    { id: "openQuantity", label: "Open Quantity", minWidth: 150 },
-    { id: "usedQuantity", label: "Used Quantity", minWidth: 150 },
+    { id: "quantity", label: "Open Quantity", minWidth: 150 },
+    { id: "quantityUsed", label: "Used Quantity", minWidth: 150 },
     { id: "actions", label: "Actions", minWidth: 150 },
 ];
 
 const createData = (
-    discountCode,
+    code,
     description,
-    discountValue,
+    discount,
     condition,
     expiryDate,
-    openQuantity,
-    usedQuantity,
+    quantity,
+    quantityUsed
 ) => ({
-    discountCode,
+    code,
     description,
-    discountValue,
+    discount,
     condition,
     expiryDate,
-    openQuantity,
-    usedQuantity,
+    quantity,
+    quantityUsed,
 });
 
 const initialRows = [
@@ -67,30 +67,12 @@ const initialRows = [
         "Order > $50",
         "2024-12-31",
         100,
-        25,
-    ),
-    createData(
-        "FLAT50",
-        "$50 off on orders over $200",
-        "$50",
-        "Order > $200",
-        "2024-11-30",
-        50,
-        10,
-    ),
-    createData(
-        "WELCOME15",
-        "15% off on first purchase",
-        "15%",
-        "First Purchase Only",
-        "2025-01-01",
-        200,
-        30,
+        25
     ),
 ];
 
 export default function DiscountsTable() {
-    const [rows, setRows] = React.useState(initialRows);
+    const [rows, setRows] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [search, setSearch] = React.useState("");
@@ -100,12 +82,23 @@ export default function DiscountsTable() {
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = React.useState(false);
     const [discountToDelete, setDiscountToDelete] = React.useState(null);
 
+    React.useEffect(() => {
+        const fetchDiscounts = async () => {
+            const response = await fetch(
+                `${process.env.REACT_APP_BACKEND_URL}/api/v1/coupons`
+            );
+            const data = await response.json();
+
+            console.log(data.data);
+
+            setRows(data.data);
+        };
+
+        fetchDiscounts();
+    }, []);
+
     const handleDelete = () => {
-        setRows(
-            rows.filter(
-                (row) => row.discountCode !== discountToDelete.discountCode,
-            ),
-        );
+        setRows(rows.filter((row) => row.code !== discountToDelete.code));
         setIsConfirmDialogOpen(false);
         setDiscountToDelete(null);
     };
@@ -133,8 +126,8 @@ export default function DiscountsTable() {
         setIsAddDialogOpen(false);
     };
 
-    const handleEditClick = (discountCode) => {
-        const discount = rows.find((row) => row.discountCode === discountCode);
+    const handleEditClick = (code) => {
+        const discount = rows.find((row) => row.code === code);
         setSelectedDiscount(discount);
         setIsEditDialogOpen(true);
     };
@@ -142,23 +135,75 @@ export default function DiscountsTable() {
     const handleEditDiscount = (updatedDiscount) => {
         setRows((prevRows) =>
             prevRows.map((row) =>
-                row.discountCode === updatedDiscount.discountCode
-                    ? updatedDiscount
-                    : row,
-            ),
+                row.code === updatedDiscount.code ? updatedDiscount : row
+            )
         );
         setIsEditDialogOpen(false);
     };
 
     const filteredRows = rows.filter((row) => {
         return (
-            row.discountCode.toLowerCase().includes(search.toLowerCase()) ||
+            row.code.toLowerCase().includes(search.toLowerCase()) ||
             row.description.toLowerCase().includes(search.toLowerCase())
         );
     });
 
     const renderTableCell = (column, value, row) => {
-        if (column.id === "discountValue" || column.id !== "actions") {
+        if (column.id === "condition") {
+            const formattedCondition = Object.entries(value || {})
+                .map(([key, val]) => `${key}: ${val}`)
+                .join(", ");
+
+            return (
+                <TableCell
+                    key={column.id}
+                    align="center"
+                    style={{ padding: "1em" }}
+                >
+                    {formattedCondition || "N/A"}
+                </TableCell>
+            );
+        }
+
+        if (column.id === "expiryDate") {
+            const formattedDate = new Date(value).toLocaleDateString(
+                undefined,
+                {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                }
+            );
+
+            return (
+                <TableCell
+                    key={column.id}
+                    align="center"
+                    style={{ padding: "1em" }}
+                >
+                    {`${formattedDate}`}
+                </TableCell>
+            );
+        }
+
+        if (column.id === "type") {
+            return (
+                <TableCell
+                    key={column.id}
+                    align="center"
+                    style={{ padding: "1em" }}
+                >
+                    {value === "percentage"
+                        ? `${row.discount}%`
+                        : new Intl.NumberFormat("vi-VN", {
+                              style: "currency",
+                              currency: "VND",
+                          }).format(row.discount)}
+                </TableCell>
+            );
+        }
+
+        if (column.id === "discount" || column.id !== "actions") {
             return (
                 <TableCell
                     key={column.id}
@@ -178,7 +223,7 @@ export default function DiscountsTable() {
                 <IconButton
                     aria-label="edit"
                     color="primary"
-                    onClick={() => handleEditClick(row.discountCode)}
+                    onClick={() => handleEditClick(row.code)}
                 >
                     <Edit />
                 </IconButton>
@@ -221,7 +266,7 @@ export default function DiscountsTable() {
                         {filteredRows
                             .slice(
                                 page * rowsPerPage,
-                                page * rowsPerPage + rowsPerPage,
+                                page * rowsPerPage + rowsPerPage
                             )
                             .map((row, index) => {
                                 const isEven = index % 2 === 0;
@@ -230,15 +275,15 @@ export default function DiscountsTable() {
                                         hover
                                         role="checkbox"
                                         tabIndex={-1}
-                                        key={row.discountCode}
+                                        key={row.code}
                                         isEven={isEven}
                                     >
                                         {columns.map((column) =>
                                             renderTableCell(
                                                 column,
                                                 row[column.id],
-                                                row,
-                                            ),
+                                                row
+                                            )
                                         )}
                                     </StyledTableRow>
                                 );

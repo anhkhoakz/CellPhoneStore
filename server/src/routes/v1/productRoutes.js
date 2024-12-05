@@ -43,6 +43,21 @@ router.patch(
     ProductController.updateProduct,
 );
 
+
+router.patch(
+    '/:id/rating',
+    ProductController.addRating,
+);
+
+router.patch(
+    '/:id/comment',
+    ProductController.addComment,
+);
+
+router.get('/:id/comments', ProductController.getComments);
+
+router.get('/:id/ratings', ProductController.getRatings);
+
 router.delete('/:id', ProductController.deleteProduct);
 
 module.exports = router;

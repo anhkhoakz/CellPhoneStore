@@ -126,6 +126,80 @@ class ProductController {
     //         });
     //     }
     // }
+
+    async addRating(req, res) {
+        const { productId } = req.params;
+        const { rating } = req.body;
+        const user = req.user;
+
+        try {
+            const { code, message } = await productService.addRating({
+                productId,
+                rating,
+                user,
+            });
+
+            res.status(code).json({ message });
+        } catch (error) {
+            res.status(500).json({ message: 'Server error', error });
+        }
+    }
+
+    async addComment(req, res) {
+        const { productId } = req.params;
+        const { comment } = req.body;
+        const user = req.user.username || 'Anonymous';
+
+        try {
+            const { code, message } = await productService.addComment({
+                productId,
+                comment,
+                user,
+            });
+
+            res.status(code).json({ message });
+        } catch (error) {
+            res.status(500).json({ message: 'Server error', error });
+        }
+    }
+
+    async getComments(req, res) {
+        const { productId } = req.params;
+
+        try {
+            const comments = await productService.getComments(productId);
+            res.status(200).json(comments);
+        } catch (error) {
+            res.status(500).json({ message: 'Server error', error });
+        }
+    }
+
+    async getRatings(req, res) {
+        const { productId } = req.params;
+
+        try {
+            const ratings = await productService.getRatings(productId);
+            res.status(200).json(ratings);
+        } catch (error) {
+            res.status(500).json({ message: 'Server error', error });
+        }
+    }
+
+    async getProductsByCategory(req, res) {
+        const { category } = req.params;
+
+        try {
+            const products = await productService.getProductsByCategory({
+                category,
+            });
+            res.status(200).json(products);
+        } catch (error) {
+            res.status(500).json({ message: 'Server error', error });
+        }
+    }
+
+
+
 }
 
 module.exports = new ProductController();

@@ -9,6 +9,28 @@ const couponSchema = new mongoose.Schema(
 
         quantity: { type: Number, default: 1 },
 
+        quantityClaimed: { type: Number, default: 0 },
+
+        quantityUsed: { type: Number, default: 0 },
+
+        condition: {
+            type: Object,
+            default: {},
+            validate: {
+                validator: function (value) {
+                    if (value.minOrderValue && value.minOrderValue < 0) {
+                        return false;
+                    }
+                    if (value.applicableCategories && !Array.isArray(value.applicableCategories)) {
+                        return false;
+                    }
+                    return true;
+                },
+                message: 'Invalid condition format!',
+            },
+        },
+
+
         type: {
             type: String,
             enum: typeValues,
@@ -22,7 +44,7 @@ const couponSchema = new mongoose.Schema(
                     if (this.type === 'percentage') {
                         return value <= 50 && value > 0;
                     } else if (this.type === 'fixed') {
-                        return value <= 100 && value > 0;
+                        return value <= 1000000 && value > 0;
                     }
                     return false;
                 },
@@ -32,7 +54,7 @@ const couponSchema = new mongoose.Schema(
             required: true,
         },
 
-        expirationDate: {
+        expiryDate: {
             type: Date,
             validate: {
                 validator: (value) => {
@@ -42,6 +64,7 @@ const couponSchema = new mongoose.Schema(
             },
         },
 
+        description: { type: String },
 
         usedBy: {
             type: [mongoose.Schema.Types.ObjectId],

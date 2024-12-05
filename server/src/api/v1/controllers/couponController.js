@@ -5,20 +5,26 @@ module.exports = {
 
     async CreateCoupon(req, res) {
         try {
-            const { code, discount, type, expiryDate } = req.body;
+            const { code, discount, type, expiryDate, quantity, condition, description } = req.body;
 
-            if (!code || !discount || !type || !expiryDate) {
+            if (!code || !discount || !type || !expiryDate || !quantity || !condition) {
                 return res.status(400).json({
                     success: false,
                     message: 'Please provide all required fields',
                 });
             }
 
+            console.log('Received expiryDate:', expiryDate);
+
             const coupon = await Coupon.create({
                 code,
                 discount,
                 type,
-                expiryDate,
+                expiryDate: new Date(expiryDate),
+                quantity,
+                condition,
+                description,
+                condition,
             });
 
             return res.status(201).json({
