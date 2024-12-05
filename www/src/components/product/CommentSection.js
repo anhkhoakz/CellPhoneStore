@@ -1,29 +1,63 @@
 // src/components/CommentsSection.js
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Comment from "./Comment";
 import ShowComment from "./ShowComment";
 import ToastNoti from "../toast-noti/ToastNoti"; // Import ToastNoti
 
-const CommentsSection = ({ initialComments = [], onSubmitComment }) => {
+const CommentsSection = ({ initialComments, onSubmitComment, id }) => {
     const [comments, setComments] = useState(initialComments);
     const [showToast, setShowToast] = useState(false); // State để điều khiển việc hiển thị toast
 
-    const handleSubmitComment = (newCommentContent) => {
-        const newComment = {
-            username: "Current User",
-            content: newCommentContent,
-            date: new Date().toISOString(),
-        };
 
-        setComments([newComment, ...comments]);
-        setShowToast(true); // Hiển thị toast khi bình luận mới được thêm vào
+    useEffect(() => { 
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/products/${id}/comments`)
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                console.log("Comments fetched successfully:", data.message);
+                setComments(data.message.sort((a, b) => new Date(b.createAt) - new Date(a.createAt)));
+            })
+            .catch((error) => {
+                console.error("Error fetching comments:", error);
+            });
+    }
+    , [id]);
 
-        // Call parent callback if necessary
-        onSubmitComment(newComment);
 
-        // Tắt toast sau 3 giây
-        setTimeout(() => setShowToast(false), 3000);
+    const handleSubmitComment = (comment) => {
+
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/products/${id}/comment`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ comment }),
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                console.log("Comment added successfully:", data);
+
+
+                setComments([data.newcomment, ...comments]);
+                setShowToast(true); // Hiển thị toast khi bình luận mới được thêm vào
+
+                // Call parent callback if necessary
+                onSubmitComment(data.newcomment);
+
+                // Tắt toast sau 3 giây
+                setTimeout(() => setShowToast(false), 3000);
+
+            })
+            .catch((error) => {
+                console.error("Error adding comment:", error);
+            });
+        
+
+        
     };
 
     return (
@@ -32,7 +66,7 @@ const CommentsSection = ({ initialComments = [], onSubmitComment }) => {
 
             {/* Hiển thị danh sách các bình luận */}
             {comments.map((comment, index) => (
-                <ShowComment key={index} comment={comment} />
+                <ShowComment key={index} ShowComment={comment} />
             ))}
 
             {/* Hiển thị toast thông báo */}

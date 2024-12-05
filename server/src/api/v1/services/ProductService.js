@@ -320,19 +320,23 @@ class ProductService {
         }
 
 
-    async addComment({ productId, comment, user }) {
+    async addComment({ productId, comment, username }) {
         try {
+
+            console.log(productId, comment, username);
             const product = await Product.findOne({ productId });
 
             if (!product) {
                 return { code: 404, message: 'Product not found' };
             }
 
-            product.comments.push({ comment, user });
+            product.comments.push({ comment, username });
+            
+            const createAt = Date.now();
 
             product.save();
 
-            return { code: 200, message: 'Comment added successfully' };
+            return { code: 200, message: 'Comment added successfully', newcomment: { username, comment, createAt } };
 
         }
         catch (error) {

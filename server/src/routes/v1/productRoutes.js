@@ -45,18 +45,18 @@ router.patch(
 
 
 router.patch(
-    '/:id/rating',
+    '/:productId/rating',
     ProductController.addRating,
 );
 
 router.patch(
-    '/:id/comment',
+    '/:productId/comment',
     ProductController.addComment,
 );
 
-router.get('/:id/comments', ProductController.getComments);
+router.get('/:productId/comments', ProductController.getComments);
 
-router.get('/:id/ratings', ProductController.getRatings);
+router.get('/:productId/ratings', ProductController.getRatings);
 
 router.delete('/:id', ProductController.deleteProduct);
 

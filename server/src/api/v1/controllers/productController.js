@@ -148,16 +148,18 @@ class ProductController {
     async addComment(req, res) {
         const { productId } = req.params;
         const { comment } = req.body;
-        const user = req.user.username || 'Anonymous';
+        const username = req.user?.username || 'Anonymous';
+
+        console.log('username', username);
 
         try {
-            const { code, message } = await productService.addComment({
+            const { code, message, newcomment } = await productService.addComment({
                 productId,
                 comment,
-                user,
+                username,
             });
 
-            res.status(code).json({ message });
+            res.status(code).json({ message, newcomment });
         } catch (error) {
             res.status(500).json({ message: 'Server error', error });
         }

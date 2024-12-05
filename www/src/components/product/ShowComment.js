@@ -1,8 +1,8 @@
 import React from "react";
 import { Box, Typography, Divider } from "@mui/material";
 
-const ShowComment = ({ comment }) => {
-    const { username, content, date } = comment;
+const ShowComment = ({ ShowComment }) => {
+    const { username, comment, createAt } = ShowComment;
 
     return (
         <Box sx={{ marginBottom: 3 }}>
@@ -14,10 +14,10 @@ const ShowComment = ({ comment }) => {
                 {username}
             </Typography>
             <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
-                {new Date(date).toLocaleDateString()}
+                {new Date(createAt).toLocaleDateString()}
             </Typography>
             <Typography variant="body1" color="textPrimary">
-                {content}
+                {comment}
             </Typography>
             <Divider sx={{ my: 2 }} />
         </Box>

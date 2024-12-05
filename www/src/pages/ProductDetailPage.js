@@ -127,7 +127,7 @@ const ProductDetailPage = () => {
 
     const handleSubmitComment = (newComment) => {
         // You can handle this to notify parent or log, or any other purpose
-        console.log("New comment submitted: ", newComment);
+
     };
 
     if (loading) {
@@ -270,19 +270,8 @@ const ProductDetailPage = () => {
             {/* Comments Section */}
             <Box sx={{ marginTop: 5, maxWidth: "70%", margin: "1.25em auto" }}>
                 <CommentsSection
-                    initialComments={[
-                        {
-                            username: "John Doe",
-                            content: "Great product! I love it!",
-                            date: "2024-11-05T12:00:00Z",
-                        },
-                        {
-                            username: "Jane Smith",
-                            content:
-                                "Good value for money, but could be better in some aspects.",
-                            date: "2024-11-04T08:30:00Z",
-                        },
-                    ]}
+                    initialComments={product.comments}
+                    id={id}
                     onSubmitComment={handleSubmitComment}
                 />
             </Box>

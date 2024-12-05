@@ -36,7 +36,7 @@ const productSchema = new Schema({
 
     comments: [
         {
-            user: { type: String, required: true },
+            username: { type: String, required: true },
             comment: String,
             createAt: { type: Date, default: Date.now },
         },
