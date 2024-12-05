@@ -182,7 +182,7 @@ const CartPage = () => {
                                 >
                                     <Typography variant="h6">Price</Typography>
                                     <Typography variant="h6">
-                                        ${subtotal.toFixed(2)}
+                                        {subtotal.toFixed(2)} ₫
                                     </Typography>
                                 </Grid>
                                 <Divider sx={{ my: 2 }} />

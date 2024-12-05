@@ -17,6 +17,13 @@ const CartItem = ({ item, onQuantityChange, onRemoveItem }) => {
         }
     };
 
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(price);
+    };
+
     const handleRemoveClick = () => {
         if (item.quantity > 1) {
             onQuantityChange(item.id, -1);
@@ -128,7 +135,7 @@ const CartItem = ({ item, onQuantityChange, onRemoveItem }) => {
                     sx={{ textAlign: { xs: "center", sm: "right" } }}
                 >
                     <Typography variant="body1">
-                        ${item.price.toFixed(2)}
+                        {formatPrice(item.price.toFixed(2))}
                     </Typography>
                 </Grid>
 

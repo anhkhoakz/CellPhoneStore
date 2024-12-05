@@ -14,6 +14,14 @@ const ProductCard = ({ product }) => {
     // Sử dụng chiều cao và chiều rộng bằng nhau cho hình ảnh, đảm bảo hình vuông
     const imageSize = cardWidth; // Chiều rộng và chiều cao của hình ảnh đều bằng chiều rộng của card
 
+    // Hàm định dạng giá VND
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(price);
+    };
+
     return (
         <Card sx={{ width: cardWidth, height: cardHeight, boxShadow: 3, margin: "auto" }}>
             <CardMedia
@@ -50,7 +58,7 @@ const ProductCard = ({ product }) => {
                     color="text.secondary"
                     sx={{ fontSize: "18px", textAlign: "left" }}
                 >
-                    ${product.price}
+                    {formatPrice(product.price)} {/* Hiển thị giá dưới dạng VND */}
                 </Typography>
 
                 <Rating
@@ -64,7 +72,6 @@ const ProductCard = ({ product }) => {
                         justifyContent: "flex-start",  // Căn sang trái
                     }}
                 />
-
             </CardContent>
         </Card>
     );

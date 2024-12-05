@@ -19,7 +19,14 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
         "456 Oak St, City B",
         "789 Pine St, City C",
     ]);
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(price);
+    };
     const [selectedAddress, setSelectedAddress] = useState(savedAddresses[0]);
+    
 
     // Shipping state
     const [shippingCost, setShippingCost] = useState(shipping);
@@ -99,8 +106,8 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
                     onChange={(e) => setShippingCost(Number(e.target.value))}
                     label="Delivery Method"
                 >
-                    <MenuItem value={5}>Standard Delivery - $5.00</MenuItem>
-                    <MenuItem value={10}>Express Delivery - $10.00</MenuItem>
+                    <MenuItem value={5}>Standard Delivery - 5 ₫ </MenuItem>
+                    <MenuItem value={10}>Express Delivery - 10 ₫</MenuItem>
                 </Select>
             </FormControl>
 
@@ -136,7 +143,7 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
                 <Typography variant="h6" className="text-uppercase">
                     Total price
                 </Typography>
-                <Typography variant="h6">${total.toFixed(2)}</Typography>
+                <Typography variant="h6">{formatPrice(total.toFixed(2))}</Typography>
             </Box>
 
             <Button

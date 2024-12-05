@@ -28,6 +28,13 @@ const ProductDetailPage = () => {
 
     const { id } = useParams();
 
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(price);
+    };
+
     const [cookies] = useCookies(["accessToken"]);
 
     useEffect(() => {
@@ -204,7 +211,7 @@ const ProductDetailPage = () => {
                                 variant="h5"
                                 sx={{ color: "green", mb: 2 }}
                             >
-                                ${product.price}
+                                {formatPrice(product.price)}
                             </Typography>
                             <Typography variant="body1" paragraph>
                                 {product.description}
