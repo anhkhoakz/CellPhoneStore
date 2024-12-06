@@ -149,6 +149,8 @@ module.exports = {
         try {
             const { orderId } = req.params;
 
+            const { noted } = req.body;
+
             const order = await Order.findById(orderId);
             if (!order) {
                 return res.status(400).json({
@@ -197,6 +199,7 @@ module.exports = {
 
 
             order.status = 'cancelled';
+            order.noted = noted;
 
             await order.save();
 
@@ -223,7 +226,7 @@ module.exports = {
                     message: 'Order not found',
                 });
             }
-            
+
             if (order.status === 'cancelled') {
                 return res.status(400).json({
                     success: false,

@@ -128,14 +128,27 @@ export default function OrdersTable() {
     const handleSaveCanceledReason = (reason) => {
         if (selectedOrderId) {
             const updatedRows = [...rows];
-            updatestatus(updatedRows, selectedOrderId, "cancelled");
             const orderIndex = updatedRows.findIndex(
                 (order) => order._id === selectedOrderId
             );
             if (orderIndex !== -1) {
-                updatedRows[orderIndex].cancelReason = reason;
+                fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/orders/cancel/${selectedOrderId}`, {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ noted: reason }),
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        console.log(data.message);
+                        if (data.success) {
+                            updatedRows[orderIndex].status = "cancelled";
+                            setRows(updatedRows);
+
+                        }
+                    });
             }
-            setRows(updatedRows);
         }
         setIsCanceledReasonDialogOpen(false);
         setSelectedOrderId(null);
