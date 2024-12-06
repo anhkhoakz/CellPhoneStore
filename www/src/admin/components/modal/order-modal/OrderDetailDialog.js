@@ -11,7 +11,7 @@ import {
 import OrderItem from "../../../../components/order/OrderItem";
 
 const OrderDetailDialog = ({ open, onClose, order }) => {
-    const { customerName, orderDate, orderStatus, totalAmount, note, items } =
+    const { shippingAddress, createdAt, status, totalAmount, note, items } =
         order;
 
     console.log(order);
@@ -21,13 +21,13 @@ const OrderDetailDialog = ({ open, onClose, order }) => {
             <DialogTitle>Order Details</DialogTitle>
             <DialogContent>
                 <Typography variant="body1" gutterBottom>
-                    <strong>Customer Name:</strong> {customerName}
+                    <strong>Customer Name:</strong> {shippingAddress.name}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                    <strong>Order Date:</strong> {orderDate}
+                    <strong>Order Date:</strong> {createdAt}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                    <strong>Status:</strong> {orderStatus}
+                    <strong>Status:</strong> {status}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
                     <strong>Note:</strong> {note || "No additional note"}

@@ -12,7 +12,7 @@ const OrderManagementPage = () => {
     const [orders, setOrders] = useState([]);
 
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/orders`, {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/orders/myOrder`, {
             method: "GET",
             credentials: "include",
             headers: {
