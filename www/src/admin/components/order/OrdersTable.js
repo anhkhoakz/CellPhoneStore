@@ -32,11 +32,11 @@ const StyledTableRow = styled(TableRow)(({ theme, isEven }) => ({
 const StatusTableCell = styled(TableCell)(({ theme, status }) => ({
     textAlign: "center",
     color:
-        status === "Canceled"
+        status === "cancelled"
             ? theme.palette.error.main
-            : status === "Delivered"
+            : status === "delivered"
               ? theme.palette.success.main
-              : status === "Pending"
+              : status === "pending"
                 ? "#FF9800"
                 : theme.palette.text.primary,
     fontWeight: "bold",
@@ -93,7 +93,7 @@ export default function OrdersTable() {
         const updatedRows = [...rows];
         const newStatus = event.target.value;
 
-        if (newStatus === "Canceled") {
+        if (newStatus === "cancelled") {
             setIsCanceledReasonDialogOpen(true);
             setSelectedOrderId(orderId);
         } else {
@@ -103,20 +103,34 @@ export default function OrdersTable() {
 
     const updatestatus = (updatedRows, orderId, newStatus) => {
         const orderIndex = updatedRows.findIndex(
-            (order) => order.orderId === orderId
+            (order) => order._id === orderId
         );
         if (orderIndex !== -1) {
-            updatedRows[orderIndex].status = newStatus;
-            setRows(updatedRows);
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/orders/${orderId}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+
+                body: JSON.stringify({ status: newStatus }),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log(data.message);
+                    if (data.success) {
+                        updatedRows[orderIndex].status = newStatus;
+                        setRows(updatedRows);
+                    }
+                });
         }
     };
 
     const handleSaveCanceledReason = (reason) => {
         if (selectedOrderId) {
             const updatedRows = [...rows];
-            updatestatus(updatedRows, selectedOrderId, "Canceled");
+            updatestatus(updatedRows, selectedOrderId, "cancelled");
             const orderIndex = updatedRows.findIndex(
-                (order) => order.orderId === selectedOrderId
+                (order) => order._id === selectedOrderId
             );
             if (orderIndex !== -1) {
                 updatedRows[orderIndex].cancelReason = reason;
@@ -236,10 +250,10 @@ export default function OrdersTable() {
                 onCustomDateChange={handleCustomDateChange}
                 statusOptions={[
                     { value: "all", label: "Tất cả" },
-                    { value: "Pending", label: "Pending" },
-                    { value: "Shipped", label: "Shipped" },
-                    { value: "Delivered", label: "Delivered" },
-                    { value: "Canceled", label: "Canceled" },
+                    { value: "pending", label: "pending" },
+                    { value: "shipping", label: "shipping" },
+                    { value: "delivered", label: "delivered" },
+                    { value: "cancelled", label: "cancelled" },
                 ]}
             />
             <TableContainer sx={{ maxHeight: 440 }}>
@@ -334,16 +348,20 @@ export default function OrdersTable() {
                                                                     },
                                                             }}
                                                         >
-                                                            <MenuItem value="Pending">
+                                                            <MenuItem value="pending">
                                                                 Pending
                                                             </MenuItem>
-                                                            <MenuItem value="Shipped">
-                                                                Shipped
+
+                                                            <MenuItem value="confirmed">
+                                                                Confirmed
                                                             </MenuItem>
-                                                            <MenuItem value="Delivered">
+                                                            <MenuItem value="shipping">
+                                                                Shipping
+                                                            </MenuItem>
+                                                            <MenuItem value="delivered">
                                                                 Delivered
                                                             </MenuItem>
-                                                            <MenuItem value="Canceled">
+                                                            <MenuItem value="cancelled">
                                                                 Canceled
                                                             </MenuItem>
                                                         </Select>

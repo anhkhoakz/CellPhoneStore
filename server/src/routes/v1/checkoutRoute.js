@@ -11,4 +11,7 @@ const {
 // Define the checkout route
 router.post('/',combinedAuthMiddleware, checkout);
 
+
+
+
 module.exports = router;
