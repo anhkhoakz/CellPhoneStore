@@ -15,7 +15,7 @@ const OrderItem = ({ product }) => {
             <Grid2 xs={3} container justifyContent="center">
                 <CardMedia
                     component="img"
-                    src={product.image}
+                    src={`${process.env.REACT_APP_BACKEND_URL}/images/${product.image}`}
                     alt={product.name}
                     sx={{ borderRadius: 1, maxHeight: 150 }}
                 />
@@ -24,7 +24,7 @@ const OrderItem = ({ product }) => {
                 <Typography variant="h6">{product.name}</Typography>
                 <Typography variant="body2">Price: {formatPrice(product.price)}</Typography>
                 <Typography variant="body2">
-                    Amount: {product.amount}
+                    Amount: {product.quantity}
                 </Typography>
             </Grid2>
         </Grid2>

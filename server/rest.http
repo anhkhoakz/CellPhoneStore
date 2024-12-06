@@ -162,3 +162,7 @@ Content-Type: application/json
         "applicableCategories": ["electronics", "fashion"]
     }
 }
+
+
+###
+GET http://localhost:8080/api/v1/orders

@@ -1,4 +1,4 @@
-import Order from '~v1/models/Order';
+const Order = require('~v1/models/Order');
 
 module.exports = {
     async trackOrder(req, res) {
@@ -18,7 +18,7 @@ module.exports = {
 
     async getOrders(req, res) {
         try {
-            const userId = req.user._id;
+            const userId = req.user.userId;
             const orders = await Order.find({ userId }).sort({ createdAt: -1 });
 
             if (!orders)

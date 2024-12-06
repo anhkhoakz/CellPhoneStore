@@ -11,6 +11,8 @@ const orderSchema = new mongoose.Schema({
             productId: { type: Number, ref: 'Product' },
             quantity: Number,
             variantId: mongoose.Schema.Types.ObjectId,
+            image: String,
+            name: String,
             price: Number,
         },
     ],
@@ -47,6 +49,8 @@ const orderSchema = new mongoose.Schema({
     pointsRedeemed: { type: Number, default: 0 },
 
     coupon: { type: mongoose.Schema.Types.ObjectId, ref: 'Coupon' },
+
+    createdAt: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model('Order', orderSchema);

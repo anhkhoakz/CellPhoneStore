@@ -21,19 +21,19 @@ const OrderCard = ({ order }) => {
                     variant="h6"
                     sx={{ fontWeight: "bold", color: "#3f51b5" }}
                 >
-                    Order #{order.id}
+                    Order #{order._id}
                 </Typography>
                 <Typography color="textSecondary" sx={{ marginBottom: 2 }}>
-                    Order Date: {order.date}
+                    Order Date: {order.createdAt}
                 </Typography>
 
-                {order.products.map((product, index) => (
+                {order.items.map((product, index) => (
                     <React.Fragment key={index}>
                         <OrderItem product={product} />
-                        {index < order.products.length - 1 && (
+                        {index < order.items.length - 1 && (
                             <Divider sx={{ marginY: 2 }} />
                         )}
-                    </React.Fragment>
+                    </React.Fragment> 
                 ))}
 
                 <Box
@@ -45,7 +45,7 @@ const OrderCard = ({ order }) => {
                     }}
                 >
                     <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                        Total: ${order.total}
+                        Total: ${order.totalAmount}
                     </Typography>
                 </Box>
             </CardContent>
