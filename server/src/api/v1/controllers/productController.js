@@ -127,23 +127,6 @@ class ProductController {
     //     }
     // }
 
-    async addRating(req, res) {
-        const { productId } = req.params;
-        const { rating } = req.body;
-        const user = req.user;
-
-        try {
-            const { code, message } = await productService.addRating({
-                productId,
-                rating,
-                user,
-            });
-
-            res.status(code).json({ message });
-        } catch (error) {
-            res.status(500).json({ message: 'Server error', error });
-        }
-    }
 
     async addComment(req, res) {
         const { productId } = req.params;
@@ -179,12 +162,12 @@ class ProductController {
         }
     }
 
-    async getRatings(req, res) {
+    async getRatingScore(req, res) {
         const { productId } = req.params;
 
         try {
-            const ratings = await productService.getRatings(productId);
-            res.status(200).json(ratings);
+            const {code, message} = await productService.getRatingScore(productId);
+            res.status(code).json(message);
         } catch (error) {
             res.status(500).json({ message: 'Server error', error });
         }

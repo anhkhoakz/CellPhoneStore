@@ -52,6 +52,8 @@ const orderSchema = new mongoose.Schema({
 
     noted: { type: String },
 
+    isRating: { type: Boolean, default: false },
+
     createdAt: { type: Date, default: Date.now },
 });
 

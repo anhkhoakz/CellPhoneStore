@@ -260,8 +260,33 @@ class ProductService {
         return await Product.find(query).sort(sortOptions);
     }
 
-    async addRating({ productId, rating, user }) {
+    // async addRating({ productId, rating, user }) {
 
+    //     try {
+    //         const product = await Product.findOne({ productId });
+
+    //         if (!product) {
+    //             return { code: 404, message: 'Product not found' };
+    //         }
+
+    //         const existingRating = product.ratings.find(
+    //             (r) => r.user.toString() === user.userId.toString(),
+    //         );
+
+    //         if (existingRating) {
+    //             return { code: 401, message: 'Rating already exists' };
+    //         }
+
+    //         product.ratings.push({ user: user.userId, rating });
+    //         product.save();
+
+    //         return { code: 200, message: 'Rating added successfully' };
+    //     } catch (error) {
+    //         return { code: 500, message: 'Server error', error };
+    //     }
+    // }
+
+    async getRatingScore(productId) {
         try {
             const product = await Product.findOne({ productId });
 
@@ -269,35 +294,19 @@ class ProductService {
                 return { code: 404, message: 'Product not found' };
             }
 
-            const existingRating = product.ratings.find(
-                (r) => r.user.toString() === user.userId.toString(),
-            );
+            const totalRatings = product.ratings.length;
 
-            if (existingRating) {
-                return { code: 401, message: 'Rating already exists' };
+            if (totalRatings === 0) {
+                return { code: 200, message: 'No ratings yet' };
             }
 
-            product.ratings.push({ user: user.userId, rating });
-            product.save();
+            const totalScore = product.ratings.reduce( (acc, rating) => acc + rating.rating, 0);
 
-            return { code: 200, message: 'Rating added successfully' };
+            const averageRating = totalScore / totalRatings;
+
+            return { code: 200, message: averageRating };
+
         } catch (error) {
-            return { code: 500, message: 'Server error', error };
-        }
-    }
-
-    async getRatings(productId) {
-        try {
-            const product = await Product.findOne({ productId });
-
-            if (!product) {
-                return { code: 404, message: 'Product not found' };
-            }
-
-            return { code: 200, message: product.ratings };
-        }
-
-        catch (error) {
             return { code: 500, message: 'Server error', error };
         }
     }

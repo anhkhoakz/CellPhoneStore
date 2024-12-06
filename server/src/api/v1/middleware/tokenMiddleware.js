@@ -98,8 +98,8 @@ const verifyAccessToken = async (req, res, next) => {
         } catch (error) {
             // Handle cases other than token expiration
 
-            res.clearCookie('userId');
             if (error.name !== 'TokenExpiredError') {
+                res.clearCookie('userId');
                 return next(CreateError.InternalServerError(error.message));
             }
         }

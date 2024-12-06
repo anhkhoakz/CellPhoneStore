@@ -47,11 +47,6 @@ router.patch(
 
 
 router.patch(
-    '/:productId/rating',
-    ProductController.addRating,
-);
-
-router.patch(
     '/:productId/comment',
     combinedAuthMiddleware,
     ProductController.addComment,
@@ -59,7 +54,7 @@ router.patch(
 
 router.get('/:productId/comments', ProductController.getComments);
 
-router.get('/:productId/ratings',verifyAccessToken, ProductController.getRatings);
+router.get('/:productId/rating', ProductController.getRatingScore);
 
 router.delete('/:id', ProductController.deleteProduct);
 

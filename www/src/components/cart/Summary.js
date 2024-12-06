@@ -16,6 +16,9 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
     // Customer state
     const [name] = useState("John Doe");
     const [phone, setPhone] = useState("+1 234 567 890");
+
+    const [email, setEmail] = useState();
+
     const [savedAddresses] = useState([
         "123 Main St, City A",
         "456 Oak St, City B",
@@ -65,7 +68,7 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
                     name,
                 },
                 items: items,
-                email: "khanhmh2004@gmail.com",
+                email: email,
                 
                 shippingOption: shippingCost === 5 ? "standard" : "express",
                 total,
@@ -91,6 +94,8 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
                 name={name}
                 phone={phone}
                 setPhone={setPhone}
+                email={email}
+                setEmail={setEmail}
                 savedAddresses={savedAddresses}
                 selectedAddress={selectedAddress}
                 setSelectedAddress={setSelectedAddress}

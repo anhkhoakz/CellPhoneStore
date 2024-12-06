@@ -257,6 +257,8 @@ module.exports = {
                     loyalty.pointsEarned += Math.floor(order.totalAmount / 100);
                     await loyalty.save();
                 }
+
+                order.paymentConfirmed = true;
             }
 
 
@@ -272,5 +274,5 @@ module.exports = {
         catch (error) {
             res.status(500).json({ success: false, message: error.message });
         }
-    }
+    },
 };

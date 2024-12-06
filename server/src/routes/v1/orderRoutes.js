@@ -17,5 +17,7 @@ router.patch('/:orderId', updateOrderStatus);
 
 router.patch('/cancel/:orderId', cancelOrder);
 
+router.patch('/:orderId/rating', verifyAccessToken, orderController.ratingOrder);
+
 
 module.exports = router;
