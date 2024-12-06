@@ -170,9 +170,15 @@ module.exports = {
                     return res.status(404).json({ success: false, message: 'Cart not found' });
                 }
 
-                const item = cart.items.find(
-                    (item) => item.productId === productId && item.variantId?.toString() === variantId,
-                );
+                const item = cart.items.find((item) => {
+                    // Check if variantId exists, and if so, match both productId and variantId
+                    if (item.variantId) {
+                        return item.productId === productId && item.variantId?.toString() === variantId;
+                    }
+                    // If variantId doesn't exist, match only productId
+                    return item.productId === productId;
+                });
+                
 
                 if (!item) {
                     return res.status(404).json({ success: false, message: 'Item not found in cart' });
@@ -192,8 +198,13 @@ module.exports = {
 
                 const cookieCart = req.cookies.cart ? JSON.parse(req.cookies.cart) : { items: [] };
 
-                const item = cookieCart.items.find((item) => item.productId === productId 
-                && item.variantId === variantId,);
+                const item = cookieCart.items.find((item) => {
+                    if (item.variantId) {
+                        return item.productId === productId && item.variantId === variantId;
+                    }
+                    return item.productId === productId;
+
+                } );
 
 
                 if (!item) {
@@ -249,10 +260,23 @@ module.exports = {
                 }
     
                 const itemIndex = cart.items.findIndex(
-                    (item) =>
-                        item.productId === productId &&
-                        (!variantId || item.variantId?.toString() === variantId)
+                    (item) =>{
+                        if (item.variantId) {
+                            return item.productId === productId && item.variantId?.toString() === variantId;
+                        }
+                        return item.productId === productId;
+                    }
                 );
+
+                const item = cart.items.find((item) => {
+                    // Check if variantId exists, and if so, match both productId and variantId
+                    if (variantId) {
+                        return item.productId === productId && item.variantId?.toString() === variantId;
+                    }
+                    // If variantId doesn't exist, match only productId
+                    return item.productId === productId;
+                });
+                
     
                 if (itemIndex >= 0) {
                     cart.items.splice(itemIndex, 1);
@@ -266,9 +290,14 @@ module.exports = {
                 
                 console.log(req.body)
                 const itemIndex = cookieCart.items.findIndex(
-                    (item) =>
-                        item.productId === productId &&
-                        (!variantId || item.variantId === variantId || !item.variantId)
+                    (item) => {
+
+                        if (item.variantId) {
+                            return item.productId === productId && item.variantId === variantId;
+                        }
+
+                        return item.productId === productId;
+                    }
                 );
     
                 if (itemIndex >= 0) {

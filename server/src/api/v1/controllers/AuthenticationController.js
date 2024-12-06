@@ -285,11 +285,10 @@ module.exports = {
         try {
             const { code, message } = await logout(req);
 
-            if (code === 200) {
-                res.clearCookie('accessToken');
-                res.clearCookie('userId');
-                req.user = null;
-            }
+            res.clearCookie('userId');
+            res.clearCookie('accessToken');
+            req.user = null;
+            
 
             return res.status(code).json({
                 message,

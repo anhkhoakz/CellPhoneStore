@@ -34,13 +34,15 @@ const orderSchema = new mongoose.Schema({
     paymentConfirmed: { type: Boolean, default: false },
 
     shippingAddress: {
-        city: String,
-        district: String,
-        village: String,
-        detail: String,
+        city: { type: String, required: true },
+        district: { type: String, required: true },
+        village: { type: String, required: true },
+        detail: { type: String, required: true },
+        phone: { type: String, required: true},
+        name: { type: String, required: true},
     },
 
-    phone: { type: String, required: true},
+   
 
     pointsRedeemed: { type: Number, default: 0 },
 

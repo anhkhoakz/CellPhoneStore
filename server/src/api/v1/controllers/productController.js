@@ -148,6 +148,9 @@ class ProductController {
     async addComment(req, res) {
         const { productId } = req.params;
         const { comment } = req.body;
+
+        console.log('req.user', req.user);
+        
         const username = req.user?.username || 'Anonymous';
 
         console.log('username', username);

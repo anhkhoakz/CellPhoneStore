@@ -24,21 +24,18 @@ module.exports = {
                 shippingAddress,
                 items,
                 email,
-                phone,
-                name,
                 shippingOption,
                 total,
             } = req.body;
 
-            if (!email || !name || !phone || !shippingAddress || !items || !shippingOption || !total) {
+            if (!email  || !shippingAddress || !items || !shippingOption || !total) {
                 return res.status(400).json({
                     success: false,
                     message: 'Please provide all required fields',
                 });
             }
 
-            
-            let userId = req.user ? req.user.userId : null;
+            const isLogin = req.user? true : false;
 
             let user = await User.findOne({ email: email });
 
@@ -46,10 +43,10 @@ module.exports = {
             if (!user) {
                 const password = generatePassword();
                 user = await User.create({
-                    username: name,
+                    username: shippingAddress.name,
                     email: email,
                     password: hashPassword(password),
-                    phone,
+                    phone: shippingAddress.phone,
                     addresses: [
                         {
                             street: shippingAddress.street,
@@ -68,11 +65,11 @@ module.exports = {
                     emailTemplate,
                 );
 
-                userId = user._id;
             }
+            
+            const userId = user._id;
 
-
-            if(couponCode){
+            if(couponCode && isLogin){
                 var coupon = await Coupon.findOne({ code: couponCode, quantity: { $gt: 0 },  usedBy: { $ne: userId } });
                 if (!coupon) {
                     return res.status(400).json({
@@ -89,26 +86,30 @@ module.exports = {
                 shippingAddress,
                 shippingOption,
                 totalAmount: total,
-                phone,
                 coupon: coupon ? coupon._id : null,
             };
             const order = await Order.create(orderData);
 
             if (req.user) {
-                await Cart.deleteOne({ userId: req.user.userId });
+                await Cart.deleteOne({ userId });
             } else {
                 res.clearCookie('cart');
             }
 
             for (const item of items) {
                 await Product.findOneAndUpdate(
-                    item.productId,
-                    { $inc: { stock: -item.quantity }, $inc: { sold: item.quantity } },
-                    { new: true },
+                    {productId: item.productId},
+                    { 
+                        $inc: { 
+                            stock: -item.quantity, // Decrease stock
+                            sold: item.quantity    // Increase sold
+                        } 
+                    },
+                    { new: true }
                 );
             }
 
-            if(pointsRedeemed){
+            if(pointsRedeemed && isLogin){
                 const loyalty = await Loyalty.findOne({ userId });
                 loyalty.pointsRedeemed += pointsRedeemed;
                 loyalty.pointsEarned -= pointsRedeemed;

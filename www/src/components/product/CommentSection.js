@@ -4,11 +4,14 @@ import React, { useEffect, useState } from "react";
 import Comment from "./Comment";
 import ShowComment from "./ShowComment";
 import ToastNoti from "../toast-noti/ToastNoti"; // Import ToastNoti
+import { useCookies } from "react-cookie";
+
+
 
 const CommentsSection = ({ initialComments, onSubmitComment, id }) => {
     const [comments, setComments] = useState(initialComments);
     const [showToast, setShowToast] = useState(false); // State để điều khiển việc hiển thị toast
-
+    const [cookies] = useCookies([]);
 
     useEffect(() => { 
         fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/products/${id}/comments`)
@@ -32,7 +35,11 @@ const CommentsSection = ({ initialComments, onSubmitComment, id }) => {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
+                "authorization": `Bearer ${cookies.accessToken}`,
             },
+            credentials: "include",
+
+
             body: JSON.stringify({ comment }),
         })
             .then((response) => {

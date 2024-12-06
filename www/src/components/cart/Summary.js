@@ -10,6 +10,8 @@ import {
 } from "@mui/material";
 import LoggedCustomerInfo from "./LoggedCustomerInfo";
 
+import { useCookies } from "react-cookie";
+
 const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
     // Customer state
     const [name] = useState("John Doe");
@@ -19,6 +21,8 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
         "456 Oak St, City B",
         "789 Pine St, City C",
     ]);
+
+    const [cookies] = useCookies([]);
     const formatPrice = (price) => {
         return new Intl.NumberFormat("vi-VN", {
             style: "currency",
@@ -40,12 +44,14 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
         console.log("Shipping:", shippingCost);
         console.log("Discount Code:", discountCode);
         console.log("Total Price:", total);
+        console.log("Items:", items);
 
         fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/checkout`, {
             method: "POST",
             credentials: "include",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.accessToken}`,
             },
             body: JSON.stringify({
                 couponCode: discountCode,
@@ -55,11 +61,12 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
                     district: "District",
                     village: "Village",
                     detail: selectedAddress,
+                    phone,
+                    name,
                 },
                 items: items,
                 email: "khanhmh2004@gmail.com",
-                phone,
-                name,
+                
                 shippingOption: shippingCost === 5 ? "standard" : "express",
                 total,
             }),
@@ -151,7 +158,7 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
                 color="success"
                 onClick={handleSubmit}
                 sx={{ fontWeight: "bold", width: "100%" }}
-                href="/success"
+                // href="/success"
             >
                 Register
             </Button>

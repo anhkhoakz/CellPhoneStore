@@ -175,12 +175,14 @@ module.exports = {
                 email: user.email,
                 userId: user._id,
                 role: user.role,
+                username: user.username,
             });
 
             const refreshToken = await createRefreshToken({
                 email: user.email,
                 userId: user._id,
                 role: user.role,
+                username: user.username,
             });
 
             return {
@@ -207,6 +209,7 @@ module.exports = {
                 await verifyAndRefreshToken(refreshToken);
 
             if (!success || !decoded) {
+
                 return {
                     code: 401,
                     message: error || 'Invalid or expired refresh token',
@@ -242,6 +245,7 @@ module.exports = {
             const accessToken = signAccessToken({
                 email: decoded.email,
                 userId: decoded.userId,
+                username: decoded.username,
                 role: decoded.role,
             });
 
