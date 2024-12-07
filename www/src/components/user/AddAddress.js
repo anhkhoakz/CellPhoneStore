@@ -9,7 +9,6 @@ import Box from "@mui/material/Box";
 import FormHelperText from "@mui/material/FormHelperText";
 import PropTypes from "prop-types";
 import { useCookies } from "react-cookie";
-import { Details } from "@mui/icons-material";
 
 const AddAddress = ({ onAddAddress, onClose }) => {
     const [cookies] = useCookies([]);

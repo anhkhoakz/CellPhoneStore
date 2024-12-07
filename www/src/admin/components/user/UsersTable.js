@@ -16,9 +16,9 @@ import {
 import { styled } from "@mui/material/styles";
 import { Edit } from "@mui/icons-material";
 import SearchBar from "../header/SearchBar";
-import AddUserDialog from "../modal/user-modal/AddUserDialog";
-import EditUserDialog from "../modal/user-modal/EditUserDialog";
-import LockReasonDialog from "../modal/user-modal/LockReasonDialog";
+import AddUserDialog from "./user-modal/AddUserDialog";
+import EditUserDialog from "./user-modal/EditUserDialog";
+import LockReasonDialog from "./user-modal/LockReasonDialog";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 

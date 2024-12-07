@@ -11,8 +11,8 @@ import { styled } from "@mui/material/styles";
 import { Visibility } from "@mui/icons-material";
 import { Select, MenuItem, FormControl } from "@mui/material";
 import OrderBar from "./OrderBar";
-import OrderDetailDialog from "../modal/order-modal/OrderDetailDialog";
-import CanceledReasonDialog from "../modal/order-modal/CanceledReasonDialog";
+import OrderDetailDialog from "./order-modal/OrderDetailDialog";
+import CanceledReasonDialog from "./order-modal/CanceledReasonDialog";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontWeight: 600,

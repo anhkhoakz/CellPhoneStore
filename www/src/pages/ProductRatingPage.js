@@ -1,108 +1,88 @@
 import React, { useState } from "react";
-import { Box, Typography, Button, TextField, Rating, CardMedia, Grid } from "@mui/material";
+import { Box, Typography, Button, Grid } from "@mui/material";
+import RatingItem from "../components/product/RatingItem";
 import ToastNoti from "../components/toast-noti/ToastNoti";
 
-const ProductRatingPage = () => {
-    // Mock product data
-    const mockProduct = {
+// Mock data
+const mockProducts = [
+    {
+        id: 1,
         name: "Smartphone XYZ",
-        description: "A high-end smartphone with excellent features. Camera: 64MP, Battery: 4000mAh, Display: 6.5 inches.",
         price: 699.99,
         image: "https://placehold.co/500x500",
-        id: 1
-    };
+        description: "A high-end smartphone with excellent features. Camera: 64MP, Battery: 4000mAh, Display: 6.5 inches.",
+    },
+    {
+        id: 2,
+        name: "Laptop ABC",
+        price: 1299.99,
+        image: "https://placehold.co/500x500",
+        description: "A powerful laptop for all your professional needs. Processor: Intel i7, RAM: 16GB, Storage: 1TB SSD.",
+    },
+    {
+        id: 3,
+        name: "Wireless Earbuds DEF",
+        price: 199.99,
+        image: "https://placehold.co/500x500",
+        description: "Noise-cancelling wireless earbuds with premium sound quality. Battery life: 20 hours.",
+    },
+];
 
-    const [newReview, setNewReview] = useState("");
-    const [newRating, setNewRating] = useState(5); // Default rating is 5
+const ProductRatingPage = () => {
+    const [reviews, setReviews] = useState({});
     const [showToast, setShowToast] = useState(false);
 
-    const handleSubmitReview = () => {
-        const newReviewData = {
-            username: "Current User", 
-            content: newReview,
-            rating: newRating, 
-            date: new Date().toISOString(),
-        };
+    const handleSubmitReviews = () => {
+        const submittedReviews = mockProducts.map((product) => ({
+            productId: product.id,
+            rating: reviews[product.id]?.rating || 5, 
+            content: reviews[product.id]?.content || "", 
+        }));
 
-        setNewRating(5); // Reset the rating after submission
+        console.log("Submitted Reviews:", submittedReviews);
+
         setShowToast(true);
         setTimeout(() => setShowToast(false), 3000);
     };
 
     return (
-        <Box sx={{ padding: "1.25em", width: "80%", margin: "5em auto", minHeight: "75vh" }}>
-            {/* Title Section */}
+        <Box sx={{ padding: "1.25em", width: "80%", margin: "5em auto 1em auto", minHeight: "75vh" }}>
             <Typography
                 sx={{ marginBottom: "1em", fontWeight: "bold" }}
                 variant="h4"
                 align="center"
                 gutterBottom
             >
-                Product Rating & Review
+                Rate Your Purchased Products
             </Typography>
 
             <Grid container spacing={4}>
-                {/* Left: Product Image and Details */}
-                <Grid item xs={12} md={6}>
-                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                        <CardMedia
-                            component="img"
-                            alt={mockProduct.name}
-                            height="300"
-                            image={mockProduct.image}
-                            sx={{ borderRadius: "8px", objectFit: "contain" }}
+                {mockProducts.map((product) => (
+                    <Grid item xs={12} key={product.id}>
+                        <RatingItem
+                            product={product}
+                            review={reviews[product.id]}
+                            setReview={setReviews}
                         />
-                        <Typography variant="h5" color="primary" sx={{ marginTop: "1em" }}>
-                            {mockProduct.name}
-                        </Typography>
-                        <Typography variant="h6" color="primary" sx={{ marginBottom: "1em" }}>
-                            Price: ${mockProduct.price}
-                        </Typography>
-                    </Box>
-                </Grid>
-
-                {/* Right: Review Form */}
-                <Grid item xs={12} md={6}>
-                    <Box sx={{ paddingLeft: { md: 2 } }}>
-                        <Typography variant="body1" mb={1}>
-                            Rate the product:
-                        </Typography>
-                        <Rating
-                            name="product-rating"
-                            value={newRating}
-                            onChange={(_, newValue) => setNewRating(newValue)}
-                            precision={0.5}
-                            sx={{ mb: 2, fontSize: "2.5rem" }}
-                        />
-                        <Typography variant="body1" mb={1}>
-                            Your review:
-                        </Typography>
-                        <TextField
-                            label="Write a review"
-                            multiline
-                            rows={4}
-                            fullWidth
-                            value={newReview}
-                            onChange={(e) => setNewReview(e.target.value)}
-                            variant="outlined"
-                            sx={{ marginBottom: "1em" }}
-                        />
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={handleSubmitReview}
-                            disabled={!newReview.trim()}
-                        >
-                            Submit Review
-                        </Button>
-                    </Box>
-                </Grid>
+                    </Grid>
+                ))}
             </Grid>
+
+            <Box sx={{ display: "flex", justifyContent: "center", marginTop: 4 }}>
+                <Button
+                    variant="contained"
+                    color="success"
+                    onClick={handleSubmitReviews}
+                    sx={{ fontWeight: "bold", width: "10%" }}
+                >
+                    Submit
+                </Button>
+            </Box>
 
             {/* Toast Notification */}
             {showToast && (
                 <ToastNoti
-                    message="Your review has been submitted!"
+                    message="Your reviews have been submitted!"
                     type="success"
                     position="top-right"
                     autoClose={3000}

@@ -11,8 +11,8 @@ import { styled } from "@mui/material/styles";
 import { Edit, Delete } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
 import SearchBar from "../header/SearchBar";
-import AddProductDialog from "../modal/product-modal/AddProductDialog";
-import EditProductDialog from "../modal/product-modal/EditProductDialog";
+import AddProductDialog from "./product-modal/AddProductDialog";
+import EditProductDialog from "./product-modal/EditProductDialog";
 import Confirm from "../../../components/Confirm";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({

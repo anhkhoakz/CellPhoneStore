@@ -10,6 +10,10 @@ import {
 import OrderItem from "./OrderItem";
 
 const OrderCard = ({ order }) => {
+    const handleRateOrder = () => {
+        console.log(`Navigating to rating page for Order ID: ${order._id}`);
+        // Thêm logic chuyển hướng đến trang đánh giá
+    };
 
     return (
         <Card
@@ -33,7 +37,7 @@ const OrderCard = ({ order }) => {
                         {index < order.items.length - 1 && (
                             <Divider sx={{ marginY: 2 }} />
                         )}
-                    </React.Fragment> 
+                    </React.Fragment>
                 ))}
 
                 <Box
@@ -47,6 +51,18 @@ const OrderCard = ({ order }) => {
                     <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                         Total: ${order.totalAmount}
                     </Typography>
+
+                    {/* Nút "Rating" chỉ hiển thị nếu trạng thái là "delivered" */}
+                    {order.status === "delivered" && (
+                        <Button
+                            // href="/rating"
+                            variant="contained"
+                            color="primary"
+                            onClick={handleRateOrder}
+                        >
+                            Rate Order
+                        </Button>
+                    )}
                 </Box>
             </CardContent>
         </Card>

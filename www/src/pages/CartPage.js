@@ -145,6 +145,13 @@ const CartPage = () => {
     );
     const total = subtotal + shipping;
 
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(price);
+    };
+
     return (
         <Box sx={{ flexGrow: 1, padding: 4,  marginTop:"5em" }}>
             <Grid container spacing={4}>
@@ -183,7 +190,7 @@ const CartPage = () => {
                                 >
                                     <Typography variant="h6">Price</Typography>
                                     <Typography variant="h6">
-                                        {subtotal.toFixed(2)} ₫
+                                        {formatPrice(subtotal.toFixed(2))}
                                     </Typography>
                                 </Grid>
                                 <Divider sx={{ my: 2 }} />

@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import SearchBar from "../header/SearchBar";
 import SaleProductsTable from "./SaleProductsTable";
 import Confirm from "../../../components/Confirm";
-import AddSaleProductDialog from "../modal/product-modal/AddSaleProductDialog";
+import AddSaleProductDialog from "../product/product-modal/AddSaleProductDialog";
 
 // Define initialRows here
 const initialRows = [

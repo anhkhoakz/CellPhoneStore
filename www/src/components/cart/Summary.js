@@ -7,6 +7,8 @@ import {
     Button,
     Typography,
     Box,
+    Switch,
+    FormControlLabel
 } from "@mui/material";
 import LoggedCustomerInfo from "./LoggedCustomerInfo";
 
@@ -26,21 +28,40 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
     ]);
 
     const [cookies] = useCookies([]);
+
+    const [selectedAddress, setSelectedAddress] = useState(savedAddresses[0]);
+    // Shipping state
+    const [shippingCost, setShippingCost] = useState(shipping);
+
+    // Discount Code State
+    const [discountCode, setDiscountCode] = useState("");
+    const [availableCoupons] = useState(["DISCOUNT10", "FREESHIP", "SUMMER2023"]);
+
+    // Loyalty Points State
+    const [loyaltyPoints] = useState(100000); // Example points
+    const [useLoyaltyPoints, setUseLoyaltyPoints] = useState(false)
+
     const formatPrice = (price) => {
         return new Intl.NumberFormat("vi-VN", {
             style: "currency",
             currency: "VND",
         }).format(price);
     };
-    const [selectedAddress, setSelectedAddress] = useState(savedAddresses[0]);
-    
 
-    // Shipping state
-    const [shippingCost, setShippingCost] = useState(shipping);
+    const calculateTotal = () => {
+        const discount = useLoyaltyPoints ? loyaltyPoints : 0;
+        return Math.max(total + shippingCost - discount, 0); // Tổng = tổng ban đầu + phí giao hàng - giảm giá
+    };
 
-    // Discount Code State
-    const [discountCode, setDiscountCode] = useState("");
-    const [availableCoupons] = useState(["DISCOUNT10", "FREESHIP", "SUMMER2023"]); // Available coupons
+
+    const handleLoyaltySwitch = (event) => {
+        setUseLoyaltyPoints(event.target.checked);
+    };
+
+    const handleCouponSelect = (e) => {
+        setDiscountCode(e.target.value); // Update the discount code when selecting a coupon
+    };
+
 
     const handleSubmit = () => {
         console.log("Customer Information:", { name, phone, selectedAddress });
@@ -69,7 +90,7 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
                 },
                 items: items,
                 email: email,
-                
+
                 shippingOption: shippingCost === 5 ? "standard" : "express",
                 total,
             }),
@@ -83,9 +104,6 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
             });
     };
 
-    const handleCouponSelect = (e) => {
-        setDiscountCode(e.target.value); // Update the discount code when selecting a coupon
-    };
 
     return (
         <Box className="p-5">
@@ -143,11 +161,28 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
                 </Select>
             </FormControl>
 
-            {/* Customer Point Section */}
+            {/* Loyalty Points Section */}
             <Typography variant="h6" gutterBottom>
                 Loyalty Points
             </Typography>
-            
+            <Box display="flex" alignItems="center" justifyContent="space-between">
+                <Typography variant="body1">
+                    Available Points: {loyaltyPoints}
+                </Typography>
+                <FormControlLabel
+                    control={
+                        <Switch
+                            checked={useLoyaltyPoints}
+                            onChange={handleLoyaltySwitch}
+                            color="primary"
+                        />
+                    }
+                    label="Use Loyalty Points"
+                    labelPlacement="start" // Đặt nhãn bên trái của switch
+                />
+
+            </Box>
+
 
             <hr className="my-4" />
 
@@ -155,15 +190,16 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
                 <Typography variant="h6" className="text-uppercase">
                     Total price
                 </Typography>
-                <Typography variant="h6">{formatPrice(total.toFixed(2))}</Typography>
+                <Typography variant="h6">{formatPrice(calculateTotal().toFixed(2))}</Typography>
             </Box>
+
 
             <Button
                 variant="contained"
                 color="success"
                 onClick={handleSubmit}
                 sx={{ fontWeight: "bold", width: "100%" }}
-                // href="/success"
+            // href="/success"
             >
                 Register
             </Button>

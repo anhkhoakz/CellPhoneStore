@@ -25,6 +25,7 @@ import CategoryPage from "./pages/CategoryPage";
 import PaymentGuide from "./pages/PaymentGuidePage";
 import InvoicePage from "./pages/InvoicePage";
 import ProductRatingPage from "./pages/ProductRatingPage";
+import CouponPage from "./pages/CouponPage";
 
 function App() {
     return (
@@ -97,8 +98,12 @@ function App() {
                                             element={<InvoicePage />}
                                         />
                                         <Route
-                                            path="/product/:id/rating"
+                                            path="rating"
                                             element={<ProductRatingPage />}
+                                        />
+                                        <Route
+                                            path="/coupon"
+                                            element={<CouponPage />}
                                         />
                                         <Route 
                                             path="/forgot-password/:token" 
