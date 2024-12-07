@@ -4,9 +4,11 @@ import {
     Divider,
     Grid,
     MenuItem,
-    TextField,
+    Rating,
     Typography,
+    TextField
 } from "@mui/material";
+
 import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { useParams } from "react-router-dom";
@@ -162,7 +164,7 @@ const ProductDetailPage = () => {
                                     margin: "auto",
                                 }}
                                 src={`${process.env.REACT_APP_BACKEND_URL}/images/${selectedColor?.image || product.image}`}
-                                alt={`${product?.name} - ${selectedColor?.name || ""}`}
+                                alt={`${product?.name} - ${selectedColor?.name || ''}`}
                             />
                         </Box>
                         <Box
@@ -223,6 +225,20 @@ const ProductDetailPage = () => {
                             <Typography variant="body1" paragraph>
                                 {product.description}
                             </Typography>
+
+                            <Box sx={{ mb: 2 }}>
+                                
+                                <Rating
+                                    name="product-rating"
+                                    value={product.averageRating || 0} 
+                                    precision={0.5}
+                                    readOnly
+                                />
+                                <Typography variant="body2" sx={{ color: "gray" }}>
+                                    ({product.ratingCount || 0} reviews)
+                                </Typography>
+                            </Box>
+
                             <Box sx={{ my: 2 }}>
                                 <Typography variant="body1" mb={1}>
                                     Color

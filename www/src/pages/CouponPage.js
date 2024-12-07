@@ -1,9 +1,10 @@
 import { Box, Divider, List, Typography } from "@mui/material";
 import React, { useState } from "react";
 import CouponItem from "../components/coupon/CouponItem";
+import ToastNoti from "../components/toast-noti/ToastNoti";
 
 const CouponPage = () => {
-    const [myCoupons] = useState([
+    const [myCoupons, setMyCoupons] = useState([
         {
             id: 1,
             title: "10% Off Your Order",
@@ -18,7 +19,7 @@ const CouponPage = () => {
         },
     ]);
 
-    const [availableCoupons] = useState([
+    const [availableCoupons, setAvailableCoupons] = useState([
         {
             id: 3,
             title: "Buy 1 Get 1 Free",
@@ -33,19 +34,28 @@ const CouponPage = () => {
         },
     ]);
 
+    const [showToast, setShowToast] = useState(false); // State to control toast visibility
+
     const handleReceiveCoupon = (id) => {
-        console.log(`Coupon with ID ${id} received!`);
+        // Find the coupon from availableCoupons
+        const couponToReceive = availableCoupons.find(coupon => coupon.id === id);
+        
+        // Remove the coupon from availableCoupons
+        const updatedAvailableCoupons = availableCoupons.filter(coupon => coupon.id !== id);
+        
+        // Add the coupon to myCoupons
+        setAvailableCoupons(updatedAvailableCoupons); // Update available coupons
+        setMyCoupons(prevCoupons => [...prevCoupons, couponToReceive]); // Add coupon to myCoupons
+        
+        // Show the toast notification
+        setShowToast(true);
+
+        // Hide the toast after 3 seconds
+        setTimeout(() => setShowToast(false), 3000);
     };
 
     return (
-        <Box
-            p={3}
-            sx={{
-                minHeight: "80vh",
-                maxWidth: "60%",
-                margin: "5em auto 0.5em auto",
-            }}
-        >
+        <Box p={3} sx={{ minHeight: "80vh", maxWidth: "60%", margin: "5em auto 0.5em auto" }}>
             <Typography variant="h4" gutterBottom>
                 My Coupons
             </Typography>
@@ -65,10 +75,20 @@ const CouponPage = () => {
                     <CouponItem
                         key={coupon.id}
                         coupon={coupon}
-                        onReceive={handleReceiveCoupon}
+                        onReceive={handleReceiveCoupon} // Pass the function to handle coupon receive
                     />
                 ))}
             </List>
+
+            {/* Show Toast Notification */}
+            {showToast && (
+                <ToastNoti
+                    message="Coupon received successfully!"
+                    type="success"
+                    position="top-right"
+                    autoClose={3000}
+                />
+            )}
         </Box>
     );
 };
