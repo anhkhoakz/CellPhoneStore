@@ -79,7 +79,6 @@ class ProductService {
 		}
 
 		data.image = mainImage;
-
 		if (data.variants && Array.isArray(data.variants)) {
 			data.variants = data.variants.map((variant, index) => {
 				return {

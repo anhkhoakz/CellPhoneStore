@@ -4,10 +4,13 @@ const checkProductValidation = (req, res, next) => {
 	const { name, price, category, stock, variants } = req.body;
 
 	// Ensure that req.files exists before accessing fields like 'image' and 'images'
-	const hasMainImage = req.files?.image && req.files.image.length > 0;
+	const hasMainImage = req.files?.some((file) => file.fieldname === "image");
 
 	// Check if all required fields are provided, including the main image
-	if (!name || !price || !category || !stock || !hasMainImage) {
+	const isAllFieldsProvided =
+		name && price && category && stock && hasMainImage;
+
+	if (!isAllFieldsProvided) {
 		console.log("Missing fields:", {
 			name,
 			price,
@@ -59,7 +62,6 @@ const checkProductValidation = (req, res, next) => {
 	// Proceed to the next middleware if validation passes
 	next();
 };
-
 module.exports = {
 	checkProductValidation,
 };
