@@ -45,7 +45,7 @@ module.exports = {
 				user = await User.create({
 					username: shippingAddress.name,
 					email: email,
-					password: hashPassword(password),
+					password: await hashPassword(password),
 					phone: shippingAddress.phone,
 					addresses: [
 						{
@@ -64,8 +64,9 @@ module.exports = {
 
 			const userId = user._id;
 
-			if (couponCode && isLogin) {
-				const coupon = await Coupon.findOne({
+			let coupon;
+			if (couponCode && isLogin && couponCode.trim() !== "") {
+				coupon = await Coupon.findOne({
 					code: couponCode,
 					quantity: { $gt: 0 },
 					usedBy: { $ne: userId },

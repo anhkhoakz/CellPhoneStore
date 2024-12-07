@@ -6,7 +6,8 @@ const ToastNoti = ({
     message,
     type = "success",
     position = "bottom-right",
-    autoClose = 4000,
+    autoClose = 3000,
+    onClose,
 }) => {
     // Hàm để hiển thị thông báo
     const showToast = () => {
@@ -32,30 +33,35 @@ const ToastNoti = ({
                 toast.success(message, {
                     position: toastPosition,
                     autoClose: autoClose,
+                    onClose: onClose,
                 });
                 break;
             case "error":
                 toast.error(message, {
                     position: toastPosition,
                     autoClose: autoClose,
+                    onClose: onClose,
                 });
                 break;
             case "info":
                 toast.info(message, {
                     position: toastPosition,
                     autoClose: autoClose,
+                    onClose: onClose,
                 });
                 break;
             case "warning":
                 toast.warning(message, {
                     position: toastPosition,
                     autoClose: autoClose,
+                    onClose: onClose,
                 });
                 break;
             default:
                 toast(message, {
                     position: toastPosition,
                     autoClose: autoClose,
+                    onClose: onClose,
                 });
                 break;
         }
