@@ -74,7 +74,7 @@ const CouponItem = ({ coupon, onReceive }) => {
                                     backgroundColor: "#115293",
                                 },
                             }}
-                            onClick={() => onReceive(coupon.id)} // Trigger onReceive in the parent
+                            onClick={() => onReceive(coupon.code)} // Trigger onReceive in the parent
                         >
                             Receive
                         </Button>

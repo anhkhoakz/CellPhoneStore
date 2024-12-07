@@ -6,7 +6,8 @@ const {
 	GetCoupons,
 	UpdateCoupon,
 	GetAvailableCoupons,
-	getMyCoupons
+	getMyCoupons,
+	ReceiveCoupon
 } = require("~v1/controllers/couponController");
 
 const {verifyAccessToken} = require("~v1/middleware/tokenMiddleware");
@@ -19,5 +20,7 @@ router.get("/available", verifyAccessToken, GetAvailableCoupons);
 router.get("/my", verifyAccessToken, getMyCoupons);
 router.get("/:id", GetCoupon);
 router.put("/:id", UpdateCoupon);
+
+router.patch("/receive/:id", verifyAccessToken, ReceiveCoupon);
 
 module.exports = router;

@@ -83,15 +83,28 @@ const CouponPage = () => {
             (coupon) => coupon.code !== id
         );
 
-        // Add the coupon to myCoupons
-        setAvailableCoupons(updatedAvailableCoupons); // Update available coupons
-        setMyCoupons((prevCoupons) => [...prevCoupons, couponToReceive]); // Add coupon to myCoupons
-
-        // Show the toast notification
-        setShowToast(true);
-
-        // Hide the toast after 3 seconds
-        setTimeout(() => setShowToast(false), 3000);
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/coupons/receive/${id}`, {
+            method: "PATCH",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.accessToken}`,
+            },
+        }).then((response) => response.json()).then((data) => {
+            if (!data.success) {
+                console.error("Error:", data.message);
+                return;
+            }
+            
+            setAvailableCoupons(updatedAvailableCoupons); // Update available coupons
+            setMyCoupons((prevCoupons) => [...prevCoupons, couponToReceive]); // Add coupon to myCoupons
+    
+            // Show the toast notification
+            setShowToast(true);
+    
+            // Hide the toast after 3 seconds
+            setTimeout(() => setShowToast(false), 3000);
+        });
     };
 
     return (
