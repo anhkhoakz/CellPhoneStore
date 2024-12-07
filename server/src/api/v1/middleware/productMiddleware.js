@@ -1,6 +1,6 @@
 const validator = require("validator");
 
-const checkProuductValidation = (req, res, next) => {
+const checkProductValidation = (req, res, next) => {
 	const { name, price, category, stock, variants } = req.body;
 
 	// Ensure that req.files exists before accessing fields like 'image' and 'images'
@@ -61,5 +61,5 @@ const checkProuductValidation = (req, res, next) => {
 };
 
 module.exports = {
-	checkProuductValidation,
+	checkProductValidation,
 };

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const ProductController = require("~v1/controllers/productController");
 const path = require("node:path");
-const { checkProuductValidation } = require("~v1/middleware/productMiddleware");
+const { checkProductValidation } = require("~v1/middleware/productMiddleware");
 
 const {
 	combinedAuthMiddleware,
@@ -37,14 +37,14 @@ router.get("/:category", ProductController.getProductsByCategory);
 router.post(
 	"/",
 	upload.any(),
-	checkProuductValidation,
+	checkProductValidation,
 	ProductController.createProduct,
 );
 
 router.patch(
 	"/:id",
 	upload.any(),
-	checkProuductValidation,
+	checkProductValidation,
 	ProductController.updateProduct,
 );
 

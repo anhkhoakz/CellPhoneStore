@@ -33,7 +33,6 @@ app.use(
 app.use(cookieParser());
 
 app.use(
-	// allow all cors
 	cors({
 		origin: process.env.FRONTEND_URL,
 		methods: ["GET", "POST", "PATCH", "DELETE"],

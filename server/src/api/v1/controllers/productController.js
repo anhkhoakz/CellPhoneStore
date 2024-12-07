@@ -50,25 +50,45 @@ class ProductController {
 		}
 	}
 
-	async searchProducts(req, res) {
-		const { query } = req.query;
+	// async searchProducts(req, res) {
+	// 	const { query } = req.query;
 
-		if (!query) {
-			return res.status(400).json({ message: "Query parameter is required." });
-		}
+	// 	if (!query) {
+	// 		return res.status(400).json({ message: "Query parameter is required." });
+	// 	}
+
+	// 	try {
+	// 		const searchResults = await productService.searchProducts(query);
+	// 		if (searchResults.status === 200) {
+	// 			res.status(200).json(searchResults.data);
+	// 		} else {
+	// 			res.status(searchResults.status).json(searchResults.message);
+	// 		}
+	// 	} catch (error) {
+	// 		res.status(500).json({
+	// 			message: "Error searching products",
+	// 			error,
+	// 		});
+	// 	}
+	// }
+
+	async searchProducts(req, res) {
+		const { q, sort, category, minPrice, maxPrice } = req.query;
 
 		try {
-			const searchResults = await productService.searchProducts(query);
-			if (searchResults.status === 200) {
-				res.status(200).json(searchResults.data);
-			} else {
-				res.status(searchResults.status).json(searchResults.message);
-			}
-		} catch (error) {
-			res.status(500).json({
-				message: "Error searching products",
-				error,
+			const searchResults = await productService.searchProducts({
+				q,
+				sort,
+				category,
+				minPrice,
+				maxPrice,
 			});
+
+			res
+				.status(searchResults.status)
+				.json(searchResults.data || searchResults.message);
+		} catch (error) {
+			res.status(500).json({ message: "Error searching products", error });
 		}
 	}
 

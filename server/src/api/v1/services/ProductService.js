@@ -101,43 +101,36 @@ class ProductService {
 
 	async addProductToIndex(product) {
 		try {
-			const response = await client.index({
+			await client.index({
 				index: "products",
 				id: product._id.toString(),
-				body: {
+				document: {
 					name: product.name,
 					description: product.description,
 					category: product.category,
 					price: product.price,
-					imageUrl: product.imageUrl,
+					stock: product.stock,
+					sold: product.sold,
+					variants: product.variants,
+					image: product.image,
+					ratings: product.ratings.map((rating) => ({
+						userId: rating.userId,
+						rating: rating.rating,
+					})),
+					comments: product.comments.map((comment) => ({
+						username: comment.username,
+						comment: comment.comment,
+						createAt: comment.createAt,
+					})),
+					createAt: product.createAt,
+					updateAt: product.updateAt,
 				},
 			});
-			console.log("Product indexed:", response);
+			console.log("Product indexed in Elasticsearch");
 		} catch (error) {
 			console.error("Error indexing product:", error);
-			throw new Error("Error indexing product");
 		}
 	}
-
-	// async searchProducts(query) {
-	// 	try {
-	// 		const response = await client.search({
-	// 			index: "products",
-	// 			body: {
-	// 				query: {
-	// 					multi_match: {
-	// 						query: query,
-	// 						fields: ["name", "description"],
-	// 					},
-	// 				},
-	// 			},
-	// 		});
-	// 		return { status: 200, data: response.body.hits.hits }; // Elasticsearch response
-	// 	} catch (error) {
-	// 		console.error("Error performing search", error);
-	// 		return { status: 500, message: "Error performing search", error };
-	// 	}
-	// }
 
 	async updateProduct(id, data, files) {
 		const product = await Product.findOne({ productId: id });
@@ -187,6 +180,15 @@ class ProductService {
 			runValidators: true,
 		});
 
+		await client.update({
+			index: "products",
+			id: product._id.toString(),
+			doc: {
+				...data,
+				updateAt: new Date(),
+			},
+		});
+
 		if (!updatedProduct) {
 			return { code: 500, message: "Failed to update product" };
 		}
@@ -202,57 +204,62 @@ class ProductService {
 		}
 		await Product.findByIdAndDelete(id);
 
+		await client.delete({
+			index: "products",
+			id: product._id.toString(),
+		});
+
 		return { code: 200, message: "Product deleted successfully" };
 	}
 
-	async searchProducts({
-		q,
-		sort,
-		category,
-		minPrice,
-		maxPrice,
-		minRating,
-		maxRating,
-	}) {
-		const query = {};
+	// async searchProducts({
+	// 	q,
+	// 	sort,
+	// 	category,
+	// 	minPrice,
+	// 	maxPrice,
+	// 	minRating,
+	// 	maxRating,
+	// }) {
+	// 	const query = {};
 
-		if (q) {
-			query.$or = [
-				{ name: { $regex: q, $options: "i" } }, // Case-insensitive search on name
-				{ description: { $regex: q, $options: "i" } }, // Case-insensitive search on description
-				{ category: { $regex: q, $options: "i" } }, // Case-insensitive search on category
-			];
-		}
+	// 	if (q) {
+	// 		query.$or = [
+	// 			{ name: { $regex: q, $options: "i" } }, // Case-insensitive search on name
+	// 			{ description: { $regex: q, $options: "i" } }, // Case-insensitive search on description
+	// 			{ category: { $regex: q, $options: "i" } }, // Case-insensitive search on category
+	// 		];
+	// 	}
 
-		if (category) {
-			query.category = category;
-		}
+	// 	if (category) {
+	// 		query.category = category;
+	// 	}
 
-		if (minPrice || maxPrice) {
-			query.price = {};
-			if (minPrice) {
-				query.price.$gte = Number.parseFloat(minPrice);
-			}
-			if (maxPrice) {
-				query.price.$lte = Number.parseFloat(maxPrice);
-			}
-		}
+	// 	if (minPrice || maxPrice) {
+	// 		query.price = {};
+	// 		if (minPrice) {
+	// 			query.price.$gte = Number.parseFloat(minPrice);
+	// 		}
+	// 		if (maxPrice) {
+	// 			query.price.$lte = Number.parseFloat(maxPrice);
+	// 		}
+	// 	}
 
-		if (minRating || maxRating) {
-			query.rating = {};
-			if (minRating) query.rating.$gte = Number.parseFloat(minRating); // Minimum rating
-			if (maxRating) query.rating.$lte = Number.parseFloat(maxRating); // Maximum rating
-		}
+	// 	if (minRating || maxRating) {
+	// 		query.rating = {};
+	// 		if (minRating) query.rating.$gte = Number.parseFloat(minRating); // Minimum rating
+	// 		if (maxRating) query.rating.$lte = Number.parseFloat(maxRating); // Maximum rating
+	// 	}
 
-		const sortOptions = {
-			price_asc: { price: 1 },
-			price_desc: { price: -1 },
-			rating_asc: { rating: 1 },
-			rating_desc: { rating: -1 },
-		}[sort] || { _id: -1 };
+	// 	const sortOptions = {
+	// 		price_asc: { price: 1 },
+	// 		price_desc: { price: -1 },
+	// 		rating_asc: { rating: 1 },
+	// 		rating_desc: { rating: -1 },
+	// 	}[sort] || { _id: -1 };
 
-		return await Product.find(query).sort(sortOptions);
-	}
+	// 	return await Product.find(query).sort(sortOptions);
+	// }
 
 	// async addRating({ productId, rating, user }) {
 
@@ -279,6 +286,48 @@ class ProductService {
 	//         return { code: 500, message: 'Server error', error };
 	//     }
 	// }
+
+	async searchProducts(query) {
+		try {
+			const response = await client.search({
+				index: "products",
+				query: {
+					bool: {
+						must: [
+							{
+								multi_match: {
+									query: query.q,
+									fields: ["name", "description", "category"],
+								},
+							},
+						],
+						filter: [
+							query.category ? { term: { category: query.category } } : null,
+							query.minPrice
+								? { range: { price: { gte: query.minPrice } } }
+								: null,
+							query.maxPrice
+								? { range: { price: { lte: query.maxPrice } } }
+								: null,
+						].filter(Boolean),
+					},
+				},
+				sort: query.sort
+					? [{ price: query.sort === "price_asc" ? "asc" : "desc" }]
+					: undefined,
+			});
+
+			const hits = response.hits.hits.map((hit) => ({
+				id: hit._id,
+				...hit._source,
+			}));
+
+			return { status: 200, data: hits };
+		} catch (error) {
+			console.error("Error searching products:", error);
+			return { status: 500, message: "Error performing search", error };
+		}
+	}
 
 	async getRatingScore(productId) {
 		try {
