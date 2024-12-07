@@ -16,8 +16,6 @@ import { useNavigate } from "react-router-dom";
 
 import ToastNoti from "../toast-noti/ToastNoti";
 
-import { da } from "date-fns/locale";
-
 
 // const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
 const Summary = ({ total, shipping, items }) => {

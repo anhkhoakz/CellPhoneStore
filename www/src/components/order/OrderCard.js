@@ -7,12 +7,21 @@ import {
     Typography,
 } from "@mui/material";
 import React from "react";
+import { useNavigate } from "react-router-dom"; // import useNavigate
 import OrderItem from "./OrderItem";
 
 const OrderCard = ({ order }) => {
+    const navigate = useNavigate(); // Hook để điều hướng
+
     const handleRateOrder = () => {
         console.log(`Navigating to rating page for Order ID: ${order._id}`);
-        // Thêm logic chuyển hướng đến trang đánh giá
+        // Chuyển hướng đến trang rating kèm theo mã đơn hàng
+        navigate(`/rating?orderId=${order._id}`);
+    };
+
+    const handleCancelOrder = () => {
+        console.log(`Cancelling Order ID: ${order._id}`);
+        // Thêm logic để huỷ đơn hàng
     };
 
     return (
@@ -52,15 +61,25 @@ const OrderCard = ({ order }) => {
                         Total: ${order.totalAmount}
                     </Typography>
 
-                    {/* Nút "Rating" chỉ hiển thị nếu trạng thái là "delivered" */}
+                    {/* Nút "Rate Order" chỉ hiển thị nếu trạng thái là "delivered" */}
                     {order.status === "delivered" && (
                         <Button
-                            // href="/rating"
                             variant="contained"
                             color="primary"
                             onClick={handleRateOrder}
                         >
                             Rate Order
+                        </Button>
+                    )}
+
+                    {/* Nút "Cancel" chỉ hiển thị nếu trạng thái là "pending" */}
+                    {order.status === "pending" && (
+                        <Button
+                            variant="outlined"
+                            color="error"
+                            onClick={handleCancelOrder}
+                        >
+                            Cancel Order
                         </Button>
                     )}
                 </Box>
