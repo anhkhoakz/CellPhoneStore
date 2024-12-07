@@ -1,13 +1,13 @@
-import * as React from "react";
-import Grid from "@mui/material/Grid2";
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid2";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import * as React from "react";
 import Copyright from "../../internals/components/Copyright";
+import EditSaleProductList from "../sale/EditSaleProductList";
 import PageViewsBarChart from "./PageViewsBarChart";
 import SessionsChart from "./SessionsChart";
 import StatCard from "./StatCard";
-import EditSaleProductList from "../sale/EditSaleProductList";
 
 const data = [
     {
@@ -93,7 +93,7 @@ export default function MainGrid() {
                     <Stack
                         gap={2}
                         direction={{ xs: "column", sm: "row", lg: "column" }}
-                    ></Stack>
+                    />
                 </Grid>
             </Grid>
             <Copyright sx={{ my: 4 }} />

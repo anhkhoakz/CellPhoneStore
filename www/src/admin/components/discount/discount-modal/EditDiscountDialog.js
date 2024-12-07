@@ -1,9 +1,10 @@
-import * as React from "react";
+import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
+<<<<<<< HEAD
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import Box from "@mui/material/Box";
@@ -13,6 +14,9 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { enGB } from 'date-fns/locale';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+=======
+import * as React from "react";
+>>>>>>> c729abd4f258939c975f34cb37526992604a0fa8
 
 export default function EditDiscountDialog({ open, onClose, onSave, discountData }) {
     // Initialize state with the discount data passed in

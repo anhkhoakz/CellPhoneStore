@@ -1,8 +1,8 @@
-import React, { useRef } from "react";
-import { Box, Typography, Paper, Divider, Grid, Button } from "@mui/material";
-import OrderItem from "../components/order/OrderItem";
-import jsPDF from "jspdf";
+import { Box, Button, Divider, Grid, Paper, Typography } from "@mui/material";
 import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import React, { useRef } from "react";
+import OrderItem from "../components/order/OrderItem";
 
 const Invoice = () => {
     const invoiceRef = useRef(); // Reference to the invoice content
@@ -55,7 +55,12 @@ const Invoice = () => {
         <Box sx={{ padding: 3, marginTop: "4em" }}>
             {/* Invoice Content */}
             <Paper elevation={3} sx={{ padding: 3 }} ref={invoiceRef}>
-                <Typography variant="h4" align="center" gutterBottom sx={{fontWeight: "bold"}} >
+                <Typography
+                    variant="h4"
+                    align="center"
+                    gutterBottom
+                    sx={{ fontWeight: "bold" }}
+                >
                     Invoice
                 </Typography>
 
@@ -73,7 +78,9 @@ const Invoice = () => {
                 {/* Purchase Information */}
                 <Box sx={{ marginBottom: 2, marginTop: 2 }}>
                     <Typography variant="h6">Purchase Information</Typography>
-                    <Typography>Date: {new Date(purchaseTime).toLocaleString()}</Typography>
+                    <Typography>
+                        Date: {new Date(purchaseTime).toLocaleString()}
+                    </Typography>
                     <Typography variant="body1" color="textSecondary">
                         Products Purchased:
                     </Typography>
@@ -93,7 +100,9 @@ const Invoice = () => {
                             <Typography variant="h6">Total Amount</Typography>
                         </Grid>
                         <Grid item>
-                            <Typography variant="h6">${total.toFixed(2)}</Typography>
+                            <Typography variant="h6">
+                                ${total.toFixed(2)}
+                            </Typography>
                         </Grid>
                     </Grid>
                 </Box>
@@ -101,7 +110,11 @@ const Invoice = () => {
 
             {/* Action Buttons */}
             <Box sx={{ marginTop: 2, textAlign: "center" }}>
-                <Button variant="contained" color="primary" onClick={handleDownloadPDF}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleDownloadPDF}
+                >
                     Download PDF
                 </Button>
             </Box>

@@ -1,12 +1,12 @@
-import React, { useState } from "react";
 import {
-    TextField,
-    Select,
-    MenuItem,
-    InputLabel,
-    FormControl,
     Box,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
 } from "@mui/material";
+import React, { useState } from "react";
 
 const SearchBar = ({ onSearch, onStatusChange }) => {
     const [query, setQuery] = useState("");

@@ -330,7 +330,6 @@ const Welcome_Email_Template = `
   </html>
 `;
 
-
 const Checkout_Email_Template = `
   <!DOCTYPE html>
   <html lang="en">
@@ -439,11 +438,10 @@ const Checkout_Email_Template = `
   </html>
 `;
 
-
 module.exports = {
-    Verification_Email_Template,
-    Welcome_Email_Template,
-    Forgot_Password_Template,
-    SendPassword_Email_Template,
-    Checkout_Email_Template
+	Verification_Email_Template,
+	Welcome_Email_Template,
+	Forgot_Password_Template,
+	SendPassword_Email_Template,
+	Checkout_Email_Template,
 };

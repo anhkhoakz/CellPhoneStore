@@ -1,6 +1,10 @@
-import * as React from "react";
+import { Edit } from "@mui/icons-material";
 import {
+    FormControl,
+    IconButton,
+    MenuItem,
     Paper,
+    Select,
     Table,
     TableBody,
     TableCell,
@@ -8,19 +12,15 @@ import {
     TableHead,
     TablePagination,
     TableRow,
-    IconButton,
-    FormControl,
-    Select,
-    MenuItem,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { Edit } from "@mui/icons-material";
+import * as React from "react";
+import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
 import SearchBar from "../header/SearchBar";
 import AddUserDialog from "./user-modal/AddUserDialog";
 import EditUserDialog from "./user-modal/EditUserDialog";
 import LockReasonDialog from "./user-modal/LockReasonDialog";
-import { useCookies } from "react-cookie";
-import { useNavigate } from "react-router-dom";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontWeight: 600,
@@ -92,7 +92,7 @@ export default function UsersTable() {
             });
     }, [cookies.accessToken, navigate]);
 
-    const handleChangePage = (event, newPage) => setPage(newPage);
+    const handleChangePage = (_event, newPage) => setPage(newPage);
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);

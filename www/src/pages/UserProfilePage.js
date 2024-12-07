@@ -1,55 +1,54 @@
-import React, { useEffect, useState } from "react";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import UserInfo from "../components/user/UserInfo";
+import React, { useEffect, useState } from "react";
+import ToastNoti from "../components/toast-noti/ToastNoti"; // Import ToastNoti
 import AddressManagement from "../components/user/AddressManagement";
 import ChangePassword from "../components/user/ChangePassword";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import ToastNoti from "../components/toast-noti/ToastNoti"; // Import ToastNoti
+import UserInfo from "../components/user/UserInfo";
 
 import { useCookies } from "react-cookie";
 
 const UserProfilePage = () => {
-
     const [cookies] = useCookies([]);
     const [user, setUser] = useState({});
-
 
     useEffect(() => {
         // Fetch user data from the server
 
-         const fetchUserData = async () => {
-                try {
-                    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users/${cookies.userId}`, 
-                        { 
-                            method: "GET",
-                            credentials: "include",
-                            headers: {
-                                "Content-Type": "application/json",
-                                Authorization: `Bearer ${cookies.accessToken}`,
-                            },
-                        });
+        const fetchUserData = async () => {
+            try {
+                const response = await fetch(
+                    `${process.env.REACT_APP_BACKEND_URL}/api/v1/users/${cookies.userId}`,
+                    {
+                        method: "GET",
+                        credentials: "include",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${cookies.accessToken}`,
+                        },
+                    },
+                );
 
-                    if (response.ok) {
-                        const userData = await response.json();
-                        console.log(userData);
-                        setUser(userData.message);
-                    } else {
-                        throw new Error("Failed to fetch user data");
-                    }
-                } catch (error) {
-                    console.error(error);
+                if (response.ok) {
+                    const userData = await response.json();
+                    console.log(userData);
+                    setUser(userData.message);
+                } else {
+                    throw new Error("Failed to fetch user data");
                 }
-            };
+            } catch (error) {
+                console.error(error);
+            }
+        };
 
-            fetchUserData();
-    }
-    , []);
+        fetchUserData();
+    }, []);
 
     const [open, setOpen] = useState(false);
     const [toast, setToast] = useState({ message: "", type: "", show: false });
@@ -117,7 +116,6 @@ const UserProfilePage = () => {
         setTimeout(() => setToast((prev) => ({ ...prev, show: false })), 3000); // Hide toast after 3 seconds
     };
 
-
     const handlePasswordChangeSuccess = () => {
         setOpen(false); // Close modal
         setToast({
@@ -138,7 +136,12 @@ const UserProfilePage = () => {
             direction="column"
             sx={{ marginTop: "6em" }}
         >
-            <Typography variant="h4" gutterBottom align="center" sx={{fontWeight: "bold"}}>
+            <Typography
+                variant="h4"
+                gutterBottom
+                align="center"
+                sx={{ fontWeight: "bold" }}
+            >
                 User Profile
             </Typography>
 

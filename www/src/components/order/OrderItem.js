@@ -1,6 +1,6 @@
-import React from "react";
 import { Grid2 } from "@mui/material"; // Thay đổi import từ Grid sang Grid2
 import { CardMedia, Typography } from "@mui/material";
+import React from "react";
 
 const formatPrice = (price) => {
     return new Intl.NumberFormat("vi-VN", {
@@ -22,7 +22,9 @@ const OrderItem = ({ product }) => {
             </Grid2>
             <Grid2 xs={9}>
                 <Typography variant="h6">{product.name}</Typography>
-                <Typography variant="body2">Price: {formatPrice(product.price)}</Typography>
+                <Typography variant="body2">
+                    Price: {formatPrice(product.price)}
+                </Typography>
                 <Typography variant="body2">
                     Amount: {product.quantity}
                 </Typography>

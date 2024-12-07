@@ -1,6 +1,6 @@
-import React from "react";
-import { Button, Box } from "@mui/material";
 import { Google as GoogleIcon } from "@mui/icons-material";
+import { Box, Button } from "@mui/material";
+import React from "react";
 
 const GoogleLogin = () => {
     const handleGoogleLogin = () => {

@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import ToastNoti from "../toast-noti/ToastNoti";
+import React, { useState } from "react";
 import { useCookies } from "react-cookie";
+import ToastNoti from "../toast-noti/ToastNoti";
 
 const UserInfo = ({ user, onUserInfoChange }) => {
     const [cookie] = useCookies([]);
@@ -71,7 +71,7 @@ const UserInfo = ({ user, onUserInfoChange }) => {
                         email: user.email,
                         phone: user.phone,
                     }),
-                }
+                },
             );
 
             if (response.ok) {
@@ -83,8 +83,7 @@ const UserInfo = ({ user, onUserInfoChange }) => {
         } catch (error) {
             console.error(error);
         }
-    }
-
+    };
 
     const handleSaveChanges = async () => {
         if (validate()) {

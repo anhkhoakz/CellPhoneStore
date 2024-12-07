@@ -1,5 +1,5 @@
+import { Box, Button, Typography } from "@mui/material";
 import React from "react";
-import { Button, Typography, Box } from "@mui/material";
 
 const Error404 = () => {
     return (
@@ -10,7 +10,7 @@ const Error404 = () => {
                 height: "100vh",
                 textAlign: "center",
                 backgroundColor: "#f4f4f4",
-                marginTop:"5em",
+                marginTop: "5em",
             }}
         >
             <Box

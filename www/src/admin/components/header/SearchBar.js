@@ -1,16 +1,16 @@
-// SearchBar.js
-import * as React from "react";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import {
     Box,
     Button,
     FormControl,
     InputAdornment,
+    InputLabel,
+    MenuItem,
     OutlinedInput,
     Select,
-    MenuItem,
-    InputLabel,
 } from "@mui/material";
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+// SearchBar.js
+import * as React from "react";
 
 export default function SearchBar({
     search,

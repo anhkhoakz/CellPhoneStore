@@ -1,6 +1,6 @@
+import PropTypes from "prop-types";
 // src/admin/AdminLayout.js
 import React from "react";
-import PropTypes from "prop-types";
 
 const AdminLayout = ({ children }) => {
     return (

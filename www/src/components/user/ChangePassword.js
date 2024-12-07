@@ -1,15 +1,14 @@
-import React, { useState } from "react";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import { IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { IconButton, InputAdornment } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import React, { useState } from "react";
 
 import { useCookies } from "react-cookie";
 
 const ChangePassword = ({ user, onPasswordChangeSuccess }) => {
-    
     const [cookies] = useCookies([]);
 
     // State để lưu trữ giá trị các trường nhập liệu
@@ -51,8 +50,7 @@ const ChangePassword = ({ user, onPasswordChangeSuccess }) => {
 
         // Kiểm tra mật khẩu hiện tại
         if (!oldPassword) {
-            errorMessages.oldPassword =
-                "Mật khẩu hiện tại không được để trống";
+            errorMessages.oldPassword = "Mật khẩu hiện tại không được để trống";
             valid = false;
         }
 
@@ -81,7 +79,6 @@ const ChangePassword = ({ user, onPasswordChangeSuccess }) => {
         return valid;
     };
 
-
     const changePassword = async () => {
         try {
             const response = await fetch(
@@ -99,37 +96,31 @@ const ChangePassword = ({ user, onPasswordChangeSuccess }) => {
                         oldPassword: oldPassword,
                         confirmPassword: confirmPassword,
                     }),
-                }
+                },
             );
 
             const data = await response.json();
             console.log(data);
             return data.code;
-
         } catch (error) {
             console.error(error);
             return 503;
         }
-    }
-
+    };
 
     const handleSubmit = async () => {
         if (validate()) {
-
             // Gọi hàm thay đổi mật khẩu
-            const check =  await changePassword();
+            const check = await changePassword();
 
             // Gọi hàm callback để đóng modal
 
-            if (check === 200)
-            {
-                
+            if (check === 200) {
                 console.log("Mật khẩu đã được thay đổi thành công!");
                 onPasswordChangeSuccess(); // Call the callback to close the modal
             }
 
             console.log("Mật khẩu không thể thay đổi!");
-
         }
     };
 

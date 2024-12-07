@@ -1,15 +1,15 @@
-import * as React from "react";
+import { AddCircle, RemoveCircle } from "@mui/icons-material";
 import {
+    Button,
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
-    Button,
-    TextField,
     IconButton,
+    TextField,
 } from "@mui/material";
-import { AddCircle, RemoveCircle } from "@mui/icons-material";
 import { Autocomplete } from "@mui/material";
+import * as React from "react";
 
 export default function EditProductDialog({
     open,
@@ -151,7 +151,7 @@ export default function EditProductDialog({
                         />
                     )}
                     value={editedProductData.category}
-                    onChange={(event, newValue) => {
+                    onChange={(_event, newValue) => {
                         if (categories.includes(newValue)) {
                             setEditedProductData((prevData) => ({
                                 ...prevData,

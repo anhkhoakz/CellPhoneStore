@@ -1,12 +1,12 @@
-import * as React from "react";
 import {
+    Button,
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
-    Button,
     TextField,
 } from "@mui/material";
+import * as React from "react";
 
 export default function LockReasonDialog({ open, onClose, onSave }) {
     const [reason, setReason] = React.useState("");

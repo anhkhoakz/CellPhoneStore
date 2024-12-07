@@ -1,119 +1,129 @@
-
-const Coupon = require('~v1/models/Coupon');
+const Coupon = require("~v1/models/Coupon");
 
 module.exports = {
+	async CreateCoupon(req, res) {
+		try {
+			const {
+				code,
+				discount,
+				type,
+				expiryDate,
+				quantity,
+				condition,
+				description,
+			} = req.body;
 
-    async CreateCoupon(req, res) {
-        try {
-            const { code, discount, type, expiryDate, quantity, condition, description } = req.body;
+			if (
+				!code ||
+				!discount ||
+				!type ||
+				!expiryDate ||
+				!quantity ||
+				!condition
+			) {
+				return res.status(400).json({
+					success: false,
+					message: "Please provide all required fields",
+				});
+			}
 
-            if (!code || !discount || !type || !expiryDate || !quantity || !condition) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Please provide all required fields',
-                });
-            }
+			console.log("Received expiryDate:", expiryDate);
 
-            console.log('Received expiryDate:', expiryDate);
+			const coupon = await Coupon.create({
+				code,
+				discount,
+				type,
+				expiryDate: new Date(expiryDate),
+				quantity,
+				description,
+				condition,
+			});
 
-            const coupon = await Coupon.create({
-                code,
-                discount,
-                type,
-                expiryDate: new Date(expiryDate),
-                quantity,
-                condition,
-                description,
-                condition,
-            });
+			return res.status(201).json({
+				success: true,
+				message: "Coupon created successfully",
+				data: coupon,
+			});
+		} catch (error) {
+			return res.status(500).json({
+				success: false,
+				message: error.message,
+			});
+		}
+	},
 
-            return res.status(201).json({
-                success: true,
-                message: 'Coupon created successfully',
-                data: coupon,
-            });
-        } catch (error) {
-            return res.status(500).json({
-                success: false,
-                message: error.message,
-            });
-        }
-    },
+	async GetCoupons(req, res) {
+		try {
+			const coupons = await Coupon.find({});
 
-    async GetCoupons(req, res) {
-        try {
-            const coupons = await Coupon.find({});
+			return res.status(200).json({
+				success: true,
+				data: coupons,
+			});
+		} catch (error) {
+			return res.status(500).json({
+				success: false,
+				message: error.message,
+			});
+		}
+	},
 
-            return res.status(200).json({
-                success: true,
-                data: coupons,
-            });
-        } catch (error) {
-            return res.status(500).json({
-                success: false,
-                message: error.message,
-            });
-        }
-    },
+	async GetCoupon(req, res) {
+		try {
+			const { id } = req.params;
 
+			const coupon = await Coupon.findById(id);
 
-    async GetCoupon(req, res) {
-        try {
-            const { id } = req.params;
+			if (!coupon) {
+				return res.status(404).json({
+					success: false,
+					message: "Coupon not found",
+				});
+			}
 
-            const coupon = await Coupon.findById(id);
+			return res.status(200).json({
+				success: true,
+				data: coupon,
+			});
+		} catch (error) {
+			return res.status(500).json({
+				success: false,
+				message: error.message,
+			});
+		}
+	},
 
-            if (!coupon) {
-                return res.status(404).json({
-                    success: false,
-                    message: 'Coupon not found',
-                });
-            }
+	async UpdateCoupon(req, res) {
+		try {
+			const { id } = req.params;
+			const { code, discount, type, expiryDate } = req.body;
 
-            return res.status(200).json({
-                success: true,
-                data: coupon,
-            });
-        } catch (error) {
-            return res.status(500).json({
-                success: false,
-                message: error.message,
-            });
-        }
-    },
+			const coupon = await Coupon.findById(id);
 
+			if (!coupon) {
+				return res.status(404).json({
+					success: false,
+					message: "Coupon not found",
+				});
+			}
 
-    async UpdateCoupon(req, res) {
-        try {
-            const { id } = req.params;
-            const { code, discount, type, expiryDate } = req.body;
+			coupon.code = code || coupon.code;
+			coupon.discount = discount || coupon.discount;
+			coupon.type = type || coupon.type;
+			coupon.expiryDate = expiryDate || coupon.expiryDate;
 
-            const coupon = await Coupon.findById(id);
+			await coupon.save();
 
-            if (!coupon) {
-                return res.status(404).json({
-                    success: false,
-                    message: 'Coupon not found',
-                });
-            }
-
-            coupon.code = code || coupon.code;
-            coupon.discount = discount || coupon.discount;
-            coupon.type = type || coupon.type;
-            coupon.expiryDate = expiryDate || coupon.expiryDate;
-
-            await coupon.save();
-
-            return res.status(200).json({
-                success: true,
-                message: 'Coupon updated successfully',
-                data: coupon,
-            });
-        } catch (error) {
-            return res.status(500).json({
-                success: false,
-                message: error.message,
-            });
-        }
-    },
-}
+			return res.status(200).json({
+				success: true,
+				message: "Coupon updated successfully",
+				data: coupon,
+			});
+		} catch (error) {
+			return res.status(500).json({
+				success: false,
+				message: error.message,
+			});
+		}
+	},
+};

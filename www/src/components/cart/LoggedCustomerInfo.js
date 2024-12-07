@@ -1,14 +1,14 @@
-// src/components/LoggedCustomerInfo.js
-import React from "react";
 import {
-    TextField,
-    Typography,
     Box,
+    FormControl,
+    InputLabel,
     MenuItem,
     Select,
-    InputLabel,
-    FormControl,
+    TextField,
+    Typography,
 } from "@mui/material";
+// src/components/LoggedCustomerInfo.js
+import React from "react";
 
 const LoggedCustomerInfo = ({
     name,

@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import EmailForm from "../components/forgot-password/EmailForm";
-import Notification from "../components/forgot-password/Notification";
 import EnterPasswordForm from "../components/forgot-password/EnterPasswordForm";
+import Notification from "../components/forgot-password/Notification";
 
 const ForgotPasswordPage = () => {
     const [emailSent, setEmailSent] = useState(false);
     const navigate = useNavigate();
 
-    const {token} = useParams();
+    const { token } = useParams();
 
-    
     useEffect(() => {
         const validateToken = async () => {
             try {
@@ -22,18 +21,16 @@ const ForgotPasswordPage = () => {
                         headers: {
                             "Content-Type": "application/json",
                         },
-                    }
+                    },
                 );
 
-                if(response.status !== 200) {
+                if (response.status !== 200) {
                     navigate("/Error404");
                 }
 
                 // print data
                 const data = await response.json();
                 console.log(data);
-
-
             } catch (error) {
                 console.error("Error validating token:", error);
                 navigate("/Error404");
@@ -43,36 +40,42 @@ const ForgotPasswordPage = () => {
         if (token) {
             validateToken();
         }
-    }, [token, navigate]); 
-
+    }, [token, navigate]);
 
     const handleBackToLogin = () => {
         navigate("/login"); // Redirect back to login
     };
 
     const handleEmailSent = () => {
-        
         setEmailSent(true);
     };
 
     return (
-        <Box sx={{ maxWidth: 400, margin: "5em auto auto auto", padding: 3, minHeight: "80vh" }}>
+        <Box
+            sx={{
+                maxWidth: 400,
+                margin: "5em auto auto auto",
+                padding: 3,
+                minHeight: "80vh",
+            }}
+        >
             <Typography variant="h5" align="center" sx={{ marginBottom: 2 }}>
                 {token ? "Reset Your Password" : "Forgot Password"}
             </Typography>
             {token ? (
                 // If a token exists, render the password reset form
-                <EnterPasswordForm token={token} onSuccess={handleBackToLogin} />
+                <EnterPasswordForm
+                    token={token}
+                    onSuccess={handleBackToLogin}
+                />
+            ) : // Otherwise, render the email form or notification
+            !emailSent ? (
+                <EmailForm onEmailSent={handleEmailSent} />
             ) : (
-                // Otherwise, render the email form or notification
-                !emailSent ? (
-                    <EmailForm onEmailSent={handleEmailSent} />
-                ) : (
-                    <Notification
-                        message="A password reset link has been sent to your email."
-                        onBackToLogin={handleBackToLogin}
-                    />
-                )
+                <Notification
+                    message="A password reset link has been sent to your email."
+                    onBackToLogin={handleBackToLogin}
+                />
             )}
         </Box>
     );

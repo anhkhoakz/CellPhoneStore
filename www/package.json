@@ -39,22 +39,15 @@
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
-        "prettier": "prettier --write .",
-        "lint": "eslint src/**/*.js",
-        "lint:fix": "eslint src/**/*.js --fix"
+        "lint": "biome check src/",
+        "lint:fix": "biome check src/ --fix",
+        "format": "biome format src/"
     },
     "eslintConfig": {
-        "extends": [
-            "react-app",
-            "react-app/jest"
-        ]
+        "extends": ["react-app", "react-app/jest"]
     },
     "browserslist": {
-        "production": [
-            ">0.2%",
-            "not dead",
-            "not op_mini all"
-        ],
+        "production": [">0.2%", "not dead", "not op_mini all"],
         "development": [
             "last 1 chrome version",
             "last 1 firefox version",
@@ -64,13 +57,11 @@
     "devDependencies": {
         "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
         "@babel/plugin-transform-private-property-in-object": "^7.25.9",
-        "@eslint/js": "^9.15.0",
-        "eslint": "^8.0.0",
+        "@biomejs/biome": "1.9.4",
         "eslint-config-prettier": "^9.1.0",
         "eslint-config-react-app": "^7.0.1",
         "eslint-plugin-react": "^7.37.2",
         "globals": "^15.12.0",
-        "prettier": "3.4.1",
         "react-scripts": "^5.0.1"
     }
 }

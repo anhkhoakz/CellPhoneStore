@@ -1,61 +1,63 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const ProductController = require('~v1/controllers/productController');
-const path = require('path');
-const { checkProuductValidation} = require('~v1/middleware/productMiddleware');
+const ProductController = require("~v1/controllers/productController");
+const path = require("node:path");
+const { checkProductValidation } = require("~v1/middleware/productMiddleware");
 
-const {combinedAuthMiddleware, verifyAccessToken} = require('~v1/middleware/tokenMiddleware');
+const {
+	combinedAuthMiddleware,
+	verifyAccessToken,
+} = require("~v1/middleware/tokenMiddleware");
 
-const multer = require('multer');
+const multer = require("multer");
 
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, path.join(__dirname, '../../public/images'));
-    },
+	destination: (req, file, cb) => {
+		cb(null, path.join(__dirname, "../../public/images"));
+	},
 
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now();
-        cb(null, file.fieldname + '-' + uniqueSuffix + '-' + file.originalname);
-    },
+	filename: (req, file, cb) => {
+		const uniqueSuffix = Date.now();
+		cb(null, `${file.fieldname}-${uniqueSuffix}-${file.originalname}`);
+	},
 });
 
 const upload = multer({ storage: storage });
 
-router.get('/', ProductController.searchProducts);
+router.get("/", ProductController.searchProducts);
 
-router.get('/page/', ProductController.List);
+router.get("/page/", ProductController.List);
 
-router.get('/:id', ProductController.getProductById);
+router.get("/:id", ProductController.getProductById);
 
 // router.get('/search', ProductController.searchProducts);
 
-router.get('/:category', ProductController.getProductsByCategory);
+router.get("/:category", ProductController.getProductsByCategory);
 
 router.post(
-    '/',
-    upload.any(),
-    checkProuductValidation,
-    ProductController.createProduct,
+	"/",
+	upload.any(),
+	checkProductValidation,
+	ProductController.createProduct,
 );
 
 router.patch(
-    '/:id',
-    upload.any(),
-    checkProuductValidation,
-    ProductController.updateProduct,
+	"/:id",
+	upload.any(),
+	checkProductValidation,
+	ProductController.updateProduct,
 );
-
 
 router.patch(
-    '/:productId/comment',
-    combinedAuthMiddleware,
-    ProductController.addComment,
+	"/:productId/comment",
+	combinedAuthMiddleware,
+	ProductController.addComment,
 );
 
-router.get('/:productId/comments', ProductController.getComments);
+router.get("/:productId/comments", ProductController.getComments);
 
-router.get('/:productId/rating', ProductController.getRatingScore);
+router.get("/:productId/rating", ProductController.getRatingScore);
 
-router.delete('/:id', ProductController.deleteProduct);
+router.delete("/:id", ProductController.deleteProduct);
 
 module.exports = router;

@@ -1,12 +1,12 @@
 import { alpha } from "@mui/material/styles";
 
-import {
-    pickersYearClasses,
-    pickersMonthClasses,
-    pickersDayClasses,
-} from "@mui/x-date-pickers";
 import { menuItemClasses } from "@mui/material/MenuItem";
-import { gray, brand } from "../../../shared-theme/themePrimitives";
+import {
+    pickersDayClasses,
+    pickersMonthClasses,
+    pickersYearClasses,
+} from "@mui/x-date-pickers";
+import { brand, gray } from "../../../shared-theme/themePrimitives";
 
 /* eslint-disable import/prefer-default-export */
 export const datePickersCustomizations = {

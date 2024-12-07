@@ -1,4 +1,5 @@
-import * as React from "react";
+import { Visibility } from "@mui/icons-material";
+import { FormControl, MenuItem, Select } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -8,11 +9,10 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
-import { Visibility } from "@mui/icons-material";
-import { Select, MenuItem, FormControl } from "@mui/material";
+import * as React from "react";
 import OrderBar from "./OrderBar";
-import OrderDetailDialog from "./order-modal/OrderDetailDialog";
 import CanceledReasonDialog from "./order-modal/CanceledReasonDialog";
+import OrderDetailDialog from "./order-modal/OrderDetailDialog";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontWeight: 600,
@@ -53,8 +53,6 @@ const columns = [
     { id: "changeStatus", label: "Change Status", minWidth: 170 },
 ];
 
-
-
 export default function OrdersTable() {
     const [rows, setRows] = React.useState([]);
     const [page, setPage] = React.useState(0);
@@ -80,7 +78,7 @@ export default function OrdersTable() {
             });
     }, []);
 
-    const handleChangePage = (event, newPage) => {
+    const handleChangePage = (_event, newPage) => {
         setPage(newPage);
     };
 
@@ -103,17 +101,20 @@ export default function OrdersTable() {
 
     const updatestatus = (updatedRows, orderId, newStatus) => {
         const orderIndex = updatedRows.findIndex(
-            (order) => order._id === orderId
+            (order) => order._id === orderId,
         );
         if (orderIndex !== -1) {
-            fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/orders/${orderId}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+            fetch(
+                `${process.env.REACT_APP_BACKEND_URL}/api/v1/orders/${orderId}`,
+                {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
 
-                body: JSON.stringify({ status: newStatus }),
-            })
+                    body: JSON.stringify({ status: newStatus }),
+                },
+            )
                 .then((res) => res.json())
                 .then((data) => {
                     console.log(data.message);
@@ -129,23 +130,25 @@ export default function OrdersTable() {
         if (selectedOrderId) {
             const updatedRows = [...rows];
             const orderIndex = updatedRows.findIndex(
-                (order) => order._id === selectedOrderId
+                (order) => order._id === selectedOrderId,
             );
             if (orderIndex !== -1) {
-                fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/orders/cancel/${selectedOrderId}`, {
-                    method: "PATCH",
-                    headers: {
-                        "Content-Type": "application/json",
+                fetch(
+                    `${process.env.REACT_APP_BACKEND_URL}/api/v1/orders/cancel/${selectedOrderId}`,
+                    {
+                        method: "PATCH",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ noted: reason }),
                     },
-                    body: JSON.stringify({ noted: reason }),
-                })
+                )
                     .then((res) => res.json())
                     .then((data) => {
                         console.log(data.message);
                         if (data.success) {
                             updatedRows[orderIndex].status = "cancelled";
                             setRows(updatedRows);
-
                         }
                     });
             }
@@ -154,11 +157,11 @@ export default function OrdersTable() {
         setSelectedOrderId(null);
     };
 
-    const handleSearchChange = (value) => {
+    const _handleSearchChange = (value) => {
         setSearch(value);
     };
 
-    const handleStatusChange = (value) => {
+    const _handleStatusChange = (value) => {
         setStatus(value);
     };
 
@@ -191,20 +194,21 @@ export default function OrdersTable() {
         status,
         dateRange,
         customStartDate,
-        customEndDate
+        customEndDate,
     ) => {
         return rows.filter((row) => {
-            const matchesStatus =
-                status === "all" || row.status === status;
+            const matchesStatus = status === "all" || row.status === status;
             const matchesSearch =
-                row.shippingAddress.name.toLowerCase().includes(search.toLowerCase()) ||
+                row.shippingAddress.name
+                    .toLowerCase()
+                    .includes(search.toLowerCase()) ||
                 row._id.toLowerCase().includes(search.toLowerCase());
 
-          
             let matchesDateRange = true;
             const orderDate = new Date(row.createdAt);
 
             if (dateRange === "all") {
+                matchesDateRange = true;
             } else if (dateRange === "today") {
                 const today = new Date();
                 matchesDateRange =
@@ -246,7 +250,7 @@ export default function OrdersTable() {
         status,
         dateRange,
         customStartDate,
-        customEndDate
+        customEndDate,
     );
 
     return (
@@ -288,7 +292,7 @@ export default function OrdersTable() {
                         {filteredRows
                             .slice(
                                 page * rowsPerPage,
-                                page * rowsPerPage + rowsPerPage
+                                page * rowsPerPage + rowsPerPage,
                             )
                             .map((row, index) => {
                                 const isEven = index % 2 === 0;
@@ -303,12 +307,12 @@ export default function OrdersTable() {
                                         {columns.map((column) => {
                                             let value; // Declare value outside the if-else block
                                             if (column.id === "name") {
-                                                value = row.shippingAddress.name;
+                                                value =
+                                                    row.shippingAddress.name;
                                             } else {
                                                 value = row[column.id];
                                             }
-                                            return column.id ===
-                                                "status" ? (
+                                            return column.id === "status" ? (
                                                 <StatusTableCell
                                                     key={column.id}
                                                     align="center"
@@ -329,7 +333,7 @@ export default function OrdersTable() {
                                                         }}
                                                         onClick={() =>
                                                             handleOpenOrderDetailDialog(
-                                                                row
+                                                                row,
                                                             )
                                                         }
                                                     />
@@ -343,13 +347,11 @@ export default function OrdersTable() {
                                                     <FormControl fullWidth>
                                                         <Select
                                                             labelId={`status-label-${row._id}`}
-                                                            value={
-                                                                row.status
-                                                            }
+                                                            value={row.status}
                                                             onChange={(e) =>
                                                                 handleChangeStatus(
                                                                     e,
-                                                                    row._id
+                                                                    row._id,
                                                                 )
                                                             }
                                                             sx={{

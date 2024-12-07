@@ -1,7 +1,7 @@
-import globals from "globals";
 import pluginJs from "@eslint/js";
-import pluginReact from "eslint-plugin-react";
 import eslintConfigPrettier from "eslint-config-prettier";
+import pluginReact from "eslint-plugin-react";
+import globals from "globals";
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [

@@ -1,5 +1,5 @@
+import { Box, Button, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { Box, TextField, Button, Typography } from "@mui/material";
 
 const Comment = ({ onSubmitComment }) => {
     const [commentText, setCommentText] = useState("");

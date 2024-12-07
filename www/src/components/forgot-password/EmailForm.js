@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { TextField, Button, Typography } from "@mui/material";
+import { Button, TextField, Typography } from "@mui/material";
 import { red } from "@mui/material/colors";
+import React, { useState } from "react";
 
 const EmailForm = ({ onEmailSent }) => {
     const [email, setEmail] = useState("");
@@ -24,15 +24,17 @@ const EmailForm = ({ onEmailSent }) => {
             return;
         }
 
-
         // Simulate API call to send reset link
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users/forgotPassword`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
+        fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/api/v1/users/forgotPassword`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email }),
             },
-            body: JSON.stringify({ email }),
-        })
+        )
             .then((res) => res.json())
             .then((data) => {
                 if (data.code === 200) {

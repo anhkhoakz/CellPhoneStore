@@ -1,5 +1,5 @@
+import { Box, Typography } from "@mui/material";
 import React from "react";
-import { Typography, Box } from "@mui/material";
 import PayPalLogo from "../../assets/image/paypal.png";
 
 const ExpressCheckout = () => {

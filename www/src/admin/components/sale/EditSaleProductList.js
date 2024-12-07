@@ -1,10 +1,10 @@
-import * as React from "react";
-import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
-import SearchBar from "../header/SearchBar";
-import SaleProductsTable from "./SaleProductsTable";
+import Paper from "@mui/material/Paper";
+import * as React from "react";
 import Confirm from "../../../components/Confirm";
+import SearchBar from "../header/SearchBar";
 import AddSaleProductDialog from "../product/product-modal/AddSaleProductDialog";
+import SaleProductsTable from "./SaleProductsTable";
 
 // Define initialRows here
 const initialRows = [

@@ -1,5 +1,5 @@
+import { Box, Divider, Typography } from "@mui/material";
 import React from "react";
-import { Box, Typography, Divider } from "@mui/material";
 
 const ShowComment = ({ ShowComment }) => {
     const { username, comment, createAt } = ShowComment;
