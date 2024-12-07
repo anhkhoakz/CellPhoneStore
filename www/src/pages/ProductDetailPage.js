@@ -11,6 +11,7 @@ import {
     Divider,
     TextField,
     MenuItem,
+    Rating,
 } from "@mui/material";
 import ToastNoti from "../components/toast-noti/ToastNoti";
 import CommentsSection from "../components/product/CommentSection";
@@ -139,7 +140,7 @@ const ProductDetailPage = () => {
     }
 
     return (
-        <Box sx={{ padding: "1.25em", marginTop:"4em" }}>
+        <Box sx={{ padding: "1.25em", marginTop: "4em" }}>
             {/* Product Detail */}
             <Box
                 sx={{ minHeight: "70vh", width: "80%", margin: "1.25em auto" }}
@@ -167,7 +168,6 @@ const ProductDetailPage = () => {
                                 }}
                                 src={`${process.env.REACT_APP_BACKEND_URL}/images/${selectedColor?.image || product.image}`}
                                 alt={`${product?.name} - ${selectedColor?.name || ''}`}
-
                             />
                         </Box>
                         <Box sx={{ marginTop: "10px", display: "flex", justifyContent: "center", gap: "10px" }}>
@@ -187,7 +187,6 @@ const ProductDetailPage = () => {
                                 </Button>
                             ))}
                         </Box>
-
                     </Grid>
 
                     {/* Content Section */}
@@ -216,6 +215,20 @@ const ProductDetailPage = () => {
                             <Typography variant="body1" paragraph>
                                 {product.description}
                             </Typography>
+
+                            <Box sx={{ mb: 2 }}>
+                                
+                                <Rating
+                                    name="product-rating"
+                                    value={product.averageRating || 0} 
+                                    precision={0.5}
+                                    readOnly
+                                />
+                                <Typography variant="body2" sx={{ color: "gray" }}>
+                                    ({product.ratingCount || 0} reviews)
+                                </Typography>
+                            </Box>
+
                             <Box sx={{ my: 2 }}>
                                 <Typography variant="body1" mb={1}>
                                     Color
