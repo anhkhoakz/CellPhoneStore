@@ -1,29 +1,16 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import RatingItem from "../components/product/RatingItem";
 import ToastNoti from "../components/toast-noti/ToastNoti";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 
-// Mock data
-
-
 const ProductRatingPage = () => {
     const [reviews, setReviews] = useState({});
     const [showToast, setShowToast] = useState(false);
     const [cookies] = useCookies([]);
     const [mockProducts, setMockProducts] = useState([]);
-
-    // const mockProducts = [
-    //     {
-    //         id: 1,
-    //         name: "Smartphone XYZ",
-    //         price: 699.99,
-    //         image: "https://placehold.co/500x500",
-    //         description:
-    //             "A high-end smartphone with excellent features. Camera: 64MP, Battery: 4000mAh, Display: 6.5 inches.",
-    //     }
-    // ];
+    const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false); // New state for dialog
 
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -31,7 +18,7 @@ const ProductRatingPage = () => {
 
     const navigate = useNavigate();
 
-    useEffect(() => { 
+    useEffect(() => {
         fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/orders/myOrder/${orderId}`, {
             method: "GET",
             credentials: "include",
@@ -46,11 +33,9 @@ const ProductRatingPage = () => {
                 if (data.success) {
                     const product = data.message.items;
                     setMockProducts(product);
-                   
                 }
             });
     }, [orderId]);
-
 
     const handleSubmitReviews = () => {
         const submittedReviews = mockProducts.map((product) => ({
@@ -68,21 +53,32 @@ const ProductRatingPage = () => {
                 "Content-Type": "application/json",
                 "authorization": `Bearer ${cookies.accessToken}`,
             },
-            body: JSON.stringify({ratings: submittedReviews}),
-        }).then((res) =>res.json())
-        .then((data) => {
-            console.log(data);
-            if (data.success) {
-                // showToastMessage("Your reviews have been submitted!");
-                setShowToast(true);
-                setTimeout(() => setShowToast(false), 3000);
+            body: JSON.stringify({ ratings: submittedReviews }),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+                if (data.success) {
+                    setShowToast(true);
+                    setTimeout(() => {
+                        setShowToast(false);
+                        navigate("/orderManagement"); // Navigate after 3 seconds
+                    }, 2000);
+                }
+            });
+    };
 
-                // Redirect to Order Management Page
-                navigate("/orderManagement");
-            }
-        });
+    const handleOpenConfirmDialog = () => {
+        setIsConfirmDialogOpen(true); // Open confirmation dialog
+    };
 
-        
+    const handleCloseConfirmDialog = () => {
+        setIsConfirmDialogOpen(false); // Close confirmation dialog without submitting
+    };
+
+    const handleConfirmSubmit = () => {
+        setIsConfirmDialogOpen(false); // Close dialog and submit the reviews
+        handleSubmitReviews();
     };
 
     return (
@@ -121,12 +117,28 @@ const ProductRatingPage = () => {
                 <Button
                     variant="contained"
                     color="success"
-                    onClick={handleSubmitReviews}
+                    onClick={handleOpenConfirmDialog} // Open dialog on button click
                     sx={{ fontWeight: "bold", width: "10%" }}
                 >
                     Submit
                 </Button>
             </Box>
+
+            {/* Confirmation Dialog */}
+            <Dialog open={isConfirmDialogOpen} onClose={handleCloseConfirmDialog}>
+                <DialogTitle>Confirm Submission</DialogTitle>
+                <DialogContent>
+                    <Typography>Are you sure you want to submit your reviews?</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseConfirmDialog} color="secondary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleConfirmSubmit} color="primary">
+                        Confirm
+                    </Button>
+                </DialogActions>
+            </Dialog>
 
             {/* Toast Notification */}
             {showToast && (

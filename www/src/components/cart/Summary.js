@@ -9,22 +9,18 @@ import {
     Switch,
     Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import LoggedCustomerInfo from "./LoggedCustomerInfo";
+import CustomerInfo from "./CustomerInfo";  // Import CustomerInfo
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 
 import ToastNoti from "../toast-noti/ToastNoti";
 
-
-// const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
 const Summary = ({ total, shipping, items }) => {
-    // Customer state
-    const [name] = useState("John Doe");
+    const [name, setName] = useState("John Doe");
     const [phone, setPhone] = useState("+1 234 567 890");
-
-    const [email, setEmail] = useState();
-
+    const [email, setEmail] = useState("");
     const [toastMessage, setToastMessage] = useState("");
     const [toastType, setToastType] = useState("success");
 
@@ -33,26 +29,16 @@ const Summary = ({ total, shipping, items }) => {
         "456 Oak St, City B",
         "789 Pine St, City C",
     ]);
-
-    const navigate = useNavigate();
-
-    const [cookies] = useCookies([]);
-
     const [selectedAddress, setSelectedAddress] = useState(savedAddresses[0]);
-    // Shipping state
+
     const [shippingCost, setShippingCost] = useState(shipping);
-
-    // Discount Code State
     const [discountCode, setDiscountCode] = useState("");
-    const [availableCoupons] = useState([
-        "DISCOUNT10",
-        "FREESHIP",
-        "SUMMER2023",
-    ]);
-
-    // Loyalty Points State
+    const [availableCoupons] = useState(["DISCOUNT10", "FREESHIP", "SUMMER2023"]);
     const [loyaltyPoints] = useState(100000); // Example points
     const [useLoyaltyPoints, setUseLoyaltyPoints] = useState(false);
+
+    const [cookies] = useCookies([]);
+    const navigate = useNavigate();
 
     const formatPrice = (price) => {
         return new Intl.NumberFormat("vi-VN", {
@@ -63,7 +49,7 @@ const Summary = ({ total, shipping, items }) => {
 
     const calculateTotal = () => {
         const discount = useLoyaltyPoints ? loyaltyPoints : 0;
-        return Math.max(total + shippingCost - discount, 0); // Tổng = tổng ban đầu + phí giao hàng - giảm giá
+        return Math.max(total + shippingCost - discount, 0);
     };
 
     const handleLoyaltySwitch = (event) => {
@@ -71,7 +57,7 @@ const Summary = ({ total, shipping, items }) => {
     };
 
     const handleCouponSelect = (e) => {
-        setDiscountCode(e.target.value); // Update the discount code when selecting a coupon
+        setDiscountCode(e.target.value);
     };
 
     const handleSubmit = () => {
@@ -101,21 +87,17 @@ const Summary = ({ total, shipping, items }) => {
                 },
                 items: items,
                 email: email,
-
                 shippingOption: shippingCost === 5 ? "standard" : "express",
                 total,
             }),
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log(data);
                 if (data.success) {
-                    console.log("Order placed");
                     setToastType("success");
                     setToastMessage("Order placed successfully!");
                     navigate("/success");
-                }else{
-                    console.log("Order failed");
+                } else {
                     setToastType("error");
                     setToastMessage(data.message);
                 }
@@ -126,22 +108,33 @@ const Summary = ({ total, shipping, items }) => {
     };
 
     const handleToastReset = () => {
-        setTimeout(() => setToastMessage(""), 3000); // Reset after 3 seconds
+        setTimeout(() => setToastMessage(""), 3000);
     };
+
+    // Check if the user is logged in
+    const isLoggedIn = Boolean(cookies.accessToken);
 
     return (
         <Box className="p-5">
-            {/* Logged customer info */}
-            <LoggedCustomerInfo
-                name={name}
-                phone={phone}
-                setPhone={setPhone}
-                email={email}
-                setEmail={setEmail}
-                savedAddresses={savedAddresses}
-                selectedAddress={selectedAddress}
-                setSelectedAddress={setSelectedAddress}
-            />
+            {/* Show LoggedCustomerInfo if logged in, else show CustomerInfo */}
+            {isLoggedIn ? (
+                <LoggedCustomerInfo
+                    name={name}
+                    phone={phone}
+                    setPhone={setPhone}
+                    email={email}
+                    setEmail={setEmail}
+                    savedAddresses={savedAddresses}
+                    selectedAddress={selectedAddress}
+                    setSelectedAddress={setSelectedAddress}
+                />
+            ) : (
+                <CustomerInfo
+                    setName={setName}
+                    setPhone={setPhone}
+                    setAddress={setSelectedAddress}
+                />
+            )}
 
             <hr className="my-4" />
 
@@ -189,11 +182,7 @@ const Summary = ({ total, shipping, items }) => {
             <Typography variant="h6" gutterBottom>
                 Loyalty Points
             </Typography>
-            <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between"
-            >
+            <Box display="flex" alignItems="center" justifyContent="space-between">
                 <Typography variant="body1">
                     Available Points: {loyaltyPoints}
                 </Typography>
@@ -206,7 +195,7 @@ const Summary = ({ total, shipping, items }) => {
                         />
                     }
                     label="Use Loyalty Points"
-                    labelPlacement="start" // Đặt nhãn bên trái của switch
+                    labelPlacement="start"
                 />
             </Box>
 
@@ -231,13 +220,13 @@ const Summary = ({ total, shipping, items }) => {
             </Button>
 
             {toastMessage && (
-                 <ToastNoti
-                 message={toastMessage}
-                 type={toastType}
-                 position="top-right"
-                 autoClose={3000}
-                 onClose={handleToastReset}
-             />
+                <ToastNoti
+                    message={toastMessage}
+                    type={toastType}
+                    position="top-right"
+                    autoClose={3000}
+                    onClose={handleToastReset}
+                />
             )}
         </Box>
     );

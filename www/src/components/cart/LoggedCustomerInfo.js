@@ -13,9 +13,7 @@ import React from "react";
 const LoggedCustomerInfo = ({
     name,
     phone,
-    email,
     setPhone,
-    setEmail,
     savedAddresses,
     selectedAddress,
     setSelectedAddress,
@@ -40,17 +38,6 @@ const LoggedCustomerInfo = ({
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)} // Handle phone change
                 placeholder="Enter your phone number"
-                margin="normal"
-            />
-
-            <TextField
-                fullWidth
-                variant="outlined"
-                label="Email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)} // Handle email change
-                placeholder="Enter your email"
                 margin="normal"
             />
 

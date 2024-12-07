@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
 import {
     ExitToApp as ExitToAppIcon,
     Menu as MenuIcon,
     Person as PersonIcon,
     Search as SearchIcon,
-} from "@mui/icons-material"; // Thêm các icon cần thiết
+} from "@mui/icons-material";
 import {
     AppBar,
     Box,
@@ -29,14 +28,14 @@ const Navigation = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const navigate = useNavigate();
-    const [cookies] = useCookies([]);
+    const [cookies, setCookie, removeCookie] = useCookies([]);
 
     // Kiểm tra xem người dùng đã đăng nhập hay chưa
     useEffect(() => {
         if (cookies.userId) {
             setIsLoggedIn(true);
         }
-    }, [cookies]);
+    }, [cookies.userId]); // Chỉ cập nhật khi userId thay đổi
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -74,10 +73,11 @@ const Navigation = () => {
                 console.log(data.message);
             });
 
-        setIsLoggedIn(false); // Đánh dấu người dùng đã đăng xuất
+        // Xóa cookie khi logout và cập nhật trạng thái
+        removeCookie("userId");
+        setIsLoggedIn(false); // Cập nhật trạng thái đăng xuất
         setAnchorEl(null);
-        // Điều hướng đến trang đăng nhập hoặc trang chủ
-        navigate("/login");
+        navigate("/login"); // Điều hướng đến trang đăng nhập
     };
 
     return (
@@ -152,8 +152,7 @@ const Navigation = () => {
                         </Typography>
                     </IconButton>
                     <IconButton component={Link} to="/coupon" color="inherit">
-                        <i className="bi bi-gift"></i>{" "}
-                        {/* Replace with the coupon icon */}
+                        <i className="bi bi-gift"></i>
                         <Typography variant="body2" sx={{ ml: 1 }}>
                             Coupon
                         </Typography>
@@ -182,13 +181,11 @@ const Navigation = () => {
                                     to="/profile"
                                     onClick={handleMenuClose}
                                 >
-                                    <PersonIcon sx={{ mr: 2 }} />{" "}
-                                    {/* Thêm biểu tượng Profile */}
+                                    <PersonIcon sx={{ mr: 2 }} />
                                     Profile Manage
                                 </MenuItem>
                                 <MenuItem onClick={handleLogout}>
-                                    <ExitToAppIcon sx={{ mr: 2 }} />{" "}
-                                    {/* Thêm biểu tượng Logout */}
+                                    <ExitToAppIcon sx={{ mr: 2 }} />
                                     Logout
                                 </MenuItem>
                             </Menu>
@@ -279,8 +276,7 @@ const Navigation = () => {
                             </ListItem>
                             {isLoggedIn ? (
                                 <ListItem button onClick={handleLogout}>
-                                    <ExitToAppIcon sx={{ mr: 2 }} />{" "}
-                                    {/* Biểu tượng Logout */}
+                                    <ExitToAppIcon sx={{ mr: 2 }} />
                                     <ListItemText primary="Logout" />
                                 </ListItem>
                             ) : (
@@ -290,8 +286,7 @@ const Navigation = () => {
                                     to="/login"
                                     onClick={toggleDrawer(false)}
                                 >
-                                    <PersonIcon sx={{ mr: 2 }} />{" "}
-                                    {/* Biểu tượng Login */}
+                                    <PersonIcon sx={{ mr: 2 }} />
                                     <ListItemText primary="Login" />
                                 </ListItem>
                             )}
