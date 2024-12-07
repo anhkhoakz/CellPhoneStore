@@ -55,18 +55,7 @@ const CouponPage = () => {
     };
 
     return (
-<<<<<<< HEAD
         <Box p={3} sx={{ minHeight: "80vh", maxWidth: "60%", margin: "5em auto 0.5em auto" }}>
-=======
-        <Box
-            p={3}
-            sx={{
-                minHeight: "80vh",
-                maxWidth: "60%",
-                margin: "5em auto 0.5em auto",
-            }}
-        >
->>>>>>> c729abd4f258939c975f34cb37526992604a0fa8
             <Typography variant="h4" gutterBottom>
                 My Coupons
             </Typography>

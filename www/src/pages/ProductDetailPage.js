@@ -4,13 +4,11 @@ import {
     Divider,
     Grid,
     MenuItem,
-<<<<<<< HEAD
     Rating,
-=======
-    TextField,
     Typography,
->>>>>>> c729abd4f258939c975f34cb37526992604a0fa8
+    TextField
 } from "@mui/material";
+
 import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { useParams } from "react-router-dom";
@@ -166,11 +164,7 @@ const ProductDetailPage = () => {
                                     margin: "auto",
                                 }}
                                 src={`${process.env.REACT_APP_BACKEND_URL}/images/${selectedColor?.image || product.image}`}
-<<<<<<< HEAD
                                 alt={`${product?.name} - ${selectedColor?.name || ''}`}
-=======
-                                alt={`${product?.name} - ${selectedColor?.name || ""}`}
->>>>>>> c729abd4f258939c975f34cb37526992604a0fa8
                             />
                         </Box>
                         <Box
