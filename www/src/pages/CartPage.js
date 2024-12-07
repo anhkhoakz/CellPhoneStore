@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Box, Grid, Typography, Card, Divider, Button } from "@mui/material";
-import CartItem from "../components/CartItem";
-import CartEmpty from "../components/CartEmpty";
-import Summary from "../components/Summary";
+import CartItem from "../components/cart/CartItem";
+import CartEmpty from "../components/cart/CartEmpty";
+import Summary from "../components/cart/Summary";
 import { Link } from "react-router-dom";
-import ExpressCheckout from "../components/ExpressCheckout";
-import ToastNoti from "../components/ToastNoti"; // Import ToastNoti
+import ExpressCheckout from "../components/cart/ExpressCheckout";
+import ToastNoti from "../components/toast-noti/ToastNoti"; // Import ToastNoti
 
 import { useCookies } from "react-cookie";
 
@@ -18,7 +18,7 @@ const CartPage = () => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${cookies.accessToken}`,
+                Authorization: `Bearer ${cookies.accessToken}`,
             },
             credentials: "include",
         })
@@ -29,10 +29,9 @@ const CartPage = () => {
                     return;
                 }
 
-                console.log(data)
+                console.log(data);
 
                 const transformedItems = data.items.map((item) => {
-
                     const variant =
                         item.variantId &&
                         item.productDetails.variants.find(
@@ -71,12 +70,45 @@ const CartPage = () => {
     const [showToast, setShowToast] = useState(false); // State để lưu thông báo toast
 
     const handleQuantityChange = (id, value) => {
-        const newItems = items.map((item) =>
-            item.id === id
-                ? { ...item, quantity: Math.max(0, item.quantity + value) }
-                : item
-        );
-        setItems(newItems);
+
+        // const quantity = items.find((item) => item.id === id).quantity;
+
+        const item = items.find((item) => item.id === id);
+
+        const { quantity, productId } = item;
+
+        const newQuantity = quantity + value;
+
+
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/cart`, {
+            method: "PATCH",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${cookies.accessToken}`,
+            },
+            body: JSON.stringify({
+                productId,
+                variantId: id,
+                quantity: newQuantity,
+            }),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.success) {
+                    console.log("Quantity updated");
+                    const newItems = items.map((item) =>
+                        item.id === id
+                            ? { ...item, quantity: Math.max(0, item.quantity + value) }
+                            : item
+                    );
+                    setItems(newItems);
+                }
+
+                console.log(data);
+            });
+
+       
     };
 
     const handleRemoveItem = (id) => {
@@ -90,7 +122,7 @@ const CartPage = () => {
             credentials: "include",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${cookies.accessToken}`,
+                Authorization: `Bearer ${cookies.accessToken}`,
             },
             body: JSON.stringify({
                 productId,
@@ -113,8 +145,15 @@ const CartPage = () => {
     );
     const total = subtotal + shipping;
 
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(price);
+    };
+
     return (
-        <Box sx={{ flexGrow: 1, padding: 4 }}>
+        <Box sx={{ flexGrow: 1, padding: 4,  marginTop:"5em" }}>
             <Grid container spacing={4}>
                 {/* Kiểm tra xem giỏ hàng có trống không */}
                 {items.length === 0 ? (
@@ -126,7 +165,7 @@ const CartPage = () => {
                         {/* Cột bên trái - Giỏ hàng */}
                         <Grid item xs={12} md={8}>
                             <Card variant="outlined" sx={{ padding: 2 }}>
-                                <Typography variant="h4" gutterBottom>
+                                <Typography variant="h4" gutterBottom sx={{fontWeight: "bold"}}>
                                     Shopping Cart
                                 </Typography>
                                 <Typography
@@ -151,7 +190,7 @@ const CartPage = () => {
                                 >
                                     <Typography variant="h6">Price</Typography>
                                     <Typography variant="h6">
-                                        ${subtotal.toFixed(2)}
+                                        {formatPrice(subtotal.toFixed(2))}
                                     </Typography>
                                 </Grid>
                                 <Divider sx={{ my: 2 }} />
@@ -180,6 +219,7 @@ const CartPage = () => {
                                     total={total}
                                     shipping={shipping}
                                     setShipping={setShipping}
+                                    items={items}
                                 />
                             </Card>
                         </Grid>

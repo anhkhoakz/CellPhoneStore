@@ -1,9 +1,9 @@
 // src/pages/LoginPage.js
 import React from "react";
 import { Box, Divider, Typography } from "@mui/material";
-import Login from "../components/Login";
-import GoogleLogin from "../components/GoogleLogin";
-import ContinueAsGuest from "../components/ContinueAsGuest";
+import Login from "../components/login/Login";
+import GoogleLogin from "../components/login/GoogleLogin";
+import ContinueAsGuest from "../components/register/ContinueAsGuest";
 // import { Cookie } from '@mui/icons-material';
 
 import { useNavigate } from "react-router-dom";
@@ -15,6 +15,9 @@ import { useEffect } from "react";
 const LoginPage = () => {
     const [cookies] = useCookies([]);
     const navigate = useNavigate();
+
+    console.log("Backend URL:", process.env.REACT_APP_BACKEND_URL);
+
 
     useEffect(() => {
         fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users/login`, {

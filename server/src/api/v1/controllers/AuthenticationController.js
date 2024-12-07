@@ -7,6 +7,9 @@ const {
     update,
     forgotPassword,
     resetPassword,
+    addAddress,
+    setDefaultAddress,
+    checkValidateResetToken
 } = require('~/api/v1/services/AccountService');
 
 require('dotenv').config();
@@ -31,14 +34,15 @@ module.exports = {
     getUser: async (req, res, next) => {
         try {
             const { id } = req.params;
-            const user = await User.findById(id);
+            const user = await User.findById(id).select('-password');   
+
             if (!user) {
                 return res.status(404).json({
                     message: 'User not found',
                 });
             }
             return res.status(200).json({
-                user,
+                message: user,
             });
         } catch (err) {
             next(err);
@@ -70,7 +74,12 @@ module.exports = {
 
     resetPassword: async (req, res, next) => {
         try {
-            const { password, token } = req.body;
+            const { password, confirmPassword, token } = req.body;
+
+            if (password !== confirmPassword) {
+                return res.status(400).json({ message: 'Passwords do not match' });
+            }
+
 
             if (!password || !token) {
                 return res
@@ -79,10 +88,6 @@ module.exports = {
             }
 
             const { code, message, elements } = await resetPassword(req.body);
-
-            if (code === 200) {
-                return res.redirect(process.env.FRONTEND_URL + '/login');
-            }
 
             return res.status(code).json({
                 code,
@@ -94,6 +99,26 @@ module.exports = {
             next(err);
         }
     },
+
+
+    checkValidateResetToken: async (req, res, next) => {
+        try {
+            const { token } = req.params;
+
+            if (!token) {
+                return res.status(400).json({ message: 'Token is required' });
+            }
+
+            const { code, message, elements } = await checkValidateResetToken(token);
+
+            return res.status(code).json({ code, message, elements });
+        } catch (err) {
+            console.error(err);
+            next(err);
+        }
+    },
+
+
 
     verifyGoogleAccount: async (accessToken, refreshToken, profile, cb) => {
         try {
@@ -260,11 +285,10 @@ module.exports = {
         try {
             const { code, message } = await logout(req);
 
-            if (code === 200) {
-                res.clearCookie('accessToken');
-                res.clearCookie('userId');
-                req.user = null;
-            }
+            res.clearCookie('userId');
+            res.clearCookie('accessToken');
+            req.user = null;
+            
 
             return res.status(code).json({
                 message,
@@ -298,17 +322,48 @@ module.exports = {
 
     update: async (req, res, next) => {
         try {
-            if (!req.body.email) {
-                const { email } = req.user;
-                req.body.email = email;
-            }
+            const { id } = req.params;
 
-            const { code, message, elements } = await update(req.body);
+            const { code, message, elements } = await update(req.body, id);
 
             return res.status(code).json({
                 code,
                 message,
                 elements,
+            });
+        } catch (err) {
+            console.error(err);
+            next(err);
+        }
+    },
+
+    addAddress: async (req, res, next) => {
+        try {
+            const { id } = req.params;
+            const { code, message, elements, detail } = await addAddress(req.body,id);
+
+            return res.status(code).json({
+                code,
+                message,
+                elements,
+                detail
+            });
+        } catch (err) {
+            console.error(err);
+            next(err);
+        }
+    },
+
+    setDefaultAddress: async (req, res, next) => {
+        try {
+            const { id } = req.params;
+            const { code, message, elements , detail} = await setDefaultAddress(req.body, id);
+
+            return res.status(code).json({
+                code,
+                message,
+                elements,
+                detail
             });
         } catch (err) {
             console.error(err);

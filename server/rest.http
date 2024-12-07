@@ -63,7 +63,7 @@ Content-Type: application/json
 
 {
     "email": "khanhmh2004@gmail.com",
-    "password": "123456"
+    "password": "12345678"
 }
 
 
@@ -146,3 +146,33 @@ Content-Type: application/json
     }
 }
 
+###
+POST  http://localhost:8080/api/v1/coupons
+Content-Type: application/json
+
+{
+    "code": "e123122",
+    "discount": 1000000,
+    "expiryDate": "2025-09-30",
+    "description": "123456",
+    "type": "fixed",
+    "quantity": 100,
+    "condition": {
+        "minOrderValue": 50,
+        "applicableCategories": ["electronics", "fashion"]
+    }
+}
+
+
+###
+PATCH  http://localhost:8080/api/v1/orders/6752ac01c271faeca8d67eb7/rating
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImtoYW5obWgyMDA0QGdtYWlsLmNvbSIsInVzZXJJZCI6IjY3NGM3YzY1OGZjN2E5YTliZjQ3NjIzYyIsInJvbGUiOiJjdXN0b21lciIsInVzZXJuYW1lIjoiRHV5IEtoYW5oIiwiaWF0IjoxNzMzNDc5MjIzLCJleHAiOjE3MzM0NzkyODN9.V4V856jk1RdOYt5iOniZXDPqt5e75VMmnWTqLMuy44kEcvydmJd6YxbXFRJI3F_EWOaNBWNymBnSw2cjsMAYbKiF9Yn9Lxy6VDyeWDVEVbdpbL1_aNm7ttqg7983Lr0TFLrbfuKIMnsmyjDYT_c-WPsUK_uXiCJccwNQNvbObAmIYlbRzU5ZJDfv3eK7TBr6bLOv1dOuNQZ2ohlh_H0ptlryjQoltCfP3H2uI9MditXBoPa_ZsGs_MlBgyORGO4l0CSsEwIvvwyKcWNUW63KUGYvLVpB72Tk3kNEhusS4xStHOf-8CkS_H0ACYquAFHQ6iWESaIRUfVZcbeIoAJOWW1x2UdKrMeiroP4fkRlh-hqsaqplwniNPpwaWQcUVnI7YOxOvlCnGLmkhV_xn-tg7b5uGmCNNQWbZ1ItEFmrUyVqDuxJwj1DijePi7SWZnrcTxN71TRd_hEXICcq5Q81LdPGPZ4bLOknijt_xbfBRK_ADlSEuheeIzQKUl9f42NGo6irSgwmK5SFehRuYch7l_1PD3he5rLHESIuf6SL1AkNbAs2psVzKVOwM7Id17FxCREzYfNqYIj7MJ5x7edjYKJbOzZEjN7qc8YBJBJ6PHroPwSr8BTVnbqT62EQNDzGtr17q-qurZ2I_2TWWqfCDQO7fnKB1_85K_-1IVjUew
+
+{
+    "ratings": [
+        { "productId": 3, "star": 4, "review": "Great product!" },
+        { "productId": 4, "star": 5, "review": "Great product!" },
+        { "productId": 5, "star": 3, "review": "Great product!" }
+    ]
+}

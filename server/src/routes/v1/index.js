@@ -15,4 +15,8 @@ router.use('/users', UserRouter);
 router.use('/cart', cartRouter);
 router.use('/checkout', checkoutRouter);
 
+router.use('/orders', require('./orderRoutes'));
+
+router.use('/coupons', require('./couponRoutes'));
+
 module.exports = router;

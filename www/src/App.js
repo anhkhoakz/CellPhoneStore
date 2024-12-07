@@ -1,9 +1,9 @@
 // src/App.js
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import Navigation from "./components/Navigation";
+import Header from "./components/header/Header";
+import Footer from "./components/footer/Footer";
+import Navigation from "./components/navigation/Navigation";
 import HomePage from "./pages/HomePage";
 import OrderManagementPage from "./pages/OrderManagementPage";
 import CartPage from "./pages/CartPage";
@@ -19,6 +19,13 @@ import Error403 from "./pages/Error403";
 import Profile from "./pages/UserProfilePage";
 import OtpPage from "./pages/OTPPage";
 import AdminRoutes from "./admin/AdminRoutes";
+import BuyPage from "./pages/BuyPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import CategoryPage from "./pages/CategoryPage";
+import PaymentGuide from "./pages/PaymentGuidePage";
+import InvoicePage from "./pages/InvoicePage";
+import ProductRatingPage from "./pages/ProductRatingPage";
+import CouponPage from "./pages/CouponPage";
 
 function App() {
     return (
@@ -73,6 +80,38 @@ function App() {
                                         <Route
                                             path="/verify"
                                             element={<OtpPage />}
+                                        />
+                                        <Route
+                                            path="/buy-now"
+                                            element={<BuyPage />}
+                                        />
+                                        <Route
+                                            path="/forgot-password"
+                                            element={<ForgotPasswordPage />}
+                                        />
+                                        <Route
+                                            path="/payment-guide"
+                                            element={<PaymentGuide />}
+                                        />
+                                        <Route
+                                            path="/invoice"
+                                            element={<InvoicePage />}
+                                        />
+                                        <Route
+                                            path="rating"
+                                            element={<ProductRatingPage />}
+                                        />
+                                        <Route
+                                            path="/coupon"
+                                            element={<CouponPage />}
+                                        />
+                                        <Route 
+                                            path="/forgot-password/:token" 
+                                            element={<ForgotPasswordPage />} 
+                                        />
+                                        <Route
+                                            path="/catagory/:category"
+                                            element={<CategoryPage />}
                                         />
                                         <Route
                                             path="/*"

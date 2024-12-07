@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const ProductController = require('~v1/controllers/productController');
 const path = require('path');
-const { checkProuductValidation } = require('~v1/middleware/productMiddleware');
+const { checkProuductValidation} = require('~v1/middleware/productMiddleware');
+
+const {combinedAuthMiddleware, verifyAccessToken} = require('~v1/middleware/tokenMiddleware');
 
 const multer = require('multer');
 
@@ -42,6 +44,17 @@ router.patch(
     checkProuductValidation,
     ProductController.updateProduct,
 );
+
+
+router.patch(
+    '/:productId/comment',
+    combinedAuthMiddleware,
+    ProductController.addComment,
+);
+
+router.get('/:productId/comments', ProductController.getComments);
+
+router.get('/:productId/rating', ProductController.getRatingScore);
 
 router.delete('/:id', ProductController.deleteProduct);
 

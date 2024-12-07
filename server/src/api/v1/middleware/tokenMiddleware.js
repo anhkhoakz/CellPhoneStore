@@ -21,11 +21,16 @@ const verifyAccessToken = async (req, res, next) => {
 
         // Check if the Authorization token is missing
         if (!authToken) {
+            console.log('No auth token');
             return next(CreateError.Unauthorized('Access token not found 2'));
         }
 
         // Check if the cookie token matches the Authorization token
         if (cookieToken !== authToken && cookieToken !== undefined) {
+            // remove cookie
+            res.clearCookie('accessToken');
+            res.clearCookie('userId');
+
             return next(CreateError.Unauthorized('Access token mismatch'));
         }
 
@@ -42,6 +47,8 @@ const verifyAccessToken = async (req, res, next) => {
             const refreshToken = await getAsync(userId.toString()); // Retrieve refresh token from Redis
 
             if (!refreshToken) {
+                res.clearCookie('userId');
+
                 return next(
                     CreateError.Unauthorized('Refresh token not found'),
                 );
@@ -73,6 +80,7 @@ const verifyAccessToken = async (req, res, next) => {
 
                 return next();
             } catch (error) {
+                res.clearCookie('userId');
                 console.log('Refresh token error:', error.response.data);
                 return next(
                     CreateError.Unauthorized('Unable to refresh access token'),
@@ -89,11 +97,15 @@ const verifyAccessToken = async (req, res, next) => {
             return next();
         } catch (error) {
             // Handle cases other than token expiration
+
             if (error.name !== 'TokenExpiredError') {
+                res.clearCookie('userId');
                 return next(CreateError.InternalServerError(error.message));
             }
         }
     } catch (error) {
+
+        res.clearCookie('userId');
         return next(CreateError.InternalServerError(error.message));
     }
 };

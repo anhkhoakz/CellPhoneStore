@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 const Confirm = ({ open, message, onClose, onConfirm }) => {
     return (
         <Dialog open={open} onClose={onClose}>
-            <DialogTitle>Xác nhận</DialogTitle>
+            <DialogTitle>Confirm</DialogTitle>
             <DialogContent>
                 <Typography>{message}</Typography>
             </DialogContent>

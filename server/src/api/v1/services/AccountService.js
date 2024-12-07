@@ -23,6 +23,7 @@ const { delAsync, getAsync } = require('~/config/redis');
 const hashPassword = require('~v1/helpers/hashPassword');
 
 const generateResetToken = require('~v1/helpers/generateKey');
+const { set } = require('~/app');
 
 require('dotenv').config();
 
@@ -174,12 +175,14 @@ module.exports = {
                 email: user.email,
                 userId: user._id,
                 role: user.role,
+                username: user.username,
             });
 
             const refreshToken = await createRefreshToken({
                 email: user.email,
                 userId: user._id,
                 role: user.role,
+                username: user.username,
             });
 
             return {
@@ -196,7 +199,7 @@ module.exports = {
     logout: async (req) => {
         try {
             if (!req.cookies['userId']) {
-                return { code: 400, message: 'redirect to login page' };
+                return { code: 401, message: 'redirect to login page' };
             }
 
             const userId = req.cookies['userId'];
@@ -206,6 +209,7 @@ module.exports = {
                 await verifyAndRefreshToken(refreshToken);
 
             if (!success || !decoded) {
+
                 return {
                     code: 401,
                     message: error || 'Invalid or expired refresh token',
@@ -241,6 +245,7 @@ module.exports = {
             const accessToken = signAccessToken({
                 email: decoded.email,
                 userId: decoded.userId,
+                username: decoded.username,
                 role: decoded.role,
             });
 
@@ -264,9 +269,9 @@ module.exports = {
             };
         }
     },
-    update: async (data) => {
+    update: async (updateData, id) => {
         try {
-            const user = await _user.findOne({ email: data.email });
+            const user = await _user.findById({ _id: id });
 
             if (!user) {
                 return {
@@ -275,14 +280,12 @@ module.exports = {
                 };
             }
 
-            const { _id, email, ...updateData } = data;
-
             if (updateData.password) {
-                if (!updateData.oldPassword) {
+                if (!updateData.oldPassword || !updateData.confirmPassword) {
                     return {
                         code: 400,
                         message:
-                            'Old password is required to update the password',
+                            'Old password and confirm password are required',
                     };
                 }
 
@@ -297,11 +300,24 @@ module.exports = {
                     };
                 }
 
+                if (updateData.password === updateData.oldPassword) {
+                    return {
+                        code: 400,
+                        message: 'New password must be different from old password',
+                    };
+                }
+
+                if (updateData.password !== updateData.confirmPassword) {
+                    return {
+                        code: 400,
+                        message: 'Passwords do not match',
+                    };
+                }
+
                 updateData.password = await hashPassword(updateData.password);
             }
 
-            const updatedUser = await _user.findOneAndUpdate(
-                { _id: user._id },
+            const updatedUser = await user.updateOne(
                 updateData,
                 { new: true },
             );
@@ -330,7 +346,7 @@ module.exports = {
                 };
             }
 
-            const resetToken = generateResetToken();
+            const resetToken = generateResetToken() + user._id;
             const resetTokenExpiry = Date.now() + 15 * 60 * 1000;
 
             // Save the reset token and expiry to the user's document in the database
@@ -339,7 +355,7 @@ module.exports = {
                 { resetToken, resetTokenExpiry },
             );
 
-            const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+            const resetLink = `${process.env.FRONTEND_URL}/forgot-password/${resetToken}`;
 
             const emailTemplate = Forgot_Password_Template.replaceAll(
                 '{resetLink}',
@@ -366,6 +382,7 @@ module.exports = {
                 resetTokenExpiry: { $gt: Date.now() },
             });
 
+
             if (!user) {
                 return {
                     code: 404,
@@ -391,4 +408,111 @@ module.exports = {
             };
         }
     },
+
+    checkValidateResetToken: async (token) => {
+
+        try {
+
+            const user = await _user.findOne({
+                resetToken: token,
+                resetTokenExpiry: { $gt: Date.now() },
+            });
+
+            if (!user) {
+                return {
+                    code: 404,
+                    message: 'Invalid or expired reset token',
+                };
+            }
+
+            return {
+                code: 200,
+                message: 'Valid reset token',
+            };
+        }
+        catch (error) {
+            console.error(error);
+            return {
+                code: 500,
+                message: 'Internal server error',
+            };
+        }
+    },
+
+    addAddress: async (data, id) => {
+        try {
+            const user = await _user.findById({ _id: id });
+
+            if (!user) {
+                return {
+                    code: 404,
+                    message: 'User not found',
+                };
+            }
+
+            if (!user.addresses) {
+                user.addresses = [];
+            }
+
+
+            if(user.addresses.length === 0){
+                data.isDefault = true;
+            }
+
+            user.addresses.push(data);
+
+            const updatedUser = await user.save();
+
+            return {
+                code: 200,
+                message: 'Address added successfully!',
+                detail: data.detail,
+            };
+        } catch (error) {
+            console.error(error);
+            return {
+                code: 500,
+                message: 'Internal server error',
+            };
+        }
+    },
+
+    setDefaultAddress: async (data, id) => {
+        try {
+            const user = await _user.findById({ _id: id });
+
+            if (!user) {
+                return {
+                    code: 404,
+                    message: 'User not found',
+                };
+            }
+
+            if (!user.addresses) {
+                user.addresses = [];
+            }
+
+            user.addresses.forEach((address) => {
+                if (address.id === data.id) {
+                    address.isDefault = true;
+                } else {
+                    address.isDefault = false;
+                }
+            });
+
+            const updatedUser = await user.save();
+
+            return {
+                code: 200,
+                message: 'Default address set successfully!',
+                elements: updatedUser,
+            };
+        } catch (error) {
+            console.error(error);
+            return {
+                code: 500,
+                message: 'Internal server error',
+            };
+        }
+    }
 };

@@ -259,6 +259,101 @@ class ProductService {
 
         return await Product.find(query).sort(sortOptions);
     }
+
+    // async addRating({ productId, rating, user }) {
+
+    //     try {
+    //         const product = await Product.findOne({ productId });
+
+    //         if (!product) {
+    //             return { code: 404, message: 'Product not found' };
+    //         }
+
+    //         const existingRating = product.ratings.find(
+    //             (r) => r.user.toString() === user.userId.toString(),
+    //         );
+
+    //         if (existingRating) {
+    //             return { code: 401, message: 'Rating already exists' };
+    //         }
+
+    //         product.ratings.push({ user: user.userId, rating });
+    //         product.save();
+
+    //         return { code: 200, message: 'Rating added successfully' };
+    //     } catch (error) {
+    //         return { code: 500, message: 'Server error', error };
+    //     }
+    // }
+
+    async getRatingScore(productId) {
+        try {
+            const product = await Product.findOne({ productId });
+
+            if (!product) {
+                return { code: 404, message: 'Product not found' };
+            }
+
+            const totalRatings = product.ratings.length;
+
+            if (totalRatings === 0) {
+                return { code: 200, message: 'No ratings yet' };
+            }
+
+            const totalScore = product.ratings.reduce( (acc, rating) => acc + rating.rating, 0);
+
+            const averageRating = totalScore / totalRatings;
+
+            return { code: 200, message: averageRating };
+
+        } catch (error) {
+            return { code: 500, message: 'Server error', error };
+        }
+    }
+
+    async getComments(productId) {
+        try {
+            const product = await Product.findOne({ productId });
+
+            if (!product) {
+                return { code: 404, message: 'Product not found' };
+            }
+
+            return { code: 200, message: product.comments };
+
+        }
+            
+            catch (error) {
+                return { code: 500, message: 'Server error', error };
+            }
+        }
+
+
+    async addComment({ productId, comment, username }) {
+        try {
+
+            console.log(productId, comment, username);
+            const product = await Product.findOne({ productId });
+
+            if (!product) {
+                return { code: 404, message: 'Product not found' };
+            }
+
+            product.comments.push({ comment, username });
+            
+            const createAt = Date.now();
+
+            product.save();
+
+            return { code: 200, message: 'Comment added successfully', newcomment: { username, comment, createAt } };
+
+        }
+        catch (error) {
+            return { code: 500, message: 'Server error', error };
+        }
+
+    }
+
 }
 
 module.exports = new ProductService();

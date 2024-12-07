@@ -4,10 +4,10 @@ import { alpha } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import AppNavbar from "../components/AppNavbar";
-import Header from "../components/Header";
-import MainGrid from "../components/MainGridDiscount";
-import SideMenu from "../components/SideMenu";
+import AppNavbar from "../components/header/AppNavbar";
+import Header from "../components/header/Header";
+import MainGrid from "../components/discount/MainGridDiscount";
+import SideMenu from "../components/menu/SideMenu";
 import AppTheme from "../../shared-theme/AppTheme";
 import {
     chartsCustomizations,

@@ -10,6 +10,7 @@ const Error404 = () => {
                 height: "100vh",
                 textAlign: "center",
                 backgroundColor: "#f4f4f4",
+                marginTop:"5em",
             }}
         >
             <Box

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
-import ProductNotFound from "../components/ProductNotFound";
+import ProductNotFound from "../components/product/ProductNotFound";
 import { useParams } from "react-router-dom";
-import ProductList from "../components/ProductList";
+import ProductList from "../components/product/ProductList";
 import {
     Box,
     Typography,
@@ -12,8 +12,8 @@ import {
     TextField,
     MenuItem,
 } from "@mui/material";
-import ToastNoti from "../components/ToastNoti";
-import CommentsSection from "../components/CommentSection";
+import ToastNoti from "../components/toast-noti/ToastNoti";
+import CommentsSection from "../components/product/CommentSection";
 
 const ProductDetailPage = () => {
     const [product, setProduct] = useState(null);
@@ -27,6 +27,13 @@ const ProductDetailPage = () => {
     const [error, setError] = useState(false);
 
     const { id } = useParams();
+
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(price);
+    };
 
     const [cookies] = useCookies(["accessToken"]);
 
@@ -47,7 +54,6 @@ const ProductDetailPage = () => {
                 const data = await res.json();
 
                 setProduct(data);
-                // setSelectedColor(data.variants[0]);
                 setLoading(false);
             } catch (err) {
                 console.error("Error fetching product:", err);
@@ -59,12 +65,29 @@ const ProductDetailPage = () => {
         fetchProduct();
     }, [id]);
 
+    // Mock data for related products
+
     const relaProducts = [
         { id: 1, name: "Product 1", price: 29.99, image: "/image/ip16.jpg" },
         { id: 2, name: "Product 2", price: 39.99, image: "/image/ip16.jpg" },
         { id: 3, name: "Product 3", price: 19.99, image: "/image/ip16.jpg" },
         { id: 4, name: "Product 4", price: 19.99, image: "/image/ip16.jpg" },
     ];
+
+    // Mock data for product images
+
+    const tempImages = [
+        "https://placehold.co/100x100",
+        "https://placehold.co/100x100",
+        "https://placehold.co/100x100",
+        "https://placehold.co/100x100"
+    ];
+
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    const handleImageChange = (index) => {
+        setCurrentImageIndex(index);
+    };
 
     const handleColorChange = (event) => {
         const color = product.variants.find(
@@ -104,7 +127,7 @@ const ProductDetailPage = () => {
 
     const handleSubmitComment = (newComment) => {
         // You can handle this to notify parent or log, or any other purpose
-        console.log("New comment submitted: ", newComment);
+
     };
 
     if (loading) {
@@ -116,7 +139,7 @@ const ProductDetailPage = () => {
     }
 
     return (
-        <Box sx={{ padding: "1.25em" }}>
+        <Box sx={{ padding: "1.25em", marginTop:"4em" }}>
             {/* Product Detail */}
             <Box
                 sx={{ minHeight: "70vh", width: "80%", margin: "1.25em auto" }}
@@ -147,6 +170,24 @@ const ProductDetailPage = () => {
 
                             />
                         </Box>
+                        <Box sx={{ marginTop: "10px", display: "flex", justifyContent: "center", gap: "10px" }}>
+                            {tempImages.map((image, index) => (
+                                <Button key={index} onClick={() => handleImageChange(index)}>
+                                    <img
+                                        src={image}
+                                        alt={`Thumbnail ${index + 1}`}
+                                        style={{
+                                            width: "50px",
+                                            height: "50px",
+                                            objectFit: "cover",
+                                            border: currentImageIndex === index ? "2px solid #00796b" : "none",
+                                            borderRadius: "8px",
+                                        }}
+                                    />
+                                </Button>
+                            ))}
+                        </Box>
+
                     </Grid>
 
                     {/* Content Section */}
@@ -170,7 +211,7 @@ const ProductDetailPage = () => {
                                 variant="h5"
                                 sx={{ color: "green", mb: 2 }}
                             >
-                                ${product.price}
+                                {formatPrice(product.price)}
                             </Typography>
                             <Typography variant="body1" paragraph>
                                 {product.description}
@@ -229,19 +270,8 @@ const ProductDetailPage = () => {
             {/* Comments Section */}
             <Box sx={{ marginTop: 5, maxWidth: "70%", margin: "1.25em auto" }}>
                 <CommentsSection
-                    initialComments={[
-                        {
-                            username: "John Doe",
-                            content: "Great product! I love it!",
-                            date: "2024-11-05T12:00:00Z",
-                        },
-                        {
-                            username: "Jane Smith",
-                            content:
-                                "Good value for money, but could be better in some aspects.",
-                            date: "2024-11-04T08:30:00Z",
-                        },
-                    ]}
+                    initialComments={product.comments}
+                    id={id}
                     onSubmitComment={handleSubmitComment}
                 />
             </Box>

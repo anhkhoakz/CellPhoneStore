@@ -22,6 +22,8 @@ router.get('/login', AuthenticationController.checkLogin);
 
 router.get('/:id', verifyAccessToken, AuthenticationController.getUser);
 
+router.get('/checkValidToken/:token', AuthenticationController.checkValidateResetToken);
+
 router.post('/resetPassword', AuthenticationController.resetPassword);
 router.post('/forgotPassword', AuthenticationController.forgotPassword);
 
@@ -36,8 +38,12 @@ router.post('/verifyAccount', AuthenticationController.verifyAccount);
 
 router.post('/refresh-token', AuthenticationController.refreshToken);
 
-router.patch('/update', verifyAccessToken, AuthenticationController.update);
+router.patch('/:id', verifyAccessToken, AuthenticationController.update);
 
 router.delete('/logout', AuthenticationController.logout);
+
+
+router.patch('/addAddress/:id', verifyAccessToken, AuthenticationController.addAddress);
+router.patch('/setDefaultAddress/:id', verifyAccessToken, AuthenticationController.setDefaultAddress);
 
 module.exports = router;

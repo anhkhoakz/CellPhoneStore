@@ -126,6 +126,68 @@ class ProductController {
     //         });
     //     }
     // }
+
+
+    async addComment(req, res) {
+        const { productId } = req.params;
+        const { comment } = req.body;
+
+        console.log('req.user', req.user);
+        
+        const username = req.user?.username || 'Anonymous';
+
+        console.log('username', username);
+
+        try {
+            const { code, message, newcomment } = await productService.addComment({
+                productId,
+                comment,
+                username,
+            });
+
+            res.status(code).json({ message, newcomment });
+        } catch (error) {
+            res.status(500).json({ message: 'Server error', error });
+        }
+    }
+
+    async getComments(req, res) {
+        const { productId } = req.params;
+
+        try {
+            const comments = await productService.getComments(productId);
+            res.status(200).json(comments);
+        } catch (error) {
+            res.status(500).json({ message: 'Server error', error });
+        }
+    }
+
+    async getRatingScore(req, res) {
+        const { productId } = req.params;
+
+        try {
+            const {code, message} = await productService.getRatingScore(productId);
+            res.status(code).json(message);
+        } catch (error) {
+            res.status(500).json({ message: 'Server error', error });
+        }
+    }
+
+    async getProductsByCategory(req, res) {
+        const { category } = req.params;
+
+        try {
+            const products = await productService.getProductsByCategory({
+                category,
+            });
+            res.status(200).json(products);
+        } catch (error) {
+            res.status(500).json({ message: 'Server error', error });
+        }
+    }
+
+
+
 }
 
 module.exports = new ProductController();
