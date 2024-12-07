@@ -16,7 +16,7 @@ const SearchPage = () => {
     const location = useLocation();
     const [searchQuery, setSearchQuery] = useState("");
     const [results, setResults] = useState([]);
-    const [sort, setSort] = useState("default"); // Sắp xếp theo giá hoặc tên
+    const [sort, setSort] = useState("default");
 
     // Dữ liệu sản phẩm
     const products = [

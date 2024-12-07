@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 const { comparePassword } = require('~v1/middleware/userMiddleware');
 
-const userRoles = ['customer', 'admin'];
+const userRoles = {
+    CUSTOMER: 'customer',
+    ADMIN: 'admin',
+};
 
 const userSchema = new mongoose.Schema(
     {
@@ -52,7 +55,11 @@ const userSchema = new mongoose.Schema(
         ],
         points: { type: Number, default: 0 },
 
-        role: { type: String, enum: userRoles, default: 'customer' },
+        role: {
+            type: String,
+            enum: Object.values(userRoles),
+            default: userRoles.CUSTOMER,
+        },
         resetToken: { type: String, default: null },
         resetTokenExpiry: { type: Date, default: null },
 

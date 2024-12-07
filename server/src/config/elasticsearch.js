@@ -9,9 +9,18 @@ const client = new Client({
         username: process.env.ELASTIC_USERNAME,
         password: process.env.ELASTIC_PASSWORD,
     },
-    ssl: {
-        rejectUnauthorized: process.env.NODE_ENV === 'production',
+    tls: {
+        rejectUnauthorized: false,
     },
 });
+
+client
+    .ping()
+    .then(() => {
+        console.info('Elasticsearch connected');
+    })
+    .catch((err) => {
+        console.error('Elasticsearch disconnected', err);
+    });
 
 module.exports = client;

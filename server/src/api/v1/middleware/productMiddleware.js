@@ -1,82 +1,67 @@
 const validator = require('validator');
 
 const checkProuductValidation = (req, res, next) => {
-    const { name, price, category, stock, variants, image } = req.body;
+    const { name, price, category, stock, variants } = req.body;
 
-    // Check if the main image exists in req.files (which is an array)
-
+    // Ensure that req.files exists before accessing fields like 'image' and 'images'
     const hasMainImage =
-        (req.files && req.files.some((file) => file.fieldname === 'image')) ||
-        image;
+        req.files && req.files['image'] && req.files['image'].length > 0;
 
+    // Check if all required fields are provided, including the main image
     if (!name || !price || !category || !stock || !hasMainImage) {
-        console.log(name, price, category, stock, hasMainImage);
+        console.log('Missing fields:', {
+            name,
+            price,
+            category,
+            stock,
+            hasMainImage,
+        });
         return res.status(400).json({
             message: 'All fields including the main image are required',
         });
     }
 
-    // Name validation
+    // Validate name (ensure it's not empty and meets length requirements)
     if (!validator.isLength(name, { min: 1, max: 255 })) {
-        return res
-            .status(400)
-            .json({ message: 'Name must be between 5 and 255 characters' });
+        return res.status(400).json({
+            message:
+                'Product name is required and must be less than 255 characters',
+        });
     }
 
-    // Category validation
-    if (!validator.isLength(category, { min: 1, max: 255 })) {
-        return res
-            .status(400)
-            .json({ message: 'Category must be between 5 and 255 characters' });
+    // Validate price (ensure it's a number and greater than zero)
+    if (!validator.isDecimal(price.toString()) || price <= 0) {
+        return res.status(400).json({
+            message: 'Price must be a valid number and greater than zero',
+        });
     }
 
-    // Price validation (must be a number)
-    if (!validator.isNumeric(price)) {
-        return res.status(400).json({ message: 'Price must be a number' });
+    // Validate category (ensure it's a valid value)
+    const validCategories = ['phone', 'laptop', 'ipad'];
+    if (!validCategories.includes(category)) {
+        return res.status(400).json({
+            message: `Category must be one of the following: ${validCategories.join(', ')}`,
+        });
     }
 
-    // Stock validation (must be a number)
-    if (!validator.isNumeric(stock)) {
-        return res.status(400).json({ message: 'Stock must be a number' });
+    // Validate stock (ensure it's a positive integer)
+    if (!validator.isInt(stock.toString(), { min: 1 })) {
+        return res.status(400).json({
+            message: 'Stock must be a positive integer',
+        });
     }
 
-    // Variants validation
-
+    // You can also validate the 'variants' field if it's required, e.g.:
     if (variants && !Array.isArray(variants)) {
-        return res.status(400).json({ message: 'Variants must be an array' });
+        return res.status(400).json({
+            message: 'Variants should be an array',
+        });
     }
 
-    if (variants) {
-        for (const variant of variants) {
-            const { name, stock, price } = variant;
-
-            if (!name || !stock || !price) {
-                return res.status(400).json({
-                    message: 'Name, stock, and price are required',
-                    variant,
-                });
-            }
-
-            if (!validator.isLength(name, { min: 1, max: 255 })) {
-                return res.status(400).json({
-                    message: 'Name must be between 1 and 255 characters',
-                });
-            }
-
-            if (!validator.isNumeric(stock)) {
-                return res
-                    .status(400)
-                    .json({ message: 'Stock must be a number' });
-            }
-
-            if (!validator.isNumeric(price)) {
-                return res
-                    .status(400)
-                    .json({ message: 'Price must be a number' });
-            }
-        }
-    }
+    // Proceed to the next middleware if validation passes
     next();
 };
 
-module.exports = { checkProuductValidation };
+module.exports = {
+    checkProuductValidation,
+};
