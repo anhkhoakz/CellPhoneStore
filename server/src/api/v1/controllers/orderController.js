@@ -2,138 +2,183 @@ const Order = require("~v1/models/Order");
 const Product = require("~v1/models/Product");
 
 module.exports = {
-	async trackOrder(req, res) {
-		try {
-			const order = await Order.findById(req.params.orderId).select("status");
-			if (!order)
-				return res
-					.status(404)
-					.json({ success: false, message: "Order not found" });
-			res.status(200).json({ success: true, status: order.status });
-		} catch (error) {
-			res.status(500).json({ success: false, message: error.message });
-		}
-	},
+    async trackOrder(req, res) {
+        try {
+            const order = await Order.findById(req.params.orderId).select(
+                "status"
+            );
+            if (!order)
+                return res
+                    .status(404)
+                    .json({ success: false, message: "Order not found" });
+            res.status(200).json({ success: true, status: order.status });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    },
 
-	async getMyOrders(req, res) {
-		try {
-			const userId = req.user.userId;
-			const orders = await Order.find({ userId }).sort({ createdAt: -1 });
+    async getMyOrders(req, res) {
+        try {
+            const userId = req.user.userId;
+            const orders = await Order.find({ userId }).sort({ createdAt: -1 });
 
-			if (!orders)
-				return res
-					.status(404)
-					.json({ success: false, message: "No orders found" });
+            if (!orders)
+                return res
+                    .status(404)
+                    .json({ success: false, message: "No orders found" });
 
-			res.status(200).json({ success: true, message: orders });
-		} catch (error) {
-			res.status(500).json({ success: false, message: error.message });
-		}
-	},
+            res.status(200).json({ success: true, message: orders });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    },
 
-	async getOrders(req, res) {
-		try {
-			const orders = await Order.find().sort({ createdAt: -1 });
+    async getMyOrder(req, res) {
+        try {
+            const { userId } = req.user;
+            const { orderId } = req.params;
 
-			if (!orders)
-				return res
-					.status(404)
-					.json({ success: false, message: "No orders found" });
+            const order = await Order.findOne({ userId, _id: orderId });
 
-			res.status(200).json({ success: true, message: orders });
-		} catch (error) {
-			res.status(500).json({ success: false, message: error.message });
-		}
-	},
+            if (!order)
+                return res
+                    .status(404)
+                    .json({ success: false, message: "Order not found" });
 
-	async confirmPayment(orderId) {
-		const order = await Order.findByIdAndUpdate(
-			orderId,
-			{ paymentConfirmed: true },
-			{ new: true },
-		);
-		if (order) {
-			const emailTemplate = `Order confirmed! Your order number is ${order.orderNumber}. Total: $${order.totalAmount}`;
-			await sendEmail(order.userId.email, "Order Confirmation", emailTemplate);
-		}
-	},
+            res.status(200).json({ success: true, message: order });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    },
 
-	async ratingOrder(req, res) {
-		try {
-			const { userId, username } = req.user;
+    async getOrders(req, res) {
+        try {
+            const orders = await Order.find().sort({ createdAt: -1 });
 
-			const { orderId } = req.params;
-			const { ratings } = req.body;
+            if (!orders)
+                return res
+                    .status(404)
+                    .json({ success: false, message: "No orders found" });
 
-			const order = await Order.findById(orderId);
-			if (!order)
-				return res
-					.status(404)
-					.json({ success: false, message: "Order not found" });
+            res.status(200).json({ success: true, message: orders });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    },
 
-			if (order.userId.toString() !== userId.toString())
-				return res
-					.status(401)
-					.json({ success: false, message: "Unauthorized" });
+    async confirmPayment(orderId) {
+        const order = await Order.findByIdAndUpdate(
+            orderId,
+            { paymentConfirmed: true },
+            { new: true }
+        );
+        if (order) {
+            const emailTemplate = `Order confirmed! Your order number is ${order.orderNumber}. Total: $${order.totalAmount}`;
+            await sendEmail(
+                order.userId.email,
+                "Order Confirmation",
+                emailTemplate
+            );
+        }
+    },
 
-			if (order.isRating)
-				return res
-					.status(401)
-					.json({ success: false, message: "Order already rated" });
+    async ratingOrder(req, res) {
+        try {
+            const { userId, username } = req.user;
 
-			if (order.status !== "delivered")
-				return res
-					.status(400)
-					.json({ success: false, message: "Order not delivered" });
+            const { orderId } = req.params;
+            const { ratings } = req.body;
 
-			order.isRating = true;
+            const order = await Order.findById(orderId);
+            if (!order)
+                return res
+                    .status(404)
+                    .json({ success: false, message: "Order not found" });
 
-			for (const rating of ratings) {
-				const item = order.items.find(
-					(item) => item.productId === rating.productId,
-				);
+            if (order.userId.toString() !== userId.toString())
+                return res
+                    .status(401)
+                    .json({ success: false, message: "Unauthorized" });
 
-				if (!item) {
-					return res.status(404).json({
-						success: false,
-						message: `Product ${rating.productId} not found in order`,
-					});
-				}
+            if (order.isRating)
+                return res
+                    .status(401)
+                    .json({ success: false, message: "Order already rated" });
 
-				const product = await Product.findOne({ productId: item.productId });
-				if (!product) {
-					return res.status(404).json({
-						success: false,
-						message: `Product ${item.productId} not found in database`,
-					});
-				}
+            if (order.status !== "delivered")
+                return res
+                    .status(400)
+                    .json({ success: false, message: "Order not delivered" });
 
-				const existingRating = product.ratings.find(
-					(r) => r.userId.toString() === userId.toString(),
-				);
+            order.isRating = true;
 
-				if (existingRating) {
-					return res.status(400).json({
-						success: false,
-						message: `You have already rated product ${item.productId}`,
-					});
-				}
+            for (const rating of ratings) {
+                const item = order.items.find(
+                    (item) => item.productId === rating.productId
+                );
 
-				// Add new rating and comment
-				const { star, review } = rating;
-				const comment = `${star} - ${review}`;
+                if (!item) {
+                    return res.status(404).json({
+                        success: false,
+                        message: `Product ${rating.productId} not found in order`,
+                    });
+                }
 
-				product.ratings.push({ userId, star });
-				product.comments.push({ username, comment });
+                const product = await Product.findOne({
+                    productId: item.productId,
+                });
+                if (!product) {
+                    return res.status(404).json({
+                        success: false,
+                        message: `Product ${item.productId} not found in database`,
+                    });
+                }
 
-				await product.save();
-			}
+                // const existingRating = product.ratings.find(
+                //     (r) => r.userId.toString() === userId.toString()
+                // );
 
-			await order.save();
+                // if (existingRating) {
+                //     return res.status(400).json({
+                //         success: false,
+                //         message: `You have already rated product ${item.productId}`,
+                //     });
+                // }
 
-			res.status(200).json({ success: true, message: "Order rated" });
-		} catch (error) {
-			res.status(500).json({ success: false, message: error.message });
-		}
-	},
+                // Add new rating and comment
+                const { star, review } = rating;
+
+				let starIcon;
+                if (star == 5) starIcon = "⭐⭐⭐⭐⭐";
+                else if (star == 4.5) starIcon = "⭐⭐⭐⭐½";
+                else if (star == 4) starIcon = "⭐⭐⭐⭐";
+                else if (star == 3.5) starIcon = "⭐⭐⭐½";
+                else if (star == 3) starIcon = "⭐⭐⭐";
+                else if (star == 2.5) starIcon = "⭐⭐½";
+                else if (star == 2) starIcon = "⭐⭐";
+                else if (star == 1.5) starIcon = "⭐½";
+                else if (star == 1) starIcon = "⭐";
+
+                const comment = review ? `${starIcon} - ${review}` : `${starIcon}`;
+
+				console.log("Rating:", star);
+
+                product.ratings.push({ userId, rating: star });
+                product.comments.push({ username, comment });
+				
+
+				console.log("Product:", product);
+
+                await product.save();
+            }
+
+			console.log("Order:", order);
+
+            await order.save();
+
+            res.status(200).json({ success: true, message: "Order rated" });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    },
 };

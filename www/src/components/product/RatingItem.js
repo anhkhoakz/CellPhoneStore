@@ -5,8 +5,8 @@ const RatingItem = ({ product, review, setReview }) => {
     const handleRatingChange = (_event, newValue) => {
         setReview((prev) => ({
             ...prev,
-            [product.id]: {
-                ...prev[product.id],
+            [product.productId]: {
+                ...prev[product.productId],
                 rating: newValue,
             },
         }));
@@ -15,8 +15,8 @@ const RatingItem = ({ product, review, setReview }) => {
     const handleReviewChange = (event) => {
         setReview((prev) => ({
             ...prev,
-            [product.id]: {
-                ...prev[product.id],
+            [product.productId]: {
+                ...prev[product.productId],
                 content: event.target.value,
             },
         }));
@@ -40,7 +40,7 @@ const RatingItem = ({ product, review, setReview }) => {
                 component="img"
                 alt={product.name}
                 height="100"
-                image={product.image}
+                image={`${process.env.REACT_APP_BACKEND_URL}/images/${product.image}`}
                 sx={{
                     objectFit: "contain",
                     width: "100px",
@@ -68,7 +68,7 @@ const RatingItem = ({ product, review, setReview }) => {
                     Rate this product:
                 </Typography>
                 <Rating
-                    name={`rating-${product.id}`}
+                    name={`rating-${product.productId}`}
                     value={review?.rating || 5}
                     onChange={handleRatingChange}
                     precision={0.5}
