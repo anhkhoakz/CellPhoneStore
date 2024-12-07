@@ -1,6 +1,16 @@
 const productService = require("~v1/services/ProductService");
 
 class ProductController {
+
+	async getAllProducts(req, res) {
+		try {
+			const {code, message} = await productService.getAllProducts();
+			res.status(code).json(message);
+		} catch (error) {
+			res.status(500).json({ message: "Internal error", error });
+		}
+	}
+
 	async getProductById(req, res) {
 		const id = req.params.id;
 		try {

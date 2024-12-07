@@ -57,16 +57,8 @@ export default function ProductsTable() {
         fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/products`)
             .then((response) => response.json())
             .then((data) => {
-                console.log("Success:", data.products);
-
-                const rows = data.products;
-
-                const sortedRows = rows.sort(
-                    (a, b) => a.productId - b.productId,
-                );
-
-                setRows(rows);
-                console.log("Rows:", sortedRows);
+                console.log("Success:", data);
+                setRows(data);
             })
             .catch((error) => {
                 console.error("Error:", error);

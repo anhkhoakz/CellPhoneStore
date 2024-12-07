@@ -24,13 +24,13 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.get("/", ProductController.searchProducts);
+router.get("/", ProductController.getAllProducts);
 
 router.get("/page/", ProductController.List);
 
 router.get("/:id", ProductController.getProductById);
 
-// router.get('/search', ProductController.searchProducts);
+router.get('/search', ProductController.searchProducts);
 
 router.get("/:category", ProductController.getProductsByCategory);
 

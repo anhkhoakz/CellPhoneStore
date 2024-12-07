@@ -20,6 +20,19 @@ class ProductService {
 		}
 	}
 
+	async getAllProducts() {
+		try {
+			const products = await Product.find({});
+			if (products.length === 0) {
+				return { code: 404, message: "No products found" };
+			}
+
+			return {code: 200, message: products };
+		} catch (error) {
+			res.status(500).json({ message: "Server error", error });
+		}
+	}
+
 	// pagination step freedom
 	// async List({ page, pagesize = 12 }) {
 	//     const query = Product.find({});
@@ -347,9 +360,11 @@ class ProductService {
 				0,
 			);
 
+			console.log("Total score:", totalScore);
 			const averageRating = totalScore / totalRatings;
 
-			return { code: 200, message: averageRating };
+
+			return { code: 200, message: {score: averageRating, reviews: totalRatings } };
 		} catch (error) {
 			return { code: 500, message: "Server error", error };
 		}

@@ -62,6 +62,7 @@ const checkProductValidation = (req, res, next) => {
 	// Proceed to the next middleware if validation passes
 	next();
 };
+
 module.exports = {
 	checkProductValidation,
 };

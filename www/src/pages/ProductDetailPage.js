@@ -26,6 +26,10 @@ const ProductDetailPage = () => {
     // This should be at the top, outside of any conditional or function
     const [showToast, setShowToast] = useState(false);
 
+    const [score, setScore] = useState(0);
+    const [reviews, setReviews] = useState(0);
+
+
     const [error, setError] = useState(false);
 
     const { id } = useParams();
@@ -38,6 +42,30 @@ const ProductDetailPage = () => {
     };
 
     const [cookies] = useCookies(["accessToken"]);
+
+
+    useEffect(() => {
+        const fetchRating = async () => { 
+            try {
+                const res = await fetch( 
+                    `${process.env.REACT_APP_BACKEND_URL}/api/v1/products/${id}/rating`,
+                );
+                if (res.status !== 200) {
+                    setError(true);
+                    return;
+                }
+                const data = await res.json();
+
+                console.log(data);
+                setScore(data.score);
+                setReviews(data.reviews);
+            } catch (err) {
+                console.error("Error fetching rating:", err);
+                setError(true);
+            }
+        };
+        fetchRating();
+    }, [id]);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -230,12 +258,12 @@ const ProductDetailPage = () => {
                                 
                                 <Rating
                                     name="product-rating"
-                                    value={product.averageRating || 0} 
+                                    value={score || 0} 
                                     precision={0.5}
                                     readOnly
                                 />
                                 <Typography variant="body2" sx={{ color: "gray" }}>
-                                    ({product.ratingCount || 0} reviews)
+                                    ({reviews || 0} reviews)
                                 </Typography>
                             </Box>
 
