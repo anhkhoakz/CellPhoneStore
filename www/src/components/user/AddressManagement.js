@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import Typography from "@mui/material/Typography";
+import { Close } from "@mui/icons-material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import AddAddress from "./AddAddress";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
-import { Close } from "@mui/icons-material";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import Typography from "@mui/material/Typography";
+import React, { useState } from "react";
+import AddAddress from "./AddAddress";
 
 const AddressManagement = ({
     addresses,
@@ -19,7 +19,7 @@ const AddressManagement = ({
 }) => {
     const [open, setOpen] = useState(false);
     const [defaultAddress, setDefaultAddress] = useState(
-        addresses.find((addr) => addr.isDefault)?.id || ""
+        addresses.find((addr) => addr.isDefault)?.id || "",
     );
     const [selectedAddress, setSelectedAddress] = useState(null);
 
@@ -84,7 +84,9 @@ const AddressManagement = ({
             {/* Hiển thị thông tin liên hệ của địa chỉ đã chọn */}
             {selectedAddress && (
                 <div style={{ marginTop: "20px" }}>
-                    <Typography variant="subtitle1">Contact Information</Typography>
+                    <Typography variant="subtitle1">
+                        Contact Information
+                    </Typography>
                     <Typography variant="body2">
                         <strong>Name:</strong> {selectedAddress.contactName}
                     </Typography>

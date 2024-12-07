@@ -1,13 +1,13 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const AuthenticationController = require('~v1/controllers/AuthenticationController');
+const AuthenticationController = require("~v1/controllers/AuthenticationController");
 const {
-    checkValidateLogin,
-    checkValidateRegister,
-} = require('~v1/middleware/userMiddleware');
+	checkValidateLogin,
+	checkValidateRegister,
+} = require("~v1/middleware/userMiddleware");
 
-const { verifyAccessToken } = require('~v1/middleware/tokenMiddleware');
-const roleAuth = require('~/api/v1/middleware/roleAuth');
+const { verifyAccessToken } = require("~v1/middleware/tokenMiddleware");
+const roleAuth = require("~/api/v1/middleware/roleAuth");
 
 // router.get(
 //     '/',
@@ -16,34 +16,44 @@ const roleAuth = require('~/api/v1/middleware/roleAuth');
 //     AuthenticationController.getAllUsers,
 // );
 
-router.get('/', AuthenticationController.getAllUsers);
+router.get("/", AuthenticationController.getAllUsers);
 
-router.get('/login', AuthenticationController.checkLogin);
+router.get("/login", AuthenticationController.checkLogin);
 
-router.get('/:id', verifyAccessToken, AuthenticationController.getUser);
+router.get("/:id", verifyAccessToken, AuthenticationController.getUser);
 
-router.get('/checkValidToken/:token', AuthenticationController.checkValidateResetToken);
-
-router.post('/resetPassword', AuthenticationController.resetPassword);
-router.post('/forgotPassword', AuthenticationController.forgotPassword);
-
-router.post(
-    '/register',
-    checkValidateRegister,
-    AuthenticationController.register,
+router.get(
+	"/checkValidToken/:token",
+	AuthenticationController.checkValidateResetToken,
 );
 
-router.post('/login', checkValidateLogin, AuthenticationController.login);
-router.post('/verifyAccount', AuthenticationController.verifyAccount);
+router.post("/resetPassword", AuthenticationController.resetPassword);
+router.post("/forgotPassword", AuthenticationController.forgotPassword);
 
-router.post('/refresh-token', AuthenticationController.refreshToken);
+router.post(
+	"/register",
+	checkValidateRegister,
+	AuthenticationController.register,
+);
 
-router.patch('/:id', verifyAccessToken, AuthenticationController.update);
+router.post("/login", checkValidateLogin, AuthenticationController.login);
+router.post("/verifyAccount", AuthenticationController.verifyAccount);
 
-router.delete('/logout', AuthenticationController.logout);
+router.post("/refresh-token", AuthenticationController.refreshToken);
 
+router.patch("/:id", verifyAccessToken, AuthenticationController.update);
 
-router.patch('/addAddress/:id', verifyAccessToken, AuthenticationController.addAddress);
-router.patch('/setDefaultAddress/:id', verifyAccessToken, AuthenticationController.setDefaultAddress);
+router.delete("/logout", AuthenticationController.logout);
+
+router.patch(
+	"/addAddress/:id",
+	verifyAccessToken,
+	AuthenticationController.addAddress,
+);
+router.patch(
+	"/setDefaultAddress/:id",
+	verifyAccessToken,
+	AuthenticationController.setDefaultAddress,
+);
 
 module.exports = router;

@@ -1,11 +1,11 @@
-import * as React from "react";
-import { styled } from "@mui/material/styles";
 import Avatar from "@mui/material/Avatar";
-import MuiDrawer, { drawerClasses } from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
+import MuiDrawer, { drawerClasses } from "@mui/material/Drawer";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { styled } from "@mui/material/styles";
+import * as React from "react";
 import MenuContent from "./MenuContent";
 import OptionsMenu from "./OptionsMenu";
 

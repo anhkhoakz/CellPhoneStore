@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
+import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Box from "@mui/material/Box";
-import FormHelperText from "@mui/material/FormHelperText";
+import TextField from "@mui/material/TextField";
 import PropTypes from "prop-types";
+import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 
 const AddAddress = ({ onAddAddress, onClose }) => {
@@ -78,20 +78,23 @@ const AddAddress = ({ onAddAddress, onClose }) => {
         ) {
             const fullAddress = `${address}, ${ward}, ${district}, ${province}`;
 
-            fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users/addAddress/${cookies.userId}`, {
-                method: "PATCH",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${cookies.accessToken}`,
+            fetch(
+                `${process.env.REACT_APP_BACKEND_URL}/api/v1/users/addAddress/${cookies.userId}`,
+                {
+                    method: "PATCH",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${cookies.accessToken}`,
+                    },
+                    body: JSON.stringify({
+                        detail: fullAddress,
+                        city: province,
+                        district: district,
+                        village: ward,
+                    }),
                 },
-                body: JSON.stringify({
-                    detail: fullAddress,
-                    city: province,
-                    district: district,
-                    village: ward,
-                }),
-            })
+            )
                 .then((response) => {
                     if (response.ok) {
                         return response.json();

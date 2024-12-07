@@ -1,8 +1,8 @@
+import { Box, CardMedia, Rating, TextField, Typography } from "@mui/material";
 import React from "react";
-import { Box, Typography, TextField, Rating, CardMedia } from "@mui/material";
 
 const RatingItem = ({ product, review, setReview }) => {
-    const handleRatingChange = (event, newValue) => {
+    const handleRatingChange = (_event, newValue) => {
         setReview((prev) => ({
             ...prev,
             [product.id]: {
@@ -53,7 +53,11 @@ const RatingItem = ({ product, review, setReview }) => {
                 <Typography variant="body2" color="text.secondary">
                     {product.description}
                 </Typography>
-                <Typography variant="body1" color="primary" sx={{ marginTop: 1 }}>
+                <Typography
+                    variant="body1"
+                    color="primary"
+                    sx={{ marginTop: 1 }}
+                >
                     Price: ${product.price.toFixed(2)}
                 </Typography>
             </Box>

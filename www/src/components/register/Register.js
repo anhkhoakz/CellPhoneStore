@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
     Box,
     Button,
+    IconButton,
+    Link,
     TextField,
     Typography,
-    Link,
-    IconButton,
 } from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import React, { useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -23,7 +23,7 @@ const Register = () => {
 
     const navigate = useNavigate();
 
-    const [cookies, setCookie] = useCookies([]);
+    const [_cookies, setCookie] = useCookies([]);
 
     // State for showing/hiding passwords
     const [showPassword, setShowPassword] = useState(false);

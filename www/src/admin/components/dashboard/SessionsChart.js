@@ -1,12 +1,12 @@
-import * as React from "react";
-import PropTypes from "prop-types";
-import { useTheme } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Chip from "@mui/material/Chip";
-import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material/styles";
 import { LineChart } from "@mui/x-charts/LineChart";
+import PropTypes from "prop-types";
+import * as React from "react";
 
 function AreaGradient({ color, id }) {
     return (
@@ -82,7 +82,7 @@ export default function RevenueChart() {
                         {
                             scaleType: "point",
                             data,
-                            tickInterval: (index, i) => (i + 1) % 5 === 0,
+                            tickInterval: (_index, i) => (i + 1) % 5 === 0,
                         },
                     ]}
                     series={[

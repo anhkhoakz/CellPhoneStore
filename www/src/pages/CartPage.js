@@ -1,10 +1,10 @@
+import { Box, Button, Card, Divider, Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { Box, Grid, Typography, Card, Divider, Button } from "@mui/material";
-import CartItem from "../components/cart/CartItem";
-import CartEmpty from "../components/cart/CartEmpty";
-import Summary from "../components/cart/Summary";
 import { Link } from "react-router-dom";
+import CartEmpty from "../components/cart/CartEmpty";
+import CartItem from "../components/cart/CartItem";
 import ExpressCheckout from "../components/cart/ExpressCheckout";
+import Summary from "../components/cart/Summary";
 import ToastNoti from "../components/toast-noti/ToastNoti"; // Import ToastNoti
 
 import { useCookies } from "react-cookie";
@@ -35,7 +35,7 @@ const CartPage = () => {
                     const variant =
                         item.variantId &&
                         item.productDetails.variants.find(
-                            (v) => v._id === item.variantId
+                            (v) => v._id === item.variantId,
                         );
 
                     const id = variant ? variant._id : item.productDetails._id; // Variant ID or product ID
@@ -70,7 +70,6 @@ const CartPage = () => {
     const [showToast, setShowToast] = useState(false); // State để lưu thông báo toast
 
     const handleQuantityChange = (id, value) => {
-
         // const quantity = items.find((item) => item.id === id).quantity;
 
         const item = items.find((item) => item.id === id);
@@ -78,7 +77,6 @@ const CartPage = () => {
         const { quantity, productId } = item;
 
         const newQuantity = quantity + value;
-
 
         fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/cart`, {
             method: "PATCH",
@@ -99,16 +97,17 @@ const CartPage = () => {
                     console.log("Quantity updated");
                     const newItems = items.map((item) =>
                         item.id === id
-                            ? { ...item, quantity: Math.max(0, item.quantity + value) }
-                            : item
+                            ? {
+                                  ...item,
+                                  quantity: Math.max(0, item.quantity + value),
+                              }
+                            : item,
                     );
                     setItems(newItems);
                 }
 
                 console.log(data);
             });
-
-       
     };
 
     const handleRemoveItem = (id) => {
@@ -141,7 +140,7 @@ const CartPage = () => {
 
     const subtotal = items.reduce(
         (acc, item) => acc + item.price * item.quantity,
-        0
+        0,
     );
     const total = subtotal + shipping;
 
@@ -153,7 +152,7 @@ const CartPage = () => {
     };
 
     return (
-        <Box sx={{ flexGrow: 1, padding: 4,  marginTop:"5em" }}>
+        <Box sx={{ flexGrow: 1, padding: 4, marginTop: "5em" }}>
             <Grid container spacing={4}>
                 {/* Kiểm tra xem giỏ hàng có trống không */}
                 {items.length === 0 ? (
@@ -165,7 +164,11 @@ const CartPage = () => {
                         {/* Cột bên trái - Giỏ hàng */}
                         <Grid item xs={12} md={8}>
                             <Card variant="outlined" sx={{ padding: 2 }}>
-                                <Typography variant="h4" gutterBottom sx={{fontWeight: "bold"}}>
+                                <Typography
+                                    variant="h4"
+                                    gutterBottom
+                                    sx={{ fontWeight: "bold" }}
+                                >
                                     Shopping Cart
                                 </Typography>
                                 <Typography

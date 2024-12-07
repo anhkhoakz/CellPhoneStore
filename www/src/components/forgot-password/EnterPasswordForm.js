@@ -1,6 +1,5 @@
+import { Box, Button, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { Box, TextField, Button , Typography} from "@mui/material";
-
 
 const EnterPasswordForm = ({ token, onSuccess }) => {
     const [password, setPassword] = useState("");
@@ -14,19 +13,21 @@ const EnterPasswordForm = ({ token, onSuccess }) => {
             return;
         }
         setError("");
-        
+
         // Mock API call to reset the password
         try {
             // Replace with actual API call
 
-            fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users/resetPassword`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
+            fetch(
+                `${process.env.REACT_APP_BACKEND_URL}/api/v1/users/resetPassword`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ password, confirmPassword, token }),
                 },
-                body: JSON.stringify({ password, confirmPassword, token }),
-
-            })
+            )
                 .then((res) => res.json())
 
                 .then((data) => {
@@ -41,13 +42,17 @@ const EnterPasswordForm = ({ token, onSuccess }) => {
                     console.error("Error:", error);
                     setError("Failed to reset password. Please try again.");
                 });
-        } catch (err) {
+        } catch (_err) {
             setError("Failed to reset password. Please try again.");
         }
     };
 
     return (
-        <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+        >
             <TextField
                 label="New Password"
                 type="password"

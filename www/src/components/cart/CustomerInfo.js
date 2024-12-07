@@ -1,6 +1,6 @@
+import { Box, TextField, Typography } from "@mui/material";
 // src/components/CustomerInfo.js
 import React, { useState } from "react";
-import { TextField, Typography, Box } from "@mui/material";
 
 const CustomerInfo = ({ setName, setPhone, setAddress }) => {
     return (

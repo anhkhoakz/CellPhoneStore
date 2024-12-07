@@ -1,5 +1,5 @@
-import React from "react";
 import { Box, Button, Typography } from "@mui/material";
+import React from "react";
 
 const Notification = ({ message, onBackToLogin }) => {
     return (

@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
-import ProductCard from "./ProductCard";
+import { ChevronLeft, ChevronRight } from "@mui/icons-material"; // Thay thế biểu tượng
 import {
-    Grid,
-    Typography,
     Box,
+    Divider,
+    Grid,
+    IconButton,
+    Typography,
     useMediaQuery,
     useTheme,
-    Divider,
-    IconButton,
 } from "@mui/material";
-import { ChevronLeft, ChevronRight } from "@mui/icons-material"; // Thay thế biểu tượng
+import React, { useState, useEffect } from "react";
+import ProductCard from "./ProductCard";
 
 const ProductList = ({ title, products }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -33,14 +33,19 @@ const ProductList = ({ title, products }) => {
     };
 
     const itemsPerRow = getItemsPerRow();
-    const visibleProducts = products.slice(currentIndex, currentIndex + itemsPerRow); // Hiển thị sản phẩm theo số lượng cột
+    const visibleProducts = products.slice(
+        currentIndex,
+        currentIndex + itemsPerRow,
+    ); // Hiển thị sản phẩm theo số lượng cột
 
     const handleNext = () => {
         setCurrentIndex((currentIndex + itemsPerRow) % products.length);
     };
 
     const handlePrevious = () => {
-        setCurrentIndex((currentIndex - itemsPerRow + products.length) % products.length);
+        setCurrentIndex(
+            (currentIndex - itemsPerRow + products.length) % products.length,
+        );
     };
 
     return (

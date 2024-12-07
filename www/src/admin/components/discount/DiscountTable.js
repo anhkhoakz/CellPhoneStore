@@ -1,4 +1,5 @@
-import * as React from "react";
+import { Delete, Edit } from "@mui/icons-material";
+import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -8,12 +9,11 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
-import { Edit, Delete } from "@mui/icons-material";
-import IconButton from "@mui/material/IconButton";
+import * as React from "react";
+import Confirm from "../../../components/Confirm";
 import SearchBar from "../header/SearchBar";
 import AddDiscountDialog from "./discount-modal/AddDiscountDialog";
 import EditDiscountDialog from "./discount-modal/EditDiscountDialog";
-import Confirm from "../../../components/Confirm";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontWeight: 600,
@@ -48,7 +48,7 @@ const createData = (
     condition,
     expiryDate,
     quantity,
-    quantityUsed
+    quantityUsed,
 ) => ({
     code,
     description,
@@ -59,7 +59,7 @@ const createData = (
     quantityUsed,
 });
 
-const initialRows = [
+const _initialRows = [
     createData(
         "DISC10",
         "10% off on orders over $50",
@@ -67,7 +67,7 @@ const initialRows = [
         "Order > $50",
         "2024-12-31",
         100,
-        25
+        25,
     ),
 ];
 
@@ -85,7 +85,7 @@ export default function DiscountsTable() {
     React.useEffect(() => {
         const fetchDiscounts = async () => {
             const response = await fetch(
-                `${process.env.REACT_APP_BACKEND_URL}/api/v1/coupons`
+                `${process.env.REACT_APP_BACKEND_URL}/api/v1/coupons`,
             );
             const data = await response.json();
 
@@ -108,7 +108,7 @@ export default function DiscountsTable() {
         setIsConfirmDialogOpen(true);
     };
 
-    const handleChangePage = (event, newPage) => {
+    const handleChangePage = (_event, newPage) => {
         setPage(newPage);
     };
 
@@ -122,30 +122,29 @@ export default function DiscountsTable() {
     };
 
     const handleAddDiscount = (newDiscount) => {
-
         // Convert expiryDate to Date format yyyy-mm-dd
-        newDiscount.expiryDate = new Date(newDiscount.expiryDate).toISOString().split('T')[0];
-        
+        newDiscount.expiryDate = new Date(newDiscount.expiryDate)
+            .toISOString()
+            .split("T")[0];
+
         fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/coupons`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(newDiscount),
-        }).then((response) => response.json())
+        })
+            .then((response) => response.json())
             .then((data) => {
                 console.log(data);
 
                 if (data.success) {
                     setRows((prevRows) => [...prevRows, data.data]);
                     setIsAddDialogOpen(false);
-                }
-
-                else {
+                } else {
                     alert(data.message);
                 }
             });
-
     };
 
     const handleEditClick = (code) => {
@@ -157,8 +156,8 @@ export default function DiscountsTable() {
     const handleEditDiscount = (updatedDiscount) => {
         setRows((prevRows) =>
             prevRows.map((row) =>
-                row.code === updatedDiscount.code ? updatedDiscount : row
-            )
+                row.code === updatedDiscount.code ? updatedDiscount : row,
+            ),
         );
         setIsEditDialogOpen(false);
     };
@@ -194,7 +193,7 @@ export default function DiscountsTable() {
                     day: "2-digit",
                     month: "2-digit",
                     year: "numeric",
-                }
+                },
             );
 
             return (
@@ -288,7 +287,7 @@ export default function DiscountsTable() {
                         {filteredRows
                             .slice(
                                 page * rowsPerPage,
-                                page * rowsPerPage + rowsPerPage
+                                page * rowsPerPage + rowsPerPage,
                             )
                             .map((row, index) => {
                                 const isEven = index % 2 === 0;
@@ -304,8 +303,8 @@ export default function DiscountsTable() {
                                             renderTableCell(
                                                 column,
                                                 row[column.id],
-                                                row
-                                            )
+                                                row,
+                                            ),
                                         )}
                                     </StyledTableRow>
                                 );

@@ -1,5 +1,5 @@
+import { Box, Button, Card, CardContent, Typography } from "@mui/material";
 import React from "react";
-import { Card, CardContent, Typography, Button, Box } from "@mui/material";
 
 const CouponItem = ({ coupon, onReceive }) => {
     if (!coupon) return null;
@@ -24,13 +24,23 @@ const CouponItem = ({ coupon, onReceive }) => {
                     sx={{ gap: 2 }}
                 >
                     <Box>
-                        <Typography variant="h6" sx={{ color: "#1976d2", fontWeight: 600 }}>
+                        <Typography
+                            variant="h6"
+                            sx={{ color: "#1976d2", fontWeight: 600 }}
+                        >
                             {coupon.title}
                         </Typography>
-                        <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
+                        <Typography
+                            variant="body2"
+                            color="textSecondary"
+                            sx={{ mb: 1 }}
+                        >
                             {coupon.description}
                         </Typography>
-                        <Typography variant="body2" sx={{ fontStyle: "italic", color: "#616161" }}>
+                        <Typography
+                            variant="body2"
+                            sx={{ fontStyle: "italic", color: "#616161" }}
+                        >
                             Expiry Date: {coupon.expiryDate}
                         </Typography>
                     </Box>

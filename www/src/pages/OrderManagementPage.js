@@ -1,8 +1,8 @@
+import { Container, Paper, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { Container, Typography, Paper } from "@mui/material";
 import OrderCard from "../components/order/OrderCard";
-import SearchBar from "../components/order/SearchBar";
 import OrderEmpty from "../components/order/OrderEmpty";
+import SearchBar from "../components/order/SearchBar";
 
 import { useCookies } from "react-cookie";
 
@@ -36,15 +36,14 @@ const OrderManagementPage = () => {
         setFilteredOrders(orders);
     }, [orders]);
 
-    
     const [statusFilter, setStatusFilter] = useState("All");
 
     const handleSearch = (query) => {
         const result = orders.filter(
             (order) =>
                 order.items.some((product) =>
-                    product.name.toLowerCase().includes(query.toLowerCase())
-                ) || order._id.toString().includes(query)
+                    product.name.toLowerCase().includes(query.toLowerCase()),
+                ) || order._id.toString().includes(query),
         );
         setFilteredOrders(result);
     };
@@ -54,7 +53,7 @@ const OrderManagementPage = () => {
     };
 
     const filteredByStatus = filteredOrders.filter(
-        (order) => statusFilter === "All" || order.status === statusFilter
+        (order) => statusFilter === "All" || order.status === statusFilter,
     );
 
     const getColor = (color) => {
@@ -120,43 +119,43 @@ const OrderManagementPage = () => {
                     {(statusFilter === "All" || statusFilter === "pending") &&
                         renderOrders(
                             filteredByStatus.filter(
-                                (order) => order.status === "pending"
+                                (order) => order.status === "pending",
                             ),
                             "Pending Orders",
-                            "#fff3e0"
+                            "#fff3e0",
                         )}
 
                     {(statusFilter === "All" || statusFilter === "confirmed") &&
                         renderOrders(
                             filteredByStatus.filter(
-                                (order) => order.status === "confirmed"
+                                (order) => order.status === "confirmed",
                             ),
                             "Confirmed Orders",
-                            "#fff3e0"
+                            "#fff3e0",
                         )}
                     {(statusFilter === "All" || statusFilter === "shipping") &&
                         renderOrders(
                             filteredByStatus.filter(
-                                (order) => order.status === "shipping"
+                                (order) => order.status === "shipping",
                             ),
                             "Shipping Orders",
-                            "#fff3e0"
+                            "#fff3e0",
                         )}
                     {(statusFilter === "All" || statusFilter === "delivered") &&
                         renderOrders(
                             filteredByStatus.filter(
-                                (order) => order.status === "delivered"
+                                (order) => order.status === "delivered",
                             ),
                             "Delivered Orders",
-                            "#e8f5e9"
+                            "#e8f5e9",
                         )}
                     {(statusFilter === "All" || statusFilter === "cancelled") &&
                         renderOrders(
                             filteredByStatus.filter(
-                                (order) => order.status === "cancelled"
+                                (order) => order.status === "cancelled",
                             ),
                             "Cancelled Orders",
-                            "#ffebee"
+                            "#ffebee",
                         )}
                 </>
             )}

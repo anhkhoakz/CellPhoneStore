@@ -1,4 +1,5 @@
-import * as React from "react";
+import { Delete, Edit } from "@mui/icons-material";
+import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -8,12 +9,11 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
-import { Edit, Delete } from "@mui/icons-material";
-import IconButton from "@mui/material/IconButton";
+import * as React from "react";
+import Confirm from "../../../components/Confirm";
 import SearchBar from "../header/SearchBar";
 import AddProductDialog from "./product-modal/AddProductDialog";
 import EditProductDialog from "./product-modal/EditProductDialog";
-import Confirm from "../../../components/Confirm";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontWeight: 600,
@@ -86,7 +86,7 @@ export default function ProductsTable() {
         setIsConfirmDialogOpen(true); // Open confirm dialog
     };
 
-    const handleChangePage = (event, newPage) => {
+    const handleChangePage = (_event, newPage) => {
         setPage(newPage);
     };
 

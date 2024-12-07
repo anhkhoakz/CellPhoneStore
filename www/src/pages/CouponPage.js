@@ -1,5 +1,5 @@
+import { Box, Divider, List, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { Box, Typography, Divider, List } from "@mui/material";
 import CouponItem from "../components/coupon/CouponItem";
 
 const CouponPage = () => {
@@ -38,8 +38,14 @@ const CouponPage = () => {
     };
 
     return (
-        <Box p={3}
-            sx={{minHeight: "80vh", maxWidth: "60%", margin: "5em auto 0.5em auto"} }>
+        <Box
+            p={3}
+            sx={{
+                minHeight: "80vh",
+                maxWidth: "60%",
+                margin: "5em auto 0.5em auto",
+            }}
+        >
             <Typography variant="h4" gutterBottom>
                 My Coupons
             </Typography>

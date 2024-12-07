@@ -1,12 +1,12 @@
-import React from "react";
 import {
+    Box,
+    Button,
     Card,
     CardContent,
-    Button,
     Divider,
     Typography,
-    Box,
 } from "@mui/material";
+import React from "react";
 import OrderItem from "./OrderItem";
 
 const OrderCard = ({ order }) => {

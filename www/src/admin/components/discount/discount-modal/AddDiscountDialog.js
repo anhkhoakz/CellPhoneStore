@@ -1,16 +1,16 @@
-import * as React from "react";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
-import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { enGB } from 'date-fns/locale';
+import { enGB } from "date-fns/locale";
+import * as React from "react";
 
 export default function AddDiscountDialog({ open, onClose, onSave }) {
     const [formData, setFormData] = React.useState({
@@ -18,7 +18,7 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
         description: "",
         discount: "",
         type: "", // Thêm kiểu giảm giá (percentage or fixed)
-        
+
         condition: {
             minOrderValue: "",
             applicableCategories: [],
@@ -30,7 +30,7 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-    
+
         if (name in formData.condition) {
             setFormData({
                 ...formData,
@@ -48,12 +48,13 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
         const {
             target: { value },
         } = event;
-    
+
         setFormData({
             ...formData,
             condition: {
                 ...formData.condition,
-                applicableCategories: typeof value === "string" ? value.split(",") : value,
+                applicableCategories:
+                    typeof value === "string" ? value.split(",") : value,
             },
         });
     };
@@ -87,10 +88,9 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
                     variant="standard"
                     onChange={handleChange}
                     inputProps={{
-                        style: { textTransform: "uppercase" } 
+                        style: { textTransform: "uppercase" },
                     }}
                 />
-
 
                 <TextField
                     margin="dense"
@@ -122,7 +122,6 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
                     <MenuItem value="percentage">Percentage</MenuItem>
                     <MenuItem value="fixed">Fixed Amount</MenuItem>
                 </TextField>
-
 
                 <TextField
                     margin="dense"
@@ -169,14 +168,21 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
                     {/* Thêm các giá trị sản phẩm khác ở đây */}
                 </TextField>
 
-
-                <LocalizationProvider dateAdapter={AdapterDateFns} locale={enGB}>
+                <LocalizationProvider
+                    dateAdapter={AdapterDateFns}
+                    locale={enGB}
+                >
                     <Box sx={{ marginTop: "16px" }}>
                         <DesktopDatePicker
                             label="Expiry Date"
                             inputFormat="dd/MM/yyyy"
                             value={formData.expiryDate}
-                            onChange={(newValue) => setFormData({ ...formData, expiryDate: newValue })}
+                            onChange={(newValue) =>
+                                setFormData({
+                                    ...formData,
+                                    expiryDate: newValue,
+                                })
+                            }
                             renderInput={(params) => (
                                 <TextField
                                     {...params}

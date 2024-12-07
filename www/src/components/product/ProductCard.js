@@ -1,5 +1,13 @@
+import {
+    Card,
+    CardContent,
+    CardMedia,
+    Rating,
+    Typography,
+    useMediaQuery,
+    useTheme,
+} from "@mui/material";
 import React from "react";
-import { Card, CardMedia, CardContent, Typography, useMediaQuery, useTheme, Rating } from "@mui/material";
 import { Link } from "react-router-dom"; // Import Link từ react-router-dom để điều hướng
 
 const ProductCard = ({ product }) => {
@@ -8,8 +16,8 @@ const ProductCard = ({ product }) => {
     const isMediumScreen = useMediaQuery(theme.breakpoints.down("md"));
 
     // Xác định kích thước thẻ theo kích thước màn hình
-    const cardWidth = isSmallScreen ? 150 : isMediumScreen ? 180 : 220;  // Điều chỉnh chiều rộng
-    const cardHeight = isSmallScreen ? 280 : isMediumScreen ? 320 : 350;  // Điều chỉnh chiều cao
+    const cardWidth = isSmallScreen ? 150 : isMediumScreen ? 180 : 220; // Điều chỉnh chiều rộng
+    const cardHeight = isSmallScreen ? 280 : isMediumScreen ? 320 : 350; // Điều chỉnh chiều cao
 
     // Sử dụng chiều cao và chiều rộng bằng nhau cho hình ảnh, đảm bảo hình vuông
     const imageSize = cardWidth; // Chiều rộng và chiều cao của hình ảnh đều bằng chiều rộng của card
@@ -23,15 +31,22 @@ const ProductCard = ({ product }) => {
     };
 
     return (
-        <Card sx={{ width: cardWidth, height: cardHeight, boxShadow: 3, margin: "auto" }}>
+        <Card
+            sx={{
+                width: cardWidth,
+                height: cardHeight,
+                boxShadow: 3,
+                margin: "auto",
+            }}
+        >
             <CardMedia
                 component="img"
-                height={imageSize}  // Đảm bảo chiều cao hình ảnh bằng với chiều rộng
-                width={imageSize}   // Đảm bảo chiều rộng hình ảnh bằng với chiều rộng
+                height={imageSize} // Đảm bảo chiều cao hình ảnh bằng với chiều rộng
+                width={imageSize} // Đảm bảo chiều rộng hình ảnh bằng với chiều rộng
                 image={product.image}
                 alt={product.name}
                 sx={{
-                    objectFit: "cover",  // Đảm bảo hình ảnh không bị méo và sẽ được cắt bớt nếu cần
+                    objectFit: "cover", // Đảm bảo hình ảnh không bị méo và sẽ được cắt bớt nếu cần
                     borderRadius: 1, // Thêm bo góc nếu muốn
                 }}
             />
@@ -58,7 +73,8 @@ const ProductCard = ({ product }) => {
                     color="text.secondary"
                     sx={{ fontSize: "18px", textAlign: "left" }}
                 >
-                    {formatPrice(product.price)} {/* Hiển thị giá dưới dạng VND */}
+                    {formatPrice(product.price)}{" "}
+                    {/* Hiển thị giá dưới dạng VND */}
                 </Typography>
 
                 <Rating
@@ -68,8 +84,8 @@ const ProductCard = ({ product }) => {
                     readOnly
                     sx={{
                         marginTop: 1,
-                        display: "flex",  // Sử dụng flexbox
-                        justifyContent: "flex-start",  // Căn sang trái
+                        display: "flex", // Sử dụng flexbox
+                        justifyContent: "flex-start", // Căn sang trái
                     }}
                 />
             </CardContent>

@@ -1,20 +1,21 @@
-import React, { useState } from "react";
 import {
-    Select,
-    MenuItem,
-    InputLabel,
-    FormControl,
-    Button,
-    Typography,
     Box,
+    Button,
+    FormControl,
+    FormControlLabel,
+    InputLabel,
+    MenuItem,
+    Select,
     Switch,
-    FormControlLabel
+    Typography,
 } from "@mui/material";
+import React, { useState } from "react";
 import LoggedCustomerInfo from "./LoggedCustomerInfo";
 
 import { useCookies } from "react-cookie";
 
-const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
+// const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
+const Summary = ({ total, shipping, items }) => {
     // Customer state
     const [name] = useState("John Doe");
     const [phone, setPhone] = useState("+1 234 567 890");
@@ -35,11 +36,15 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
 
     // Discount Code State
     const [discountCode, setDiscountCode] = useState("");
-    const [availableCoupons] = useState(["DISCOUNT10", "FREESHIP", "SUMMER2023"]);
+    const [availableCoupons] = useState([
+        "DISCOUNT10",
+        "FREESHIP",
+        "SUMMER2023",
+    ]);
 
     // Loyalty Points State
     const [loyaltyPoints] = useState(100000); // Example points
-    const [useLoyaltyPoints, setUseLoyaltyPoints] = useState(false)
+    const [useLoyaltyPoints, setUseLoyaltyPoints] = useState(false);
 
     const formatPrice = (price) => {
         return new Intl.NumberFormat("vi-VN", {
@@ -53,7 +58,6 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
         return Math.max(total + shippingCost - discount, 0); // Tổng = tổng ban đầu + phí giao hàng - giảm giá
     };
 
-
     const handleLoyaltySwitch = (event) => {
         setUseLoyaltyPoints(event.target.checked);
     };
@@ -61,7 +65,6 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
     const handleCouponSelect = (e) => {
         setDiscountCode(e.target.value); // Update the discount code when selecting a coupon
     };
-
 
     const handleSubmit = () => {
         console.log("Customer Information:", { name, phone, selectedAddress });
@@ -75,7 +78,7 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
             credentials: "include",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${cookies.accessToken}`,
+                Authorization: `Bearer ${cookies.accessToken}`,
             },
             body: JSON.stringify({
                 couponCode: discountCode,
@@ -103,7 +106,6 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
                 console.error("Error:", error);
             });
     };
-
 
     return (
         <Box className="p-5">
@@ -165,7 +167,11 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
             <Typography variant="h6" gutterBottom>
                 Loyalty Points
             </Typography>
-            <Box display="flex" alignItems="center" justifyContent="space-between">
+            <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+            >
                 <Typography variant="body1">
                     Available Points: {loyaltyPoints}
                 </Typography>
@@ -180,9 +186,7 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
                     label="Use Loyalty Points"
                     labelPlacement="start" // Đặt nhãn bên trái của switch
                 />
-
             </Box>
-
 
             <hr className="my-4" />
 
@@ -190,16 +194,17 @@ const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
                 <Typography variant="h6" className="text-uppercase">
                     Total price
                 </Typography>
-                <Typography variant="h6">{formatPrice(calculateTotal().toFixed(2))}</Typography>
+                <Typography variant="h6">
+                    {formatPrice(calculateTotal().toFixed(2))}
+                </Typography>
             </Box>
-
 
             <Button
                 variant="contained"
                 color="success"
                 onClick={handleSubmit}
                 sx={{ fontWeight: "bold", width: "100%" }}
-            // href="/success"
+                // href="/success"
             >
                 Register
             </Button>

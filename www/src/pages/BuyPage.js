@@ -1,10 +1,10 @@
+import { Box, Button, Card, Divider, Grid, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { Box, Grid, Typography, Card, Divider, Button } from "@mui/material";
-import CartItem from "../components/cart/CartItem";
-import CartEmpty from "../components/cart/CartEmpty";
-import Summary from "../components/cart/Summary";
 import { Link } from "react-router-dom";
+import CartEmpty from "../components/cart/CartEmpty";
+import CartItem from "../components/cart/CartItem";
 import ExpressCheckout from "../components/cart/ExpressCheckout";
+import Summary from "../components/cart/Summary";
 import ToastNoti from "../components/toast-noti/ToastNoti"; // Import ToastNoti
 
 const BuyPage = () => {
@@ -17,7 +17,7 @@ const BuyPage = () => {
             category: "Category 1",
             quantity: 2,
             price: 10.0,
-            image: "product1.jpg"
+            image: "product1.jpg",
         },
         {
             id: "2",
@@ -26,8 +26,8 @@ const BuyPage = () => {
             category: "Category 2",
             quantity: 1,
             price: 15.0,
-            image: "product2.jpg"
-        }
+            image: "product2.jpg",
+        },
     ]);
 
     const [shipping, setShipping] = useState(5);
@@ -36,12 +36,12 @@ const BuyPage = () => {
     const handleQuantityChange = (id, value) => {
         const item = items.find((item) => item.id === id);
         const { quantity } = item;
-        const newQuantity = quantity + value;
+        const _newQuantity = quantity + value;
 
         const newItems = items.map((item) =>
             item.id === id
                 ? { ...item, quantity: Math.max(0, item.quantity + value) }
-                : item
+                : item,
         );
         setItems(newItems);
     };
@@ -55,12 +55,12 @@ const BuyPage = () => {
 
     const subtotal = items.reduce(
         (acc, item) => acc + item.price * item.quantity,
-        0
+        0,
     );
     const total = subtotal + shipping;
 
     return (
-        <Box sx={{ flexGrow: 1, padding: 4,  marginTop:"5em" }}>
+        <Box sx={{ flexGrow: 1, padding: 4, marginTop: "5em" }}>
             <Grid container spacing={4}>
                 {/* Kiểm tra xem giỏ hàng có trống không */}
                 {items.length === 0 ? (
@@ -75,7 +75,10 @@ const BuyPage = () => {
                                 <Typography variant="h4" gutterBottom>
                                     Buy Now
                                 </Typography>
-                                <Typography variant="body1" color="textSecondary">
+                                <Typography
+                                    variant="body1"
+                                    color="textSecondary"
+                                >
                                     {items.length} items
                                 </Typography>
                                 <Divider sx={{ my: 2 }} />
@@ -87,12 +90,23 @@ const BuyPage = () => {
                                         onRemoveItem={handleRemoveItem}
                                     />
                                 ))}
-                                <Grid container justifyContent="space-between" sx={{ my: 2 }}>
+                                <Grid
+                                    container
+                                    justifyContent="space-between"
+                                    sx={{ my: 2 }}
+                                >
                                     <Typography variant="h6">Price</Typography>
-                                    <Typography variant="h6">${subtotal.toFixed(2)}</Typography>
+                                    <Typography variant="h6">
+                                        ${subtotal.toFixed(2)}
+                                    </Typography>
                                 </Grid>
                                 <Divider sx={{ my: 2 }} />
-                                <Button component={Link} to="/" variant="contained" color="primary">
+                                <Button
+                                    component={Link}
+                                    to="/"
+                                    variant="contained"
+                                    color="primary"
+                                >
                                     Go back to products
                                 </Button>
                             </Card>
@@ -100,7 +114,10 @@ const BuyPage = () => {
 
                         {/* Cột bên phải - Summary */}
                         <Grid item xs={12} md={4}>
-                            <Card variant="outlined" sx={{ padding: 2, marginBottom: 2 }}>
+                            <Card
+                                variant="outlined"
+                                sx={{ padding: 2, marginBottom: 2 }}
+                            >
                                 <ExpressCheckout />
                             </Card>
                             <Card variant="outlined" sx={{ padding: 2 }}>

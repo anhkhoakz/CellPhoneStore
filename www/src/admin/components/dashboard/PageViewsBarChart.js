@@ -1,11 +1,11 @@
-import * as React from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Chip from "@mui/material/Chip";
-import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
-import { BarChart } from "@mui/x-charts/BarChart";
+import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
+import { BarChart } from "@mui/x-charts/BarChart";
+import * as React from "react";
 
 export default function TopSellingProductsChart() {
     const theme = useTheme();

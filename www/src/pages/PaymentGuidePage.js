@@ -1,6 +1,17 @@
-import React from 'react';
-import { Container, Typography, Box, Button, List, ListItem, ListItemText, Divider, Grid, Paper } from '@mui/material';
-import { Payment as PaymentIcon } from '@mui/icons-material';
+import { Payment as PaymentIcon } from "@mui/icons-material";
+import {
+    Box,
+    Button,
+    Container,
+    Divider,
+    Grid,
+    List,
+    ListItem,
+    ListItemText,
+    Paper,
+    Typography,
+} from "@mui/material";
+import React from "react";
 
 const PaymentGuide = () => {
     return (
@@ -8,7 +19,7 @@ const PaymentGuide = () => {
             <Typography variant="h3" align="center" gutterBottom>
                 Payment Guide
             </Typography>
-            
+
             <Paper elevation={3} sx={{ padding: 3 }}>
                 <Typography variant="h5" gutterBottom>
                     Payment Methods
@@ -84,7 +95,9 @@ const PaymentGuide = () => {
                                 Additional Information
                             </Typography>
                             <Typography variant="body2" color="textSecondary">
-                                If you encounter any issues during the payment process, please contact us via the phone number or email below.
+                                If you encounter any issues during the payment
+                                process, please contact us via the phone number
+                                or email below.
                             </Typography>
                         </Paper>
                     </Grid>

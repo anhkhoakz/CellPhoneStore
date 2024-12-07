@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from "react";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
     Box,
     Button,
+    IconButton,
+    Link,
     TextField,
     Typography,
-    Link,
-    IconButton,
 } from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import React, { useState, useEffect } from "react";
 
 import { red } from "@mui/material/colors";
-import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-    const [cookies] = useCookies(["accessToken"]);
+    const [_cookies] = useCookies(["accessToken"]);
     const navigate = useNavigate();
 
     // Validation state

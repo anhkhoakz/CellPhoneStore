@@ -1,12 +1,12 @@
 // src/admin/AdminRoutes.js
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import AdminLayout from "./AdminLayout";
 import Dashboard from "./pages/Dashboard";
-import UserManagement from "./pages/UserManagement";
-import ProductManagement from "./pages/ProductManagement";
-import OrderManagement from "./pages/OrderManagement";
 import DiscountManagement from "./pages/DiscountManagement";
+import OrderManagement from "./pages/OrderManagement";
+import ProductManagement from "./pages/ProductManagement";
+import UserManagement from "./pages/UserManagement";
 
 const AdminRoutes = () => {
     return (

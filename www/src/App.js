@@ -1,31 +1,31 @@
 // src/App.js
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Header from "./components/header/Header";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Footer from "./components/footer/Footer";
+import Header from "./components/header/Header";
 import Navigation from "./components/navigation/Navigation";
+import CartPage from "./pages/CartPage";
 import HomePage from "./pages/HomePage";
 import OrderManagementPage from "./pages/OrderManagementPage";
-import CartPage from "./pages/CartPage";
 import RegisterPage from "./pages/RegisterPage";
 import "./App.css";
 import LoginPage from "./pages/LoginPage";
-import ProductDetailPage from "./pages/ProductDetailPage";
 import OrderSuccessPage from "./pages/OrderSuccessPage";
+import ProductDetailPage from "./pages/ProductDetailPage";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import SearchPage from "./pages/SearchPage";
-import Error404 from "./pages/Error404";
-import Error403 from "./pages/Error403";
-import Profile from "./pages/UserProfilePage";
-import OtpPage from "./pages/OTPPage";
 import AdminRoutes from "./admin/AdminRoutes";
 import BuyPage from "./pages/BuyPage";
-import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import CategoryPage from "./pages/CategoryPage";
-import PaymentGuide from "./pages/PaymentGuidePage";
-import InvoicePage from "./pages/InvoicePage";
-import ProductRatingPage from "./pages/ProductRatingPage";
 import CouponPage from "./pages/CouponPage";
+import Error403 from "./pages/Error403";
+import Error404 from "./pages/Error404";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import InvoicePage from "./pages/InvoicePage";
+import OtpPage from "./pages/OTPPage";
+import PaymentGuide from "./pages/PaymentGuidePage";
+import ProductRatingPage from "./pages/ProductRatingPage";
+import SearchPage from "./pages/SearchPage";
+import Profile from "./pages/UserProfilePage";
 
 function App() {
     return (
@@ -105,9 +105,9 @@ function App() {
                                             path="/coupon"
                                             element={<CouponPage />}
                                         />
-                                        <Route 
-                                            path="/forgot-password/:token" 
-                                            element={<ForgotPasswordPage />} 
+                                        <Route
+                                            path="/forgot-password/:token"
+                                            element={<ForgotPasswordPage />}
                                         />
                                         <Route
                                             path="/catagory/:category"

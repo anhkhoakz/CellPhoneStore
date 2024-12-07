@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
+import React, { useEffect, useState } from "react";
 
 // Sample banner data
 const bannerData = [

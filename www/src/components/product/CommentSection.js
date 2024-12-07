@@ -1,53 +1,55 @@
 // src/components/CommentsSection.js
 
 import React, { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
+import ToastNoti from "../toast-noti/ToastNoti"; // Import ToastNoti
 import Comment from "./Comment";
 import ShowComment from "./ShowComment";
-import ToastNoti from "../toast-noti/ToastNoti"; // Import ToastNoti
-import { useCookies } from "react-cookie";
-
-
 
 const CommentsSection = ({ initialComments, onSubmitComment, id }) => {
     const [comments, setComments] = useState(initialComments);
     const [showToast, setShowToast] = useState(false); // State để điều khiển việc hiển thị toast
     const [cookies] = useCookies([]);
 
-    useEffect(() => { 
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/products/${id}/comments`)
+    useEffect(() => {
+        fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/api/v1/products/${id}/comments`,
+        )
             .then((response) => {
                 return response.json();
             })
             .then((data) => {
                 console.log("Comments fetched successfully:", data.message);
-                setComments(data.message.sort((a, b) => new Date(b.createAt) - new Date(a.createAt)));
+                setComments(
+                    data.message.sort(
+                        (a, b) => new Date(b.createAt) - new Date(a.createAt),
+                    ),
+                );
             })
             .catch((error) => {
                 console.error("Error fetching comments:", error);
             });
-    }
-    , [id]);
-
+    }, [id]);
 
     const handleSubmitComment = (comment) => {
+        fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/api/v1/products/${id}/comment`,
+            {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    authorization: `Bearer ${cookies.accessToken}`,
+                },
+                credentials: "include",
 
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/products/${id}/comment`, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                "authorization": `Bearer ${cookies.accessToken}`,
+                body: JSON.stringify({ comment }),
             },
-            credentials: "include",
-
-
-            body: JSON.stringify({ comment }),
-        })
+        )
             .then((response) => {
                 return response.json();
             })
             .then((data) => {
                 console.log("Comment added successfully:", data);
-
 
                 setComments([data.newcomment, ...comments]);
                 setShowToast(true); // Hiển thị toast khi bình luận mới được thêm vào
@@ -57,14 +59,10 @@ const CommentsSection = ({ initialComments, onSubmitComment, id }) => {
 
                 // Tắt toast sau 3 giây
                 setTimeout(() => setShowToast(false), 3000);
-
             })
             .catch((error) => {
                 console.error("Error adding comment:", error);
             });
-        
-
-        
     };
 
     return (

@@ -1,14 +1,14 @@
 import * as React from "react";
 
-import { alpha } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
 import Stack from "@mui/material/Stack";
+import { alpha } from "@mui/material/styles";
+import AppTheme from "../../shared-theme/AppTheme";
 import AppNavbar from "../components/header/AppNavbar";
 import Header from "../components/header/Header";
-import MainGrid from "../components/order/MainGridOrders";
 import SideMenu from "../components/menu/SideMenu";
-import AppTheme from "../../shared-theme/AppTheme";
+import MainGrid from "../components/order/MainGridOrders";
 import {
     chartsCustomizations,
     dataGridCustomizations,

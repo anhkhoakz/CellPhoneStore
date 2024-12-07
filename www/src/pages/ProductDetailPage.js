@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { useCookies } from "react-cookie";
-import ProductNotFound from "../components/product/ProductNotFound";
-import { useParams } from "react-router-dom";
-import ProductList from "../components/product/ProductList";
 import {
     Box,
-    Typography,
     Button,
-    Grid,
     Divider,
-    TextField,
+    Grid,
     MenuItem,
+    TextField,
+    Typography,
 } from "@mui/material";
-import ToastNoti from "../components/toast-noti/ToastNoti";
+import React, { useState, useEffect } from "react";
+import { useCookies } from "react-cookie";
+import { useParams } from "react-router-dom";
 import CommentsSection from "../components/product/CommentSection";
+import ProductList from "../components/product/ProductList";
+import ProductNotFound from "../components/product/ProductNotFound";
+import ToastNoti from "../components/toast-noti/ToastNoti";
 
 const ProductDetailPage = () => {
     const [product, setProduct] = useState(null);
@@ -42,7 +42,7 @@ const ProductDetailPage = () => {
             try {
                 setLoading(true);
                 const res = await fetch(
-                    `${process.env.REACT_APP_BACKEND_URL}/api/v1/products/${id}`
+                    `${process.env.REACT_APP_BACKEND_URL}/api/v1/products/${id}`,
                 );
 
                 if (res.status !== 200) {
@@ -80,7 +80,7 @@ const ProductDetailPage = () => {
         "https://placehold.co/100x100",
         "https://placehold.co/100x100",
         "https://placehold.co/100x100",
-        "https://placehold.co/100x100"
+        "https://placehold.co/100x100",
     ];
 
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -91,19 +91,18 @@ const ProductDetailPage = () => {
 
     const handleColorChange = (event) => {
         const color = product.variants.find(
-            (c) => c.name === event.target.value
+            (c) => c.name === event.target.value,
         );
         setSelectedColor(color);
     };
 
     const handleAddToCart = () => {
-
         fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/cart`, {
             method: "POST",
             credentials: "include",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${cookies.accessToken}`,
+                Authorization: `Bearer ${cookies.accessToken}`,
             },
             body: JSON.stringify({
                 productId: product.productId,
@@ -116,18 +115,15 @@ const ProductDetailPage = () => {
                 if (data.success) {
                     setShowToast(true);
                     setTimeout(() => setShowToast(false), 3000);
-                }
-                else
-                    alert(JSON.stringify(data));
+                } else alert(JSON.stringify(data));
                 // alert("Vui long chon mau san pham");
             });
 
         // Hide toast after 3 seconds
     };
 
-    const handleSubmitComment = (newComment) => {
+    const handleSubmitComment = (_newComment) => {
         // You can handle this to notify parent or log, or any other purpose
-
     };
 
     if (loading) {
@@ -139,7 +135,7 @@ const ProductDetailPage = () => {
     }
 
     return (
-        <Box sx={{ padding: "1.25em", marginTop:"4em" }}>
+        <Box sx={{ padding: "1.25em", marginTop: "4em" }}>
             {/* Product Detail */}
             <Box
                 sx={{ minHeight: "70vh", width: "80%", margin: "1.25em auto" }}
@@ -166,13 +162,22 @@ const ProductDetailPage = () => {
                                     margin: "auto",
                                 }}
                                 src={`${process.env.REACT_APP_BACKEND_URL}/images/${selectedColor?.image || product.image}`}
-                                alt={`${product?.name} - ${selectedColor?.name || ''}`}
-
+                                alt={`${product?.name} - ${selectedColor?.name || ""}`}
                             />
                         </Box>
-                        <Box sx={{ marginTop: "10px", display: "flex", justifyContent: "center", gap: "10px" }}>
+                        <Box
+                            sx={{
+                                marginTop: "10px",
+                                display: "flex",
+                                justifyContent: "center",
+                                gap: "10px",
+                            }}
+                        >
                             {tempImages.map((image, index) => (
-                                <Button key={index} onClick={() => handleImageChange(index)}>
+                                <Button
+                                    key={index}
+                                    onClick={() => handleImageChange(index)}
+                                >
                                     <img
                                         src={image}
                                         alt={`Thumbnail ${index + 1}`}
@@ -180,14 +185,16 @@ const ProductDetailPage = () => {
                                             width: "50px",
                                             height: "50px",
                                             objectFit: "cover",
-                                            border: currentImageIndex === index ? "2px solid #00796b" : "none",
+                                            border:
+                                                currentImageIndex === index
+                                                    ? "2px solid #00796b"
+                                                    : "none",
                                             borderRadius: "8px",
                                         }}
                                     />
                                 </Button>
                             ))}
                         </Box>
-
                     </Grid>
 
                     {/* Content Section */}

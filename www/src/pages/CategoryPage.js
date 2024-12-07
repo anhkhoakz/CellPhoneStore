@@ -1,5 +1,5 @@
+import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import { Box, Grid, Typography, CircularProgress } from "@mui/material";
 import { useParams } from "react-router-dom"; // Để lấy tham số danh mục từ URL
 import ProductCard from "../components/product/ProductCard";
 // Giả lập dữ liệu sản phẩm cho các danh mục
@@ -79,7 +79,14 @@ const CategoryPage = () => {
     }, [category]);
 
     return (
-        <Box sx={{ maxWidth: "1200px", margin: "5em auto auto auto", padding: 2, minHeight:"80vh" }}>
+        <Box
+            sx={{
+                maxWidth: "1200px",
+                margin: "5em auto auto auto",
+                padding: 2,
+                minHeight: "80vh",
+            }}
+        >
             <Typography variant="h4" gutterBottom>
                 {category.charAt(0).toUpperCase() + category.slice(1)} Products
             </Typography>
@@ -87,7 +94,9 @@ const CategoryPage = () => {
                 {loading ? (
                     <CircularProgress />
                 ) : products.length === 0 ? (
-                    <Typography variant="h6">No products found in this category</Typography>
+                    <Typography variant="h6">
+                        No products found in this category
+                    </Typography>
                 ) : (
                     <Grid container spacing={4}>
                         {products.map((product) => (

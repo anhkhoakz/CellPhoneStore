@@ -1,27 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { useCookies } from "react-cookie";
+import {
+    ExitToApp as ExitToAppIcon,
+    Menu as MenuIcon,
+    Person as PersonIcon,
+    Search as SearchIcon,
+} from "@mui/icons-material"; // Thêm các icon cần thiết
 import {
     AppBar,
-    Toolbar,
-    IconButton,
-    Typography,
-    InputBase,
     Box,
     Drawer,
+    IconButton,
+    InputBase,
     List,
     ListItem,
     ListItemText,
     Menu,
     MenuItem,
+    Toolbar,
+    Typography,
 } from "@mui/material";
-import {
-    Search as SearchIcon,
-    Menu as MenuIcon,
-    Person as PersonIcon,
-    ExitToApp as ExitToAppIcon,
-} from "@mui/icons-material"; // Thêm các icon cần thiết
+import { useCookies } from "react-cookie";
 
 const Navigation = () => {
     const [searchQuery, setSearchQuery] = useState("");
@@ -72,8 +72,7 @@ const Navigation = () => {
             .then((res) => res.json())
             .then((data) => {
                 console.log(data.message);
-            })
-
+            });
 
         setIsLoggedIn(false); // Đánh dấu người dùng đã đăng xuất
         setAnchorEl(null);
@@ -82,7 +81,7 @@ const Navigation = () => {
     };
 
     return (
-        <AppBar position="fixed" className="custom-navbar" >
+        <AppBar position="fixed" className="custom-navbar">
             <Toolbar>
                 <IconButton
                     component={Link}
@@ -153,7 +152,8 @@ const Navigation = () => {
                         </Typography>
                     </IconButton>
                     <IconButton component={Link} to="/coupon" color="inherit">
-                        <i className="bi bi-gift"></i> {/* Replace with the coupon icon */}
+                        <i className="bi bi-gift"></i>{" "}
+                        {/* Replace with the coupon icon */}
                         <Typography variant="body2" sx={{ ml: 1 }}>
                             Coupon
                         </Typography>

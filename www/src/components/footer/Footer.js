@@ -1,6 +1,6 @@
+import { Box, Container, Link, Typography } from "@mui/material";
 // src/components/Footer.js
 import React from "react";
-import { Box, Container, Typography, Link } from "@mui/material";
 
 const Footer = () => {
     return (

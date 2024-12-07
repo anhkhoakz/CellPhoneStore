@@ -1,19 +1,19 @@
-import * as React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { DiscountOutlined } from "@mui/icons-material";
+import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
+import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
+import InventorySharpIcon from "@mui/icons-material/InventorySharp";
+import PersonIcon from "@mui/icons-material/Person";
+import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import PersonIcon from "@mui/icons-material/Person";
-import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
-import InventorySharpIcon from "@mui/icons-material/InventorySharp";
-import { DiscountOutlined } from "@mui/icons-material";
-import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
-import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
-import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
+import * as React from "react";
+import { Link, useLocation } from "react-router-dom";
 
 const mainListItems = [
     { text: "Home", icon: <HomeRoundedIcon />, path: "/admin" },
