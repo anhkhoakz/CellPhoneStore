@@ -66,9 +66,17 @@ const couponSchema = new mongoose.Schema(
 			},
 		},
 
-		description: { type: String },
+		description: { type: String, required: true },
+
+
 
 		usedBy: {
+			type: [mongoose.Schema.Types.ObjectId],
+			ref: "User",
+			default: [],
+		},
+
+		claimedBy: {
 			type: [mongoose.Schema.Types.ObjectId],
 			ref: "User",
 			default: [],

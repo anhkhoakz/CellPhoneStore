@@ -6,6 +6,8 @@ const {
 	checkValidateRegister,
 } = require("~v1/middleware/userMiddleware");
 
+const { getLoyaltyPoints } = require("~v1/controllers/LoyaltyController");
+
 const { verifyAccessToken } = require("~v1/middleware/tokenMiddleware");
 const roleAuth = require("~/api/v1/middleware/roleAuth");
 
@@ -17,6 +19,8 @@ const roleAuth = require("~/api/v1/middleware/roleAuth");
 // );
 
 router.get("/", AuthenticationController.getAllUsers);
+
+router.get("/loyalty", verifyAccessToken, getLoyaltyPoints);
 
 router.get("/login", AuthenticationController.checkLogin);
 

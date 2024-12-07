@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import LoggedCustomerInfo from "./LoggedCustomerInfo";
-import CustomerInfo from "./CustomerInfo";  // Import CustomerInfo
+import CustomerInfo from "./CustomerInfo"; // Import CustomerInfo
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 
@@ -31,14 +31,74 @@ const Summary = ({ total, shipping, items }) => {
     ]);
     const [selectedAddress, setSelectedAddress] = useState(savedAddresses[0]);
 
+
     const [shippingCost, setShippingCost] = useState(shipping);
     const [discountCode, setDiscountCode] = useState("");
-    const [availableCoupons] = useState(["DISCOUNT10", "FREESHIP", "SUMMER2023"]);
-    const [loyaltyPoints] = useState(100000); // Example points
+
+    const [availableCoupons, setAvailableCoupons] = useState([""]);
+
+    const [loyaltyPoints, setLoyaltyPoints] = useState(); // Example points
     const [useLoyaltyPoints, setUseLoyaltyPoints] = useState(false);
 
     const [cookies] = useCookies([]);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users/loyalty`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${cookies.accessToken}`,
+            },
+            credentials: "include",
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+
+                if (data.success) {
+                    // Set loyalty points
+
+                    console.log(data.message);
+                    setLoyaltyPoints(data.message.pointsEarned);
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+    }, [cookies.accessToken]);
+
+    useEffect(() => {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/coupons/my`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${cookies.accessToken}`,
+            },
+            credentials: "include",
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+
+                if (data.success) {
+                    // const descriptions = data.data.map(
+                    //     (coupon) =>{
+                    //         if(coupon.condition.minOrderValue < total && coupon.condition.applicableCategories.includes(items[0].category)){
+                    //             return coupon.description
+                    //         }
+                    //     } 
+                    // );
+
+
+                    setAvailableCoupons(data.data);
+                    // console.log(descriptions);
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+    }, [cookies.accessToken]);
 
     const formatPrice = (price) => {
         return new Intl.NumberFormat("vi-VN", {
@@ -53,6 +113,7 @@ const Summary = ({ total, shipping, items }) => {
     };
 
     const handleLoyaltySwitch = (event) => {
+        
         setUseLoyaltyPoints(event.target.checked);
     };
 
@@ -67,44 +128,49 @@ const Summary = ({ total, shipping, items }) => {
         console.log("Total Price:", total);
         console.log("Items:", items);
 
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/checkout`, {
-            method: "POST",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${cookies.accessToken}`,
-            },
-            body: JSON.stringify({
-                couponCode: discountCode,
-                shippingAddress: {
-                    street: "Street",
-                    city: "City",
-                    district: "District",
-                    village: "Village",
-                    detail: selectedAddress,
-                    phone,
-                    name,
-                },
-                items: items,
-                email: email,
-                shippingOption: shippingCost === 5 ? "standard" : "express",
-                total,
-            }),
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.success) {
-                    setToastType("success");
-                    setToastMessage("Order placed successfully!");
-                    navigate("/success");
-                } else {
-                    setToastType("error");
-                    setToastMessage(data.message);
-                }
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-            });
+        if(useLoyaltyPoints){
+            console.log("Loyalty Points used:", loyaltyPoints);
+        }
+
+
+        // fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/checkout`, {
+        //     method: "POST",
+        //     credentials: "include",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //         Authorization: `Bearer ${cookies.accessToken}`,
+        //     },
+        //     body: JSON.stringify({
+        //         couponCode: discountCode,
+        //         shippingAddress: {
+        //             street: "Street",
+        //             city: "City",
+        //             district: "District",
+        //             village: "Village",
+        //             detail: selectedAddress,
+        //             phone,
+        //             name,
+        //         },
+        //         items: items,
+        //         email: email,
+        //         shippingOption: shippingCost === 5 ? "standard" : "express",
+        //         total,
+        //     }),
+        // })
+        //     .then((res) => res.json())
+        //     .then((data) => {
+        //         if (data.success) {
+        //             setToastType("success");
+        //             setToastMessage("Order placed successfully!");
+        //             navigate("/success");
+        //         } else {
+        //             setToastType("error");
+        //             setToastMessage(data.message);
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         console.error("Error:", error);
+        //     });
     };
 
     const handleToastReset = () => {
@@ -171,8 +237,8 @@ const Summary = ({ total, shipping, items }) => {
                 >
                     <MenuItem value="">None</MenuItem>
                     {availableCoupons.map((coupon) => (
-                        <MenuItem key={coupon} value={coupon}>
-                            {coupon}
+                        <MenuItem key={coupon.code} value={coupon.code}>
+                            {coupon.code} - {coupon.description}
                         </MenuItem>
                     ))}
                 </Select>
@@ -182,16 +248,22 @@ const Summary = ({ total, shipping, items }) => {
             <Typography variant="h6" gutterBottom>
                 Loyalty Points
             </Typography>
-            <Box display="flex" alignItems="center" justifyContent="space-between">
+            <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+            >
                 <Typography variant="body1">
                     Available Points: {loyaltyPoints}
                 </Typography>
                 <FormControlLabel
                     control={
                         <Switch
+                            disabled={loyaltyPoints < 50000}
                             checked={useLoyaltyPoints}
                             onChange={handleLoyaltySwitch}
                             color="primary"
+
                         />
                     }
                     label="Use Loyalty Points"

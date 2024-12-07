@@ -135,7 +135,7 @@ module.exports = {
             const coupons = await Coupon.find({
                 quantity: { $gt: 0 },
                 expiryDate: { $gte: new Date() },
-                usedBy: { $nin: [userId] },
+                claimedBy: { $nin: [userId] },
             });
 
             return res.status(200).json({
@@ -155,7 +155,7 @@ module.exports = {
             const userId = req.user.userId;
 
             const coupons = await Coupon.find({
-                usedBy: { $in: [userId] },
+                claimedBy: { $in: [userId] },
             });
 
             return res.status(200).json({
@@ -198,7 +198,7 @@ module.exports = {
                 });
             }
 
-            if (coupon.usedBy.includes(userId)) {
+            if (coupon.claimedBy.includes(userId)) {
                 return res.status(400).json({
                     success: false,
                     message: "Coupon already received",
@@ -206,7 +206,8 @@ module.exports = {
             }
 
             coupon.quantity -= 1;
-            coupon.usedBy.push(userId);
+            coupon.quantityClaimed += 1;
+            coupon.claimedBy.push(userId);
 
             await coupon.save();
 
@@ -222,4 +223,44 @@ module.exports = {
             });
         }
     },
+
+    // async getCouponsByCondition(req, res) {
+    //     try {
+    //         const userId = req.user.userId;
+    //         const {condition} = req.body;
+
+    //         let coupons = await Coupon.find({ usedBy: { $nin: [userId] } });
+
+    //         if (!coupons) {
+    //             return res.status(404).json({
+    //                 success: false,
+    //                 message: "Coupons not found",
+    //             });
+    //         }
+
+    //         if (condition.minOrderValue) {
+    //             coupons = coupons.filter(
+    //                 (coupon) => coupon.minOrderValue >= condition.minOrderValue
+    //             );
+    //         }
+
+    //         if (condition.applicableCategories) {
+    //             coupons = coupons.filter((coupon) =>
+    //                 coupon.applicableCategories.some((category) =>
+    //                     condition.applicableCategories.includes(category)
+    //                 )
+    //             );
+    //         }
+
+    //         return res.status(200).json({
+    //             success: true,
+    //             data: coupons,
+    //         });
+    //     } catch (error) {
+    //         return res.status(500).json({
+    //             success: false,
+    //             message: error.message,
+    //         });
+    //     }
+    // }
 };

@@ -7,7 +7,8 @@ const {
 	UpdateCoupon,
 	GetAvailableCoupons,
 	getMyCoupons,
-	ReceiveCoupon
+	ReceiveCoupon,
+	getCouponsByCondition
 } = require("~v1/controllers/couponController");
 
 const {verifyAccessToken} = require("~v1/middleware/tokenMiddleware");
@@ -19,6 +20,10 @@ router.get("/", GetCoupons);
 router.get("/available", verifyAccessToken, GetAvailableCoupons);
 router.get("/my", verifyAccessToken, getMyCoupons);
 router.get("/:id", GetCoupon);
+
+// router.post("/getCouponsByCondition",verifyAccessToken, getCouponsByCondition);
+
+
 router.put("/:id", UpdateCoupon);
 
 router.patch("/receive/:id", verifyAccessToken, ReceiveCoupon);
