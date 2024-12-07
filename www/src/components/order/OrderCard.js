@@ -22,6 +22,28 @@ const OrderCard = ({ order }) => {
     const handleCancelOrder = () => {
         console.log(`Cancelling Order ID: ${order._id}`);
         // Thêm logic để huỷ đơn hàng
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/orders/cancel/${order._id}`, {
+            method: "PATCH",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data.message);
+                if (data.success) {
+                    // Nếu huỷ đơn hàng thành công, cập nhật lại trạng thái
+                    order.status = "cancelled";
+                    console.log("Order Cancelled");
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            }
+        );
+
+
     };
 
     return (
@@ -67,13 +89,14 @@ const OrderCard = ({ order }) => {
                             variant="contained"
                             color="primary"
                             onClick={handleRateOrder}
+                            disabled={order.isRating}
                         >
-                            Rate Order
+                            {!order.isRating ? "Rate Order" : "Rated"}
+
                         </Button>
                     )}
-
                     {/* Nút "Cancel" chỉ hiển thị nếu trạng thái là "pending" */}
-                    {order.status === "pending" && (
+                    {(order.status === "pending" || order.status === "confirmed")&& (
                         <Button
                             variant="outlined"
                             color="error"

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import RatingItem from "../components/product/RatingItem";
 import ToastNoti from "../components/toast-noti/ToastNoti";
 import { useCookies } from "react-cookie";
-
+import { useNavigate } from "react-router-dom";
 
 // Mock data
 
@@ -29,6 +29,7 @@ const ProductRatingPage = () => {
     const urlParams = new URLSearchParams(queryString);
     const orderId = urlParams.get("orderId");
 
+    const navigate = useNavigate();
 
     useEffect(() => { 
         fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/orders/myOrder/${orderId}`, {
@@ -75,6 +76,9 @@ const ProductRatingPage = () => {
                 // showToastMessage("Your reviews have been submitted!");
                 setShowToast(true);
                 setTimeout(() => setShowToast(false), 3000);
+
+                // Redirect to Order Management Page
+                navigate("/orderManagement");
             }
         });
 
