@@ -1,3 +1,4 @@
+const { get } = require("mongoose");
 const Coupon = require("~v1/models/Coupon");
 
 module.exports = {
@@ -126,4 +127,107 @@ module.exports = {
 			});
 		}
 	},
+
+	async GetAvailableCoupons(req, res) {
+		try {
+
+			const userId = req.user.userId;
+
+			const coupons = await Coupon.find({
+				quantity: { $gt: 0 },
+				expiryDate: { $gte: new Date() },
+				users: { $nin: [userId] },
+			});
+
+			return res.status(200).json({
+				success: true,
+				data: coupons,
+			});
+		} catch (error) {
+			return res.status(500).json({
+				success: false,
+				message: error.message,
+			});
+		}
+	},
+
+	async getMyCoupons(req, res) {
+		try {
+			const userId = req.user.userId;
+
+			const coupons = await Coupon.find({
+				users: { $in: [userId] },
+			});
+
+			return res.status(200).json({
+				success: true,
+				data: coupons,
+			});
+		} catch (error) {
+			return res.status(500).json({
+				success: false,
+				message: error.message,
+			});
+		}
+	},
+
+	async ApplyCoupon(req, res) {
+		try {
+			const { code } = req.body;
+			const userId = req.user.userId;
+
+			const coupon = await Coupon.findOne ({ code });
+
+			if (!coupon) {
+				return res.status(404).json({
+					success: false,
+					message: "Coupon not found",
+				});
+			}
+
+			if (coupon.quantity <= 0) {
+				return res.status(400).json({
+					success: false,
+					message: "Coupon has been exhausted",
+				});
+			}
+
+			if (coupon.expiryDate < new Date()) {
+				return res.status(400).json({
+					success: false,
+					message: "Coupon has expired",
+				});
+			}
+
+			const user = await User.findById(userId);
+
+			if (coupon.condition > user.totalAmount) {
+				return res.status(400).json({
+					success: false,
+					message: "You do not meet the coupon condition",
+				});
+			}
+
+			user.totalAmount -= coupon.discount;
+
+			coupon.quantity -= 1;
+
+			user.coupons.push(coupon._id);
+
+			await user.save();
+			await coupon.save();
+
+			return res.status(200).json({
+				success: true,
+				message: "Coupon applied successfully",
+			});
+
+		}
+		catch (error) {
+			return res.status(500).json({
+				success: false,
+				message: error.message,
+			});
+		}
+	}
 };

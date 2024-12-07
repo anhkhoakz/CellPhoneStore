@@ -1,52 +1,92 @@
 import { Box, Divider, List, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CouponItem from "../components/coupon/CouponItem";
 import ToastNoti from "../components/toast-noti/ToastNoti";
+import { useCookies } from "react-cookie";
 
 const CouponPage = () => {
-    const [myCoupons, setMyCoupons] = useState([
-        {
-            id: 1,
-            title: "10% Off Your Order",
-            description: "Get 10% off on all items.",
-            expiryDate: "2024-12-31",
-        },
-        {
-            id: 2,
-            title: "Free Shipping",
-            description: "Enjoy free shipping for orders over $50.",
-            expiryDate: "2024-11-30",
-        },
-    ]);
+    const [cookies, setCookie] = useCookies([]);
 
-    const [availableCoupons, setAvailableCoupons] = useState([
-        {
-            id: 3,
-            title: "Buy 1 Get 1 Free",
-            description: "Applicable on select items.",
-            expiryDate: "2024-12-15",
-        },
-        {
-            id: 4,
-            title: "20% Cashback",
-            description: "Get 20% cashback on prepaid orders.",
-            expiryDate: "2024-12-25",
-        },
-    ]);
+    const [myCoupons, setMyCoupons] = useState([]);
+
+    const [availableCoupons, setAvailableCoupons] = useState([]);
+
+    useEffect(() => {
+        const fetchCoupons = async () => {
+            try {
+                const response = await fetch(
+                    `${process.env.REACT_APP_BACKEND_URL}/api/v1/coupons/my`,
+                    {
+                        method: "GET",
+                        credentials: "include",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${cookies.accessToken}`,
+                        },
+                    }
+                );
+
+                const data = await response.json();
+                console.log(data);
+
+                if (data.success) {
+                    setMyCoupons(data.data);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        };
+
+        fetchCoupons();
+    }, [cookies.accessToken]);
+
+    useEffect(() => {
+        // Fetch available coupons from the server
+        const fetchCoupons = async () => {
+            try {
+                const response = await fetch(
+                    `${process.env.REACT_APP_BACKEND_URL}/api/v1/coupons/available`,
+                    {
+                        method: "GET",
+                        credentials: "include",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${cookies.accessToken}`,
+                        },
+                    }
+                );
+
+                const data = await response.json();
+                console.log(data);
+
+                if (data.success) {
+                    setAvailableCoupons(data.data);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        };
+
+        fetchCoupons();
+    }, [cookies.accessToken]); // Ensure dependencies are correctly listed
 
     const [showToast, setShowToast] = useState(false); // State to control toast visibility
 
     const handleReceiveCoupon = (id) => {
         // Find the coupon from availableCoupons
-        const couponToReceive = availableCoupons.find(coupon => coupon.id === id);
-        
+        const couponToReceive = availableCoupons.find(
+            (coupon) => coupon.code === id
+        );
+
         // Remove the coupon from availableCoupons
-        const updatedAvailableCoupons = availableCoupons.filter(coupon => coupon.id !== id);
-        
+        const updatedAvailableCoupons = availableCoupons.filter(
+            (coupon) => coupon.code !== id
+        );
+
         // Add the coupon to myCoupons
         setAvailableCoupons(updatedAvailableCoupons); // Update available coupons
-        setMyCoupons(prevCoupons => [...prevCoupons, couponToReceive]); // Add coupon to myCoupons
-        
+        setMyCoupons((prevCoupons) => [...prevCoupons, couponToReceive]); // Add coupon to myCoupons
+
         // Show the toast notification
         setShowToast(true);
 
@@ -55,15 +95,28 @@ const CouponPage = () => {
     };
 
     return (
-        <Box p={3} sx={{ minHeight: "80vh", maxWidth: "60%", margin: "5em auto 0.5em auto" }}>
+        <Box
+            p={3}
+            sx={{
+                minHeight: "80vh",
+                maxWidth: "60%",
+                margin: "5em auto 0.5em auto",
+            }}
+        >
             <Typography variant="h4" gutterBottom>
                 My Coupons
             </Typography>
-            <List>
-                {myCoupons.map((coupon) => (
-                    <CouponItem key={coupon.id} coupon={coupon} />
-                ))}
-            </List>
+            {myCoupons.length > 0 ? (
+                <List>
+                    {myCoupons.map((coupon) => (
+                        <CouponItem key={coupon.code} coupon={coupon} />
+                    ))}
+                </List>
+            ) : (
+                <Typography variant="body1" color="textSecondary">
+                    You don't have any coupons yet.
+                </Typography>
+            )}
 
             <Divider sx={{ my: 4 }} />
 
@@ -73,7 +126,7 @@ const CouponPage = () => {
             <List>
                 {availableCoupons.map((coupon) => (
                     <CouponItem
-                        key={coupon.id}
+                        key={coupon.code}
                         coupon={coupon}
                         onReceive={handleReceiveCoupon} // Pass the function to handle coupon receive
                     />

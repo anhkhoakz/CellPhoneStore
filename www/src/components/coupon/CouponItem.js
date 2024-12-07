@@ -28,14 +28,31 @@ const CouponItem = ({ coupon, onReceive }) => {
                             variant="h6"
                             sx={{ color: "#1976d2", fontWeight: 600 }}
                         >
-                            {coupon.title}
+                            {coupon.description}
                         </Typography>
                         <Typography
                             variant="body2"
                             color="textSecondary"
                             sx={{ mb: 1 }}
                         >
-                            {coupon.description}
+                            {coupon.condition && (
+                                <div>
+                                    <strong style={{color: "black"}}>Condition:</strong>
+                                    {Object.entries(coupon.condition).map(
+                                        ([key, val], index) => (
+                                            <div
+                                                key={index}
+                                                style={{
+                                                    marginLeft: "1em",
+                                                    fontWeight: "bold",
+                                                }}
+                                            >
+                                                {key}: {val}
+                                            </div>
+                                        )
+                                    )}
+                                </div>
+                            )}
                         </Typography>
                         <Typography
                             variant="body2"
