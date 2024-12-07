@@ -11,8 +11,11 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import LoggedCustomerInfo from "./LoggedCustomerInfo";
-
 import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
+
+import ToastNoti from "../toast-noti/ToastNoti";
+
 
 // const Summary = ({ subtotal, total, shipping, setShipping, items }) => {
 const Summary = ({ total, shipping, items }) => {
@@ -22,11 +25,16 @@ const Summary = ({ total, shipping, items }) => {
 
     const [email, setEmail] = useState();
 
+    const [toastMessage, setToastMessage] = useState("");
+    const [toastType, setToastType] = useState("success");
+
     const [savedAddresses] = useState([
         "123 Main St, City A",
         "456 Oak St, City B",
         "789 Pine St, City C",
     ]);
+
+    const navigate = useNavigate();
 
     const [cookies] = useCookies([]);
 
@@ -101,10 +109,24 @@ const Summary = ({ total, shipping, items }) => {
             .then((res) => res.json())
             .then((data) => {
                 console.log(data);
+                if (data.success) {
+                    console.log("Order placed");
+                    setToastType("success");
+                    setToastMessage("Order placed successfully!");
+                    navigate("/success");
+                }else{
+                    console.log("Order failed");
+                    setToastType("error");
+                    setToastMessage(data.message);
+                }
             })
             .catch((error) => {
                 console.error("Error:", error);
             });
+    };
+
+    const handleToastReset = () => {
+        setTimeout(() => setToastMessage(""), 3000); // Reset after 3 seconds
     };
 
     return (
@@ -204,10 +226,19 @@ const Summary = ({ total, shipping, items }) => {
                 color="success"
                 onClick={handleSubmit}
                 sx={{ fontWeight: "bold", width: "100%" }}
-                // href="/success"
             >
                 Register
             </Button>
+
+            {toastMessage && (
+                 <ToastNoti
+                 message={toastMessage}
+                 type={toastType}
+                 position="top-right"
+                 autoClose={3000}
+                 onClose={handleToastReset}
+             />
+            )}
         </Box>
     );
 };

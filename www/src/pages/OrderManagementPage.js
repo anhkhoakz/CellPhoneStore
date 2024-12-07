@@ -59,6 +59,7 @@ const OrderManagementPage = () => {
     const getColor = (color) => {
         if (color === "#fff3e0") return "#ff6d00";
         if (color === "#e8f5e9") return "#2e7d32";
+        if (color === "#F6FB88") return "#BCC146";
         return "#c62828";
     };
 
@@ -122,7 +123,7 @@ const OrderManagementPage = () => {
                                 (order) => order.status === "pending",
                             ),
                             "Pending Orders",
-                            "#fff3e0",
+                            "#F6FB88",
                         )}
 
                     {(statusFilter === "All" || statusFilter === "confirmed") &&
