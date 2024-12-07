@@ -180,14 +180,14 @@ class ProductService {
 			runValidators: true,
 		});
 
-		await client.update({
-			index: "products",
-			id: product._id.toString(),
-			doc: {
-				...data,
-				updateAt: new Date(),
-			},
-		});
+		// await client.update({
+		// 	index: "products",
+		// 	id: product._id.toString(),
+		// 	doc: {
+		// 		...data,
+		// 		updateAt: new Date(),
+		// 	},
+		// });
 
 		if (!updatedProduct) {
 			return { code: 500, message: "Failed to update product" };
