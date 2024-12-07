@@ -6,43 +6,71 @@ import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
 import Box from "@mui/material/Box";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { enGB } from 'date-fns/locale';
 
 export default function AddDiscountDialog({ open, onClose, onSave }) {
     const [formData, setFormData] = React.useState({
-        discountCode: "",
+        code: "",
         description: "",
-        discountValue: "",
-        discountType: "", // Thêm kiểu giảm giá (percentage or fixed)
-        minimumOrderValue: "",
-        discountedProductType: "",
+        discount: "",
+        type: "", // Thêm kiểu giảm giá (percentage or fixed)
+        
+        condition: {
+            minOrderValue: "",
+            applicableCategories: [],
+        },
+
         expiryDate: null,
-        openQuantity: "",
-        usedQuantity: "",
+        quantity: "",
     });
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+    
+        if (name in formData.condition) {
+            setFormData({
+                ...formData,
+                condition: {
+                    ...formData.condition,
+                    [name]: value,
+                },
+            });
+        } else {
+            setFormData({ ...formData, [name]: value });
+        }
+    };
+
+    const handleCategoriesChange = (event) => {
+        const {
+            target: { value },
+        } = event;
+    
+        setFormData({
+            ...formData,
+            condition: {
+                ...formData.condition,
+                applicableCategories: typeof value === "string" ? value.split(",") : value,
+            },
+        });
     };
 
     const handleSave = () => {
         onSave(formData);
         setFormData({
-            discountCode: "",
+            code: "",
             description: "",
-            discountValue: "",
-            discountType: "",
-            minimumOrderValue: "",
-            discountedProductType: "",
+            discount: "",
+            type: "",
+            condition: {
+                minOrderValue: "",
+                applicableCategories: [],
+            },
             expiryDate: null,
-            openQuantity: "",
-            usedQuantity: "",
+            quantity: "",
         });
     };
 
@@ -54,7 +82,7 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
                     margin="dense"
                     label="Discount Code"
                     type="text"
-                    name="discountCode"
+                    name="code"
                     fullWidth
                     variant="standard"
                     onChange={handleChange}
@@ -77,9 +105,9 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
                 <TextField
                     margin="dense"
                     label="Discount Type"
-                    name="discountType"
+                    name="type"
                     select
-                    value={formData.discountType}
+                    value={formData.type}
                     onChange={handleChange}
                     fullWidth
                     variant="standard"
@@ -100,7 +128,7 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
                     margin="dense"
                     label="Discount Value"
                     type="number"
-                    name="discountValue"
+                    name="discount"
                     fullWidth
                     variant="standard"
                     onChange={handleChange}
@@ -110,20 +138,21 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
                     margin="dense"
                     label="Minimum Order Value"
                     type="number"
-                    name="minimumOrderValue"
+                    name="minOrderValue"
                     fullWidth
                     variant="standard"
+                    value={formData.condition.minOrderValue}
                     onChange={handleChange}
                 />
 
                 <TextField
                     margin="dense"
                     label="Discounted Product Type"
-                    name="discountedProductType"
+                    name="applicableCategories"
                     select
                     multiple
-                    value={formData.discountedProductType}
-                    onChange={handleChange}
+                    value={formData.condition.applicableCategories || []}
+                    onChange={handleCategoriesChange}
                     fullWidth
                     variant="standard"
                     sx={{
@@ -134,18 +163,18 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
                         },
                     }}
                 >
-                    <MenuItem value="productType1">Phone</MenuItem>
-                    <MenuItem value="productType2">Laptop</MenuItem>
-                    <MenuItem value="productType3">Tablet</MenuItem>
+                    <MenuItem value="phone">Phone</MenuItem>
+                    <MenuItem value="laptop">Laptop</MenuItem>
+                    <MenuItem value="ipad">Tablet</MenuItem>
                     {/* Thêm các giá trị sản phẩm khác ở đây */}
                 </TextField>
 
 
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <LocalizationProvider dateAdapter={AdapterDateFns} locale={enGB}>
                     <Box sx={{ marginTop: "16px" }}>
                         <DesktopDatePicker
                             label="Expiry Date"
-                            inputFormat="MM/dd/yyyy"
+                            inputFormat="dd/MM/yyyy"
                             value={formData.expiryDate}
                             onChange={(newValue) => setFormData({ ...formData, expiryDate: newValue })}
                             renderInput={(params) => (
@@ -164,7 +193,7 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
                     margin="dense"
                     label="Open Quantity"
                     type="number"
-                    name="openQuantity"
+                    name="quantity"
                     fullWidth
                     variant="standard"
                     onChange={handleChange}

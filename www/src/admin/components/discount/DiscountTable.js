@@ -122,8 +122,30 @@ export default function DiscountsTable() {
     };
 
     const handleAddDiscount = (newDiscount) => {
-        setRows((prevRows) => [...prevRows, newDiscount]);
-        setIsAddDialogOpen(false);
+
+        // Convert expiryDate to Date format yyyy-mm-dd
+        newDiscount.expiryDate = new Date(newDiscount.expiryDate).toISOString().split('T')[0];
+        
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/coupons`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newDiscount),
+        }).then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+
+                if (data.success) {
+                    setRows((prevRows) => [...prevRows, data.data]);
+                    setIsAddDialogOpen(false);
+                }
+
+                else {
+                    alert(data.message);
+                }
+            });
+
     };
 
     const handleEditClick = (code) => {

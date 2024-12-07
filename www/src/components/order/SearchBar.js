@@ -47,8 +47,10 @@ const SearchBar = ({ onSearch, onStatusChange }) => {
                     label="Status"
                 >
                     <MenuItem value="All">All</MenuItem>
-                    <MenuItem value="In Transit">In Transit</MenuItem>
-                    <MenuItem value="Delivered">Delivered</MenuItem>
+                    <MenuItem value="pending">Pending</MenuItem>
+                    <MenuItem value="confirmed">Confirm</MenuItem>
+                    <MenuItem value="shipping">Shipping</MenuItem>
+                    <MenuItem value="delivered">Delivered</MenuItem>
                 </Select>
             </FormControl>
         </Box>
