@@ -1,10 +1,9 @@
 const productService = require("~v1/services/ProductService");
 
 class ProductController {
-
 	async getAllProducts(req, res) {
 		try {
-			const {code, message} = await productService.getAllProducts();
+			const { code, message } = await productService.getAllProducts();
 			res.status(code).json(message);
 		} catch (error) {
 			res.status(500).json({ message: "Internal error", error });
@@ -32,16 +31,16 @@ class ProductController {
 	}
 
 	async getProductsByCategory(req, res) {
-
-		const {category} = req.params;
+		const { category } = req.params;
 
 		console.log("category", category);
 		try {
-			const {code, message, success} = await productService.getProductsByCategory({
-				category
-			});
-			
-			res.status(code).json({message, success});
+			const { code, message, success } =
+				await productService.getProductsByCategory({
+					category,
+				});
+
+			res.status(code).json({ message, success });
 		} catch (error) {
 			res.status(500).json({ message: " error", error });
 		}
