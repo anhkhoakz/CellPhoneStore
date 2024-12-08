@@ -17,7 +17,7 @@ export default function EditProductDialog({
     onSave,
     productData,
 }) {
-    const categories = ["phone", "laptop", "ipad"];
+    const categories = ["phone", "laptop", "tablet", "headphone"];
 
     const [editedProductData, setEditedProductData] = React.useState({
         productId: "",

@@ -97,16 +97,6 @@ const ProductDetailPage = () => {
 
 
 
-    // Mock data for related products
-
-    const relaProducts = [
-        { id: 1, name: "Product 1", price: 29.99, image: "/image/ip16.jpg" },
-        { id: 2, name: "Product 2", price: 39.99, image: "/image/ip16.jpg" },
-        { id: 3, name: "Product 3", price: 19.99, image: "/image/ip16.jpg" },
-        { id: 4, name: "Product 4", price: 19.99, image: "/image/ip16.jpg" },
-    ];
-
-
     const handleColorChange = (event) => {
         const color = product.variants.find(
             (c) => c.name === event.target.value,
@@ -273,9 +263,6 @@ const ProductDetailPage = () => {
                 </Grid>
             </Box>
             <Divider sx={{ maxWidth: "80%", margin: "1.25em auto" }} />
-            <Box>
-                <ProductList title="Similar items" products={relaProducts} />
-            </Box>
 
             {/* Comments Section */}
             <Box sx={{ marginTop: 5, maxWidth: "70%", margin: "1.25em auto" }}>

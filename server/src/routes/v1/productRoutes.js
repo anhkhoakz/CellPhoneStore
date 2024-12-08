@@ -32,7 +32,7 @@ router.get("/:id", ProductController.getProductById);
 
 router.get('/search', ProductController.searchProducts);
 
-router.get("/:category", ProductController.getProductsByCategory);
+router.get("/category/:category", ProductController.getProductsByCategory);
 
 router.post(
 	"/",

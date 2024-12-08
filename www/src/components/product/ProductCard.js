@@ -1,6 +1,13 @@
-
 import React from "react";
-import { Card, CardMedia, CardContent, Typography, useMediaQuery, useTheme, Rating } from "@mui/material";
+import {
+    Card,
+    CardMedia,
+    CardContent,
+    Typography,
+    useMediaQuery,
+    useTheme,
+    Rating,
+} from "@mui/material";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom to navigate
 
 const ProductCard = ({ product }) => {
@@ -21,12 +28,26 @@ const ProductCard = ({ product }) => {
         }).format(price);
     };
 
+    const totalRatings = product.ratings?.length;
+    const totalScore = product.ratings?.reduce(
+        (acc, rating) => acc + rating.rating,
+        0
+    );
+    const averageRating = totalRatings > 0 ? totalScore / totalRatings : 0;
+
     return (
         <Link
-            to={`/product/${product.id}`} // Ensure you have a route for product details
+            to={`/product/${product.productId}`} // Ensure you have a route for product details
             style={{ textDecoration: "none" }}
         >
-            <Card sx={{ width: cardWidth, height: cardHeight, boxShadow: 3, margin: "auto" }}>
+            <Card
+                sx={{
+                    width: cardWidth,
+                    height: cardHeight,
+                    boxShadow: 3,
+                    margin: "auto",
+                }}
+            >
                 <div
                     style={{
                         width: "100%",
@@ -38,7 +59,7 @@ const ProductCard = ({ product }) => {
                         component="img"
                         height={imageSize}
                         width={imageSize}
-                        image={product.image}
+                        image={`${process.env.REACT_APP_BACKEND_URL}/images/${product.image}`}
                         alt={product.name}
                         sx={{
                             objectFit: "cover",
@@ -59,7 +80,7 @@ const ProductCard = ({ product }) => {
                             fontSize: "1.25em",
                             "&:hover": { cursor: "pointer" },
                         }}
-                        data-id={product.id}
+                        data-id={product.productId}
                     >
                         {product.name}
                     </Typography>
@@ -68,12 +89,13 @@ const ProductCard = ({ product }) => {
                         color="text.secondary"
                         sx={{ fontSize: "18px", textAlign: "left" }}
                     >
-                        {formatPrice(product.price)} {/* Display price in VND */}
+                        {formatPrice(product.price)}{" "}
+                        {/* Display price in VND */}
                     </Typography>
 
                     <Rating
                         name="product-rating"
-                        value={product.rating}
+                        value={averageRating}
                         precision={0.5}
                         readOnly
                         sx={{

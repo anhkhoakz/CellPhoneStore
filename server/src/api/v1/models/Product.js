@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const mongooseSequence = require("mongoose-sequence")(mongoose);
 const Schema = mongoose.Schema;
 
-const categoryValues = ["phone", "laptop", "ipad"];
+const categoryValues = ["phone", "laptop", "tablet", "headphone"];
 
 const productSchema = new Schema({
 	name: { type: String, maxLength: 255, required: true, trim: true },

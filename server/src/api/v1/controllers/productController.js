@@ -32,14 +32,18 @@ class ProductController {
 	}
 
 	async getProductsByCategory(req, res) {
-		const category = req.params.category;
+
+		const {category} = req.params;
+
+		console.log("category", category);
 		try {
-			const products = await productService.getProductsByCategory({
-				category,
+			const {code, message, success} = await productService.getProductsByCategory({
+				category
 			});
-			res.json(products);
+			
+			res.status(code).json({message, success});
 		} catch (error) {
-			res.status(500).json({ message: "Server error", error });
+			res.status(500).json({ message: " error", error });
 		}
 	}
 

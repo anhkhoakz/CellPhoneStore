@@ -10,13 +10,13 @@ class ProductService {
 		try {
 			const products = await Product.find({ category });
 			if (products.length === 0) {
-				return res
-					.status(404)
-					.json({ message: "No products found in this category." });
+				return { code: 404, message: "No products found", success: false };			
 			}
-			res.json(products);
+
+
+			return { code: 200, message: products, success: true };
 		} catch (error) {
-			res.status(500).json({ message: "Server error", error });
+			res.status(500).json({ message: "error", error, success: false });
 		}
 	}
 

@@ -10,9 +10,9 @@ import TextField from "@mui/material/TextField";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { enGB } from 'date-fns/locale';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import { enGB } from "date-fns/locale";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 export default function AddDiscountDialog({ open, onClose, onSave }) {
     const [formData, setFormData] = React.useState({
@@ -50,7 +50,9 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
         const { value, checked } = event.target;
         const newCategories = checked
             ? [...formData.condition.applicableCategories, value]
-            : formData.condition.applicableCategories.filter((category) => category !== value);
+            : formData.condition.applicableCategories.filter(
+                  (category) => category !== value
+              );
 
         setFormData({
             ...formData,
@@ -90,7 +92,7 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
                     variant="standard"
                     onChange={handleChange}
                     inputProps={{
-                        style: { textTransform: "uppercase" }
+                        style: { textTransform: "uppercase" },
                     }}
                 />
 
@@ -148,11 +150,19 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
 
                 <Box sx={{ marginTop: "16px" }}>
                     <label>Discounted Product Type</label>
-                    <Box sx={{ display: 'flex', marginLeft: '1em', flexDirection: 'column' }}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            marginLeft: "1em",
+                            flexDirection: "column",
+                        }}
+                    >
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={formData.condition.applicableCategories.includes("phone")}
+                                    checked={formData.condition.applicableCategories.includes(
+                                        "phone"
+                                    )}
                                     onChange={handleCategoryChange}
                                     value="phone"
                                 />
@@ -162,7 +172,9 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={formData.condition.applicableCategories.includes("laptop")}
+                                    checked={formData.condition.applicableCategories.includes(
+                                        "laptop"
+                                    )}
                                     onChange={handleCategoryChange}
                                     value="laptop"
                                 />
@@ -172,24 +184,47 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={formData.condition.applicableCategories.includes("ipad")}
+                                    checked={formData.condition.applicableCategories.includes(
+                                        "tablet"
+                                    )}
                                     onChange={handleCategoryChange}
-                                    value="ipad"
+                                    value="tablet"
                                 />
                             }
                             label="Tablet"
                         />
+
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={formData.condition.applicableCategories.includes(
+                                        "headphone"
+                                    )}
+                                    onChange={handleCategoryChange}
+                                    value="headphone"
+                                />
+                            }
+                            label="Headphone"
+                        />
                     </Box>
                 </Box>
 
-                <LocalizationProvider dateAdapter={AdapterDateFns} locale={enGB}>
-                    <Box sx={{margin: "1em 0 0.5em 0"}}>
+                <LocalizationProvider
+                    dateAdapter={AdapterDateFns}
+                    locale={enGB}
+                >
+                    <Box sx={{ margin: "1em 0 0.5em 0" }}>
                         <label>Discounted Product Type</label>
                         <Box>
                             <DesktopDatePicker
                                 inputFormat="dd/MM/yyyy"
                                 value={formData.expiryDate}
-                                onChange={(newValue) => setFormData({ ...formData, expiryDate: newValue })}
+                                onChange={(newValue) =>
+                                    setFormData({
+                                        ...formData,
+                                        expiryDate: newValue,
+                                    })
+                                }
                                 renderInput={(params) => (
                                     <TextField
                                         {...params}
@@ -201,7 +236,6 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
                             />
                         </Box>
                     </Box>
-
                 </LocalizationProvider>
 
                 <TextField

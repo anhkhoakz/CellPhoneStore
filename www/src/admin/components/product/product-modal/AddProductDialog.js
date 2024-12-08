@@ -13,7 +13,7 @@ import * as React from "react";
 import { AddCircle, Category, RemoveCircle } from "@mui/icons-material";
 
 export default function AddProductDialog({ open, onClose, onSave }) {
-    const categories = ["phone", "laptop", "ipad"];
+    const categories = ["phone", "laptop", "tablet", "headphone"];
 
     const [productData, setProductData] = React.useState({
         category: "",
