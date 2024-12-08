@@ -2,6 +2,25 @@ import { Box, TextField, Typography, Button, FormControl, InputLabel, Select, Me
 import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 
+
+const useDebounce = (value, delay) => {
+    const [debouncedValue, setDebouncedValue] = useState(value);
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedValue(value);
+        }, delay);
+
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [value, delay]);
+
+    return debouncedValue;
+};
+
+
+
 const CustomerInfo = ({ setName, setPhone, setAddress }) => {
     const [address, setAddressInput] = useState("");
     const [province, setProvince] = useState("");
@@ -17,6 +36,11 @@ const CustomerInfo = ({ setName, setPhone, setAddress }) => {
         ward: "",
     });
 
+
+    
+    
+    const debouncedAddress = useDebounce(address, 3000); 
+
     const [cookies] = useCookies([]);
 
     // Fetch provinces data
@@ -30,6 +54,11 @@ const CustomerInfo = ({ setName, setPhone, setAddress }) => {
         };
         fetchData();
     }, []);
+
+    useEffect(() => {
+        // setAddress(`${address}, ${ward}, ${district}, ${province}`);
+        setAddress(`${debouncedAddress}, ${ward}, ${district}, ${province}`);
+    }, [debouncedAddress, address, district]);
 
     const handleProvinceChange = (e) => {
         const selectedProvince = e.target.value;
@@ -134,7 +163,7 @@ const CustomerInfo = ({ setName, setPhone, setAddress }) => {
                 fullWidth
                 margin="normal"
                 value={address}
-                onChange={(e) => setAddressInput(e.target.value)}
+                onChange={(e) => {setAddressInput(e.target.value)}}
                 error={!!errors.address}
                 helperText={errors.address}
             />

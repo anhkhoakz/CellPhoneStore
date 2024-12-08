@@ -198,8 +198,8 @@ const ProductDetailPage = () => {
                             >
                                 {product.name}
                             </Typography>
-                            <Typography variant="h5" color={product.inStock ? "green" : "red"} sx={{ mb: 1 }}>
-                                {product.inStock ? "Instock" : "Outstock"}
+                            <Typography variant="h5" color={product.stock > 0 ? "" : "red"} sx={{ mb: 1 }}>
+                                {product.stock > 0 ? "" : "Out of stock"}
                             </Typography>
                             <Typography
                                 variant="h5"
@@ -256,7 +256,7 @@ const ProductDetailPage = () => {
                                 variant="contained"
                                 color="success"
                                 sx={{ mr: 2 }}
-                                disabled={!product.inStock} // Disable 'Buy now' if out of stock
+                                disabled={product.stock == 0} // Disable 'Buy now' if out of stock
                             >
                                 Buy now
                             </Button>
@@ -264,7 +264,7 @@ const ProductDetailPage = () => {
                                 variant="contained"
                                 color="primary"
                                 onClick={handleAddToCart}
-                                disabled={!product.inStock} // Disable 'Buy now' if out of stock
+                                disabled={product.stock == 0} // Disable 'Buy now' if out of stock
                             >
                                 Add to cart
                             </Button>

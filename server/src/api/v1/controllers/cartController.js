@@ -27,6 +27,46 @@ const getShippingFee = async (data) => {
 	}
 };
 
+
+const removeAccents = (str) => {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+};
+
+
+const getDistrictId = async (shippingAddress) => {
+    // Read district data from JSON file
+    const districtData = await fs.promises.readFile(
+        "src/api/v1/controllers/city_district.json",
+        "utf8",
+    );
+
+    // Parse the JSON data
+    const districts = JSON.parse(districtData);
+
+    // Find the province that matches the city in the shipping address
+    const province = districts.find(
+        (item) =>
+            removeAccents(item.ProvinceName.toLowerCase()) === shippingAddress.city.toLowerCase()
+    );
+
+
+    let districtId = null;
+
+    if (province) {
+        const district = province.Districts.find(
+            (d) =>
+                removeAccents(d.DistrictName.toLowerCase()).includes(shippingAddress.district.toLowerCase())
+        );
+
+        if (district) {
+            districtId = district.DistrictID;
+        }
+    }
+
+
+    return districtId;
+};
+
 module.exports = {
 	async getCart(req, res, next) {
 		try {
@@ -363,25 +403,10 @@ module.exports = {
 
 	async getShippingFee(req, res) {
 		const { shippingAddress } = req.body;
-		const districtData = await fs.promises.readFile(
-			"src/api/v1/controllers/city_district.json",
-			"utf8",
-		);
-		const districts = JSON.parse(districtData);
-		const province = districts.find(
-			(item) =>
-				item.ProvinceName.toLowerCase() === shippingAddress.city.toLowerCase(),
-		);
+		
+		console.log(shippingAddress);
 
-		let districtId = null;
-		if (province) {
-			const district = province.Districts.find(
-				(d) =>
-					d.DistrictName.toLowerCase() ===
-					shippingAddress.district.toLowerCase(),
-			);
-			if (district) districtId = district.DistrictID;
-		}
+		const districtId = await getDistrictId(shippingAddress);
 
 		if (!districtId) {
 			return res.status(400).json({
@@ -396,9 +421,8 @@ module.exports = {
 			weight: 1000,
 		};
 
-		const vndToUsdRate = 23000;
-		const standardVnd = await getShippingFee(data);
-		const standard = standardVnd / vndToUsdRate;
+		
+		const standard = await getShippingFee(data);
 
 		const express = standard * 1.5;
 

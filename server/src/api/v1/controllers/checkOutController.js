@@ -117,6 +117,8 @@ module.exports = {
 
 			if (coupon) {
 				coupon.quantity -= 1;
+				coupon.usedBy.push(userId);
+				coupon.quantityUsed += 1;
 				await coupon.save();
 			}
 
@@ -178,7 +180,7 @@ module.exports = {
 				coupon.usedBy = coupon.usedBy.filter(
 					(id) => id.toString() !== order.userId.toString(),
 				);
-
+				coupon.quantityUsed -= 1;
 				await coupon.save();
 			}
 

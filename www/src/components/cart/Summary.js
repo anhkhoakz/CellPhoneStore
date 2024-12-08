@@ -18,30 +18,96 @@ import { useNavigate } from "react-router-dom";
 import ToastNoti from "../toast-noti/ToastNoti";
 
 const Summary = ({ total, shipping, items }) => {
-    const [name, setName] = useState("John Doe");
+    const [name, setName] = useState("userJohn Doe");
     const [phone, setPhone] = useState("+1 234 567 890");
     const [email, setEmail] = useState("");
     const [toastMessage, setToastMessage] = useState("");
     const [toastType, setToastType] = useState("success");
 
-    const [savedAddresses] = useState([
-        "123 Main St, City A",
-        "456 Oak St, City B",
-        "789 Pine St, City C",
-    ]);
+    const [savedAddresses, setSavedAddresses] = useState([]);
     const [selectedAddress, setSelectedAddress] = useState(savedAddresses[0]);
 
-
-    const [shippingCost, setShippingCost] = useState(shipping);
+    const [shippingCost, setShippingCost] = useState(0);
     const [discountCode, setDiscountCode] = useState("");
 
     const [availableCoupons, setAvailableCoupons] = useState([""]);
+
+    const [shippingMethod, setShippingMethod] = useState([""]);
 
     const [loyaltyPoints, setLoyaltyPoints] = useState(); // Example points
     const [useLoyaltyPoints, setUseLoyaltyPoints] = useState(false);
 
     const [cookies] = useCookies([]);
     const navigate = useNavigate();
+
+
+    useEffect(() => {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users/${cookies.userId}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${cookies.accessToken}`,
+            },
+            credentials: "include",
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+
+                if (data.success) {
+                    // Set user data
+                    setName(data.message.username);
+                    setPhone(data.message.phone);
+                    setEmail(data.message.email);
+                    setSavedAddresses(data.message.addresses.map(address => address.detail));
+                }
+
+                if (data.message.addresses.length > 0) {
+                    setSelectedAddress(data.message.addresses[0].detail);
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+    }, [cookies.accessToken]);
+
+
+    useEffect(() => {
+        if (!selectedAddress) return; // Early return if no address is selected
+
+        const addressParts = selectedAddress.split(",");
+
+        const city = addressParts[addressParts.length - 1]
+            .replace(/( Province| City| Town)$/i, "")
+            .trim();
+        const district = addressParts[addressParts.length - 2]
+            .replace(/( District| City| Town)$/i, "")
+            .trim();
+
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/cart/shipping-fee`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                shippingAddress: {
+                    city: city,
+                    district: district,
+                },
+            }),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.success) {
+                    setShippingMethod(data.shippingFee);
+                } else {
+                    console.error("Shipping fee fetch failed:", data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+    }, [selectedAddress]); // Only runs when selectedAddress changes
 
     useEffect(() => {
         fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users/loyalty`, {
@@ -82,17 +148,7 @@ const Summary = ({ total, shipping, items }) => {
                 console.log(data);
 
                 if (data.success) {
-                    // const descriptions = data.data.map(
-                    //     (coupon) =>{
-                    //         if(coupon.condition.minOrderValue < total && coupon.condition.applicableCategories.includes(items[0].category)){
-                    //             return coupon.description
-                    //         }
-                    //     } 
-                    // );
-
-
                     setAvailableCoupons(data.data);
-                    // console.log(descriptions);
                 }
             })
             .catch((error) => {
@@ -108,12 +164,36 @@ const Summary = ({ total, shipping, items }) => {
     };
 
     const calculateTotal = () => {
-        const discount = useLoyaltyPoints ? loyaltyPoints : 0;
-        return Math.max(total + shippingCost - discount, 0);
+        const discountPoint = useLoyaltyPoints ? loyaltyPoints : 0;
+
+        const discount = availableCoupons.find( 
+            (coupon) => coupon.code === discountCode
+        );
+
+        console.log("Discount:", discount);
+
+        const discountType = discount ? discount.type : "";
+
+        const discountValue = discount ? discount.discount : 0;
+
+        if (discountType === "percentage") {
+            return Math.max(
+                total + shippingCost - (total * discountValue) / 100 - discountPoint,
+                0
+            );
+        }
+
+        if (discountType === "fixed") {
+            return Math.max(
+                total + shippingCost - discountValue - discountPoint,
+                0
+            );
+        }
+        
+        return Math.max(total + shippingCost - discountPoint, 0);
     };
 
     const handleLoyaltySwitch = (event) => {
-        
         setUseLoyaltyPoints(event.target.checked);
     };
 
@@ -128,49 +208,48 @@ const Summary = ({ total, shipping, items }) => {
         console.log("Total Price:", total);
         console.log("Items:", items);
 
-        if(useLoyaltyPoints){
+        if (useLoyaltyPoints) {
             console.log("Loyalty Points used:", loyaltyPoints);
         }
 
-
-        // fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/checkout`, {
-        //     method: "POST",
-        //     credentials: "include",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //         Authorization: `Bearer ${cookies.accessToken}`,
-        //     },
-        //     body: JSON.stringify({
-        //         couponCode: discountCode,
-        //         shippingAddress: {
-        //             street: "Street",
-        //             city: "City",
-        //             district: "District",
-        //             village: "Village",
-        //             detail: selectedAddress,
-        //             phone,
-        //             name,
-        //         },
-        //         items: items,
-        //         email: email,
-        //         shippingOption: shippingCost === 5 ? "standard" : "express",
-        //         total,
-        //     }),
-        // })
-        //     .then((res) => res.json())
-        //     .then((data) => {
-        //         if (data.success) {
-        //             setToastType("success");
-        //             setToastMessage("Order placed successfully!");
-        //             navigate("/success");
-        //         } else {
-        //             setToastType("error");
-        //             setToastMessage(data.message);
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         console.error("Error:", error);
-        //     });
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/checkout`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${cookies.accessToken}`,
+            },
+            body: JSON.stringify({
+                couponCode: discountCode,
+                shippingAddress: {
+                    street: "Street",
+                    city: "City",
+                    district: "District",
+                    village: "Village",
+                    detail: selectedAddress,
+                    phone,
+                    name,
+                },
+                items: items,
+                email: email,
+                shippingOption: shippingCost === 5 ? "standard" : "express",
+                total,
+            }),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.success) {
+                    setToastType("success");
+                    setToastMessage("Order placed successfully!");
+                    navigate("/success");
+                } else {
+                    setToastType("error");
+                    setToastMessage(data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
     };
 
     const handleToastReset = () => {
@@ -212,18 +291,33 @@ const Summary = ({ total, shipping, items }) => {
             <Typography variant="h6" gutterBottom>
                 Shipping
             </Typography>
-            <FormControl fullWidth variant="outlined" margin="normal">
-                <InputLabel>Delivery Method</InputLabel>
-                <Select
-                    value={shippingCost}
-                    onChange={(e) => setShippingCost(Number(e.target.value))}
-                    label="Delivery Method"
-                >
-                    <MenuItem value={5}>Standard Delivery - 5 ₫ </MenuItem>
-                    <MenuItem value={10}>Express Delivery - 10 ₫</MenuItem>
-                </Select>
-            </FormControl>
+            
 
+                {!savedAddresses.isEmpty && (
+                    <FormControl fullWidth margin="normal">
+                        <InputLabel id="delivery-method-label">
+                            Delivery Method
+                        </InputLabel>
+                        <Select
+                            labelId="delivery-method-label"
+                            value={shippingCost}
+                            onChange={(e) =>
+                                setShippingCost(Number(e.target.value))
+                            }
+                            label="Delivery Method"
+                        >
+                            <MenuItem value={shippingMethod.standard}>
+                                Standard Delivery -{" "}
+                                {shippingMethod.standard?.toLocaleString() || "0"} ₫
+                            </MenuItem>
+                            <MenuItem value={shippingMethod.express}>
+                                Express Delivery -{" "}
+                                {shippingMethod.express?.toLocaleString() || "0"} ₫
+                            </MenuItem>
+                        </Select>
+                    </FormControl>
+                )}
+        
             {/* Discount Code Section */}
             <Typography variant="h6" gutterBottom>
                 Discount Code
@@ -263,7 +357,6 @@ const Summary = ({ total, shipping, items }) => {
                             checked={useLoyaltyPoints}
                             onChange={handleLoyaltySwitch}
                             color="primary"
-
                         />
                     }
                     label="Use Loyalty Points"

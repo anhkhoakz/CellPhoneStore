@@ -59,8 +59,7 @@ const OrderCard = ({ order }) => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                reason: cancelReason,
-                customReason: customReason,
+                noted: cancelReason === "Other" ? customReason : cancelReason,
             }),
         })
             .then((res) => res.json())
