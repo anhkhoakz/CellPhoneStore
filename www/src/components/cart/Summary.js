@@ -28,6 +28,7 @@ const Summary = ({ total, shipping, items }) => {
     const [selectedAddress, setSelectedAddress] = useState(savedAddresses[0]);
 
     const [shippingCost, setShippingCost] = useState(0);
+    const [shippingType, setShippingType] = useState("standard");
     const [discountCode, setDiscountCode] = useState("");
 
     const [availableCoupons, setAvailableCoupons] = useState([""]);
@@ -232,7 +233,7 @@ const Summary = ({ total, shipping, items }) => {
                 },
                 items: items,
                 email: email,
-                shippingOption: shippingCost === 5 ? "standard" : "express",
+                shippingOption: shippingType,
                 total,
             }),
         })
@@ -257,7 +258,7 @@ const Summary = ({ total, shipping, items }) => {
     };
 
     // Check if the user is logged in
-    const isLoggedIn = Boolean(cookies.accessToken);
+    const isLoggedIn = Boolean(cookies.userId);
 
     return (
         <Box className="p-5">
@@ -300,10 +301,18 @@ const Summary = ({ total, shipping, items }) => {
                         </InputLabel>
                         <Select
                             labelId="delivery-method-label"
-                            value={shippingCost}
-                            onChange={(e) =>
-                                setShippingCost(Number(e.target.value))
-                            }
+                            value={shippingCost|| 0}
+                            onChange={(e) =>{
+                                const value = Number(e.target.value);
+                                setShippingCost(value);
+                        
+                                // Determine shipping type based on selected value
+                                if (value === shippingMethod.standard) {
+                                    setShippingType("standard");
+                                } else if (value === shippingMethod.express) {
+                                    setShippingType("express");
+                                }
+                            }}
                             label="Delivery Method"
                         >
                             <MenuItem value={shippingMethod.standard}>
@@ -319,6 +328,9 @@ const Summary = ({ total, shipping, items }) => {
                 )}
         
             {/* Discount Code Section */}
+
+            {isLoggedIn && (
+                <>
             <Typography variant="h6" gutterBottom>
                 Discount Code
             </Typography>
@@ -339,31 +351,33 @@ const Summary = ({ total, shipping, items }) => {
             </FormControl>
 
             {/* Loyalty Points Section */}
-            <Typography variant="h6" gutterBottom>
-                Loyalty Points
-            </Typography>
-            <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between"
-            >
-                <Typography variant="body1">
-                    Available Points: {loyaltyPoints}
+            
+                <Typography variant="h6" gutterBottom>
+                    Loyalty Points
                 </Typography>
-                <FormControlLabel
-                    control={
-                        <Switch
-                            disabled={loyaltyPoints < 50000}
-                            checked={useLoyaltyPoints}
-                            onChange={handleLoyaltySwitch}
-                            color="primary"
-                        />
-                    }
-                    label="Use Loyalty Points"
-                    labelPlacement="start"
-                />
-            </Box>
-
+                <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="space-between"
+                >
+                    <Typography variant="body1">
+                        Available Points: {loyaltyPoints}
+                    </Typography>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                disabled={loyaltyPoints < 50000}
+                                checked={useLoyaltyPoints}
+                                onChange={handleLoyaltySwitch}
+                                color="primary"
+                            />
+                        }
+                        label="Use Loyalty Points"
+                        labelPlacement="start"
+                    />
+                </Box>
+                </>
+            )}
             <hr className="my-4" />
 
             <Box display="flex" justifyContent="space-between" mb={5}>
