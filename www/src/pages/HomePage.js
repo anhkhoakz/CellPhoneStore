@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import TimedBanner from "../components/banner/TimedBanner";
 import ProductList from "../components/product/ProductList";
+import Category from "../components/product/Category";
 
 const HomePage = () => {
     // Sample data for products
@@ -31,6 +32,13 @@ const HomePage = () => {
         },
     ];
 
+    const categories = [
+        { name: "Phone" },
+        { name: "Laptop" },
+        { name: "Tablet" },
+        { name: "Headphone" },
+    ];
+
     // const [hotProducts, setHotProducts] = useState([]);
     // const [newProducts, setNewProducts] = useState([]);
 
@@ -50,6 +58,7 @@ const HomePage = () => {
     return (
         <div>
             <TimedBanner />
+            <Category categories={categories} />
             <ProductList title="HOT PRODUCTS" products={products} />
             <ProductList title="NEW PRODUCTS" products={products} />
         </div>

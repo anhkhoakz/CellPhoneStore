@@ -22,7 +22,39 @@ const productsData = {
             rating: 4.2,
         },
     ],
-    electronics: [
+    phone: [
+        {
+            id: 3,
+            name: "Smartphone 1",
+            price: 599.99,
+            image: "smartphone1.jpg",
+            category: "Electronics",
+            rating: 4.7,
+        },
+        {
+            id: 4,
+            name: "Smartwatch 1",
+            price: 199.99,
+            image: "smartwatch1.jpg",
+            category: "Electronics",
+            rating: 4.0,
+        },
+        {
+            id: 3,
+            name: "Smartphone 1",
+            price: 599.99,
+            image: "smartphone1.jpg",
+            category: "Electronics",
+            rating: 4.7,
+        },
+        {
+            id: 4,
+            name: "Smartwatch 1",
+            price: 199.99,
+            image: "smartwatch1.jpg",
+            category: "Electronics",
+            rating: 4.0,
+        },
         {
             id: 3,
             name: "Smartphone 1",
@@ -40,7 +72,7 @@ const productsData = {
             rating: 4.0,
         },
     ],
-    fashion: [
+    tablet: [
         {
             id: 5,
             name: "T-shirt 1",
@@ -87,9 +119,10 @@ const CategoryPage = () => {
                 minHeight: "80vh",
             }}
         >
-            <Typography variant="h4" gutterBottom>
-                {category.charAt(0).toUpperCase() + category.slice(1)} Products
+            <Typography variant="h4" gutterBottom sx={{ textAlign: "center", fontWeight: "bold" }}>
+                {category.toUpperCase()} PRODUCTS
             </Typography>
+
             <Box sx={{ paddingTop: 2 }}>
                 {loading ? (
                     <CircularProgress />

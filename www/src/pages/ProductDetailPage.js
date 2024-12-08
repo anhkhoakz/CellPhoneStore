@@ -45,9 +45,9 @@ const ProductDetailPage = () => {
 
 
     useEffect(() => {
-        const fetchRating = async () => { 
+        const fetchRating = async () => {
             try {
-                const res = await fetch( 
+                const res = await fetch(
                     `${process.env.REACT_APP_BACKEND_URL}/api/v1/products/${id}/rating`,
                 );
                 if (res.status !== 200) {
@@ -95,6 +95,8 @@ const ProductDetailPage = () => {
         fetchProduct();
     }, [id]);
 
+
+
     // Mock data for related products
 
     const relaProducts = [
@@ -104,20 +106,6 @@ const ProductDetailPage = () => {
         { id: 4, name: "Product 4", price: 19.99, image: "/image/ip16.jpg" },
     ];
 
-    // Mock data for product images
-
-    const tempImages = [
-        "https://placehold.co/100x100",
-        "https://placehold.co/100x100",
-        "https://placehold.co/100x100",
-        "https://placehold.co/100x100",
-    ];
-
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-    const handleImageChange = (index) => {
-        setCurrentImageIndex(index);
-    };
 
     const handleColorChange = (event) => {
         const color = product.variants.find(
@@ -164,6 +152,8 @@ const ProductDetailPage = () => {
         return <ProductNotFound />;
     }
 
+
+
     return (
         <Box sx={{ padding: "1.25em", marginTop: "4em" }}>
             {/* Product Detail */}
@@ -195,36 +185,7 @@ const ProductDetailPage = () => {
                                 alt={`${product?.name} - ${selectedColor?.name || ''}`}
                             />
                         </Box>
-                        <Box
-                            sx={{
-                                marginTop: "10px",
-                                display: "flex",
-                                justifyContent: "center",
-                                gap: "10px",
-                            }}
-                        >
-                            {tempImages.map((image, index) => (
-                                <Button
-                                    key={index}
-                                    onClick={() => handleImageChange(index)}
-                                >
-                                    <img
-                                        src={image}
-                                        alt={`Thumbnail ${index + 1}`}
-                                        style={{
-                                            width: "50px",
-                                            height: "50px",
-                                            objectFit: "cover",
-                                            border:
-                                                currentImageIndex === index
-                                                    ? "2px solid #00796b"
-                                                    : "none",
-                                            borderRadius: "8px",
-                                        }}
-                                    />
-                                </Button>
-                            ))}
-                        </Box>
+
                     </Grid>
 
                     {/* Content Section */}
@@ -237,12 +198,8 @@ const ProductDetailPage = () => {
                             >
                                 {product.name}
                             </Typography>
-                            <Typography
-                                variant="body1"
-                                color="textSecondary"
-                                sx={{ mb: 1 }}
-                            >
-                                In stock
+                            <Typography variant="h5" color={product.inStock ? "green" : "red"} sx={{ mb: 1 }}>
+                                {product.inStock ? "Instock" : "Outstock"}
                             </Typography>
                             <Typography
                                 variant="h5"
@@ -255,10 +212,10 @@ const ProductDetailPage = () => {
                             </Typography>
 
                             <Box sx={{ mb: 2 }}>
-                                
+
                                 <Rating
                                     name="product-rating"
-                                    value={score || 0} 
+                                    value={score || 0}
                                     precision={0.5}
                                     readOnly
                                 />
@@ -299,6 +256,7 @@ const ProductDetailPage = () => {
                                 variant="contained"
                                 color="success"
                                 sx={{ mr: 2 }}
+                                disabled={!product.inStock} // Disable 'Buy now' if out of stock
                             >
                                 Buy now
                             </Button>
@@ -306,6 +264,7 @@ const ProductDetailPage = () => {
                                 variant="contained"
                                 color="primary"
                                 onClick={handleAddToCart}
+                                disabled={!product.inStock} // Disable 'Buy now' if out of stock
                             >
                                 Add to cart
                             </Button>
