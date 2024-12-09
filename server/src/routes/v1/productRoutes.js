@@ -4,12 +4,15 @@ const ProductController = require("~v1/controllers/productController");
 const path = require("node:path");
 const { checkProductValidation } = require("~v1/middleware/productMiddleware");
 
+const {getTopBestSellersFromDelivered} = require("~v1/controllers/orderController");
+
 const {
 	combinedAuthMiddleware,
 	verifyAccessToken,
 } = require("~v1/middleware/tokenMiddleware");
 
 const multer = require("multer");
+const { get } = require("node:http");
 
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
@@ -24,6 +27,10 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+router.get("/newest", ProductController.getNewProducts);
+
+router.get("/hot", getTopBestSellersFromDelivered);
+
 router.get("/", ProductController.getAllProducts);
 
 router.get("/search", ProductController.searchProducts);
@@ -33,6 +40,7 @@ router.get("/page/", ProductController.List);
 router.get("/:id", ProductController.getProductById);
 
 router.get("/category/:category", ProductController.getProductsByCategory);
+
 
 router.post(
 	"/",

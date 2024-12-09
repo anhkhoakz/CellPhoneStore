@@ -181,4 +181,67 @@ module.exports = {
             res.status(500).json({ success: false, message: error.message });
         }
     },
+
+    async getTopBestSellersFromDelivered(req, res) {
+        try {
+          // Calculate the date range for the last 30 days
+          const endDate = new Date();
+          const startDate = new Date();
+          startDate.setDate(startDate.getDate() - 30);
+      
+          // Aggregation pipeline
+          const topProducts = await Order.aggregate([
+            { 
+              $match: { 
+                status: "delivered", // Filter only delivered orders
+                createdAt: { $gte: startDate, $lte: endDate }, // Filter orders in the last 30 days
+              } 
+            },
+            { $unwind: "$items" }, // Deconstruct the `items` array
+            {
+              $group: {
+                _id: "$items.productId", // Group by productId
+                totalSold: { $sum: "$items.quantity" }, // Sum up quantities sold
+              },
+            },
+            { $sort: { totalSold: -1 } }, // Sort by totalSold in descending order
+            { $limit: 8 }, // Limit to top 8 products
+            {
+              $lookup: {
+                from: "products", // Assuming your products collection is named "products"
+                localField: "_id",
+                foreignField: "productId",
+                as: "productDetails",
+              },
+            },
+            { $unwind: "$productDetails" }, // Deconstruct the `productDetails` array
+            {
+              $project: {
+                productId: "$_id",
+                totalSold: 1,
+                productDetails: {
+                  name: 1,
+                  price: 1,
+                  image: 1,
+                  description: 1,
+                },
+              },
+            },
+          ]);
+      
+          // Send the response
+          res.status(200).json({
+            success: true,
+            message: "Top 8 best-selling products in the last 30 days",
+            data: topProducts,
+          });
+        } catch (error) {
+          console.error("Error fetching top products:", error);
+          res.status(500).json({
+            success: false,
+            message: "An error occurred while fetching top products",
+            error: error.message,
+          });
+        }
+      },
 };

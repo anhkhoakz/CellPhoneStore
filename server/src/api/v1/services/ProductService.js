@@ -299,6 +299,22 @@ class ProductService {
 	//     }
 	// }
 
+	async getNewProducts() {
+		try {
+
+			const products = await Product.find({}).sort({ createAt: -1 }).limit(8);
+			
+			if (products.length === 0) {
+				return { code: 404, message: "No products found", success: false };
+			}
+
+			return { code: 200, message: products, success: true };
+		} catch (error) {
+			return { code: 500, message: "Server error", error, success: false };
+		}
+	}
+
+
 	async searchProducts(query) {
 		try {
 			const response = await client.search({

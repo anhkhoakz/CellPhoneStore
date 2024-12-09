@@ -105,6 +105,18 @@ class ProductController {
 		}
 	}
 
+	async getNewProducts(req, res) {
+		try {
+
+
+			const { code, message, success } = await productService.getNewProducts();
+			res.status(code).json({ message, success });
+		} catch (error) {
+			res.status(500).json({ message: "Server error", error });
+		}
+	}
+
+
 	async updateProduct(req, res) {
 		const id = req.params.id;
 		const data = req.body;
