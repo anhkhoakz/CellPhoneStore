@@ -276,6 +276,7 @@ const Summary = ({ total, shipping, items }) => {
                 />
             ) : (
                 <CustomerInfo
+                    setEmail={setEmail}
                     setName={setName}
                     setPhone={setPhone}
                     setAddress={setSelectedAddress}

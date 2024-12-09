@@ -30,6 +30,8 @@ module.exports = {
 			} = req.body;
 
 			if (!email || !shippingAddress || !items || !shippingOption || !total) {
+
+				console.log("Missing fields:", { email, shippingAddress, items, shippingOption, total });
 				return res.status(400).json({
 					success: false,
 					message: "Please provide all required fields",

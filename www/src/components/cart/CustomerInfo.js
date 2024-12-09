@@ -1,7 +1,16 @@
-import { Box, TextField, Typography, Button, FormControl, InputLabel, Select, MenuItem, FormHelperText } from "@mui/material";
+import {
+    Box,
+    TextField,
+    Typography,
+    Button,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    FormHelperText,
+} from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
-
 
 const useDebounce = (value, delay) => {
     const [debouncedValue, setDebouncedValue] = useState(value);
@@ -19,9 +28,7 @@ const useDebounce = (value, delay) => {
     return debouncedValue;
 };
 
-
-
-const CustomerInfo = ({ setName, setPhone, setAddress }) => {
+const CustomerInfo = ({ setName, setPhone, setAddress, setEmail }) => {
     const [address, setAddressInput] = useState("");
     const [province, setProvince] = useState("");
     const [district, setDistrict] = useState("");
@@ -36,10 +43,7 @@ const CustomerInfo = ({ setName, setPhone, setAddress }) => {
         ward: "",
     });
 
-
-    
-    
-    const debouncedAddress = useDebounce(address, 3000); 
+    const debouncedAddress = useDebounce(address, 3000);
 
     const [cookies] = useCookies([]);
 
@@ -101,6 +105,15 @@ const CustomerInfo = ({ setName, setPhone, setAddress }) => {
             <TextField
                 fullWidth
                 variant="outlined"
+                label="Email"
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                margin="normal"
+            />
+
+            <TextField
+                fullWidth
+                variant="outlined"
                 label="Phone Number"
                 type="tel"
                 onChange={(e) => setPhone(e.target.value)}
@@ -111,14 +124,20 @@ const CustomerInfo = ({ setName, setPhone, setAddress }) => {
             {/* Province Select */}
             <FormControl fullWidth margin="normal" error={!!errors.province}>
                 <InputLabel>Province</InputLabel>
-                <Select value={province} onChange={handleProvinceChange} label="Province">
+                <Select
+                    value={province}
+                    onChange={handleProvinceChange}
+                    label="Province"
+                >
                     {provinces.map((prov) => (
                         <MenuItem key={prov.FullNameEn} value={prov.FullNameEn}>
                             {prov.FullNameEn}
                         </MenuItem>
                     ))}
                 </Select>
-                {errors.province && <FormHelperText>{errors.province}</FormHelperText>}
+                {errors.province && (
+                    <FormHelperText>{errors.province}</FormHelperText>
+                )}
             </FormControl>
 
             {/* District Select */}
@@ -136,7 +155,9 @@ const CustomerInfo = ({ setName, setPhone, setAddress }) => {
                         </MenuItem>
                     ))}
                 </Select>
-                {errors.district && <FormHelperText>{errors.district}</FormHelperText>}
+                {errors.district && (
+                    <FormHelperText>{errors.district}</FormHelperText>
+                )}
             </FormControl>
 
             {/* Ward Select */}
@@ -163,7 +184,9 @@ const CustomerInfo = ({ setName, setPhone, setAddress }) => {
                 fullWidth
                 margin="normal"
                 value={address}
-                onChange={(e) => {setAddressInput(e.target.value)}}
+                onChange={(e) => {
+                    setAddressInput(e.target.value);
+                }}
                 error={!!errors.address}
                 helperText={errors.address}
             />
