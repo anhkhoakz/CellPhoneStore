@@ -33,10 +33,11 @@ const ProductList = ({ title, products }) => {
     };
 
     const itemsPerRow = getItemsPerRow();
-    const visibleProducts = products.slice(
-        currentIndex,
-        currentIndex + itemsPerRow,
-    ); // Hiển thị sản phẩm theo số lượng cột
+    const visibleProducts = [];
+    for (let i = 0; i < Math.min(itemsPerRow, products.length); i++) {
+        // Lấy sản phẩm theo vòng lặp (khi vượt quá số sản phẩm thì quay lại đầu danh sách)
+        visibleProducts.push(products[(currentIndex + i) % products.length]);
+    }
 
     const handleNext = () => {
         setCurrentIndex((currentIndex + itemsPerRow) % products.length);

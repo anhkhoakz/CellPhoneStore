@@ -13,7 +13,6 @@ import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { useParams } from "react-router-dom";
 import CommentsSection from "../components/product/CommentSection";
-import ProductList from "../components/product/ProductList";
 import ProductNotFound from "../components/product/ProductNotFound";
 import ToastNoti from "../components/toast-noti/ToastNoti";
 
@@ -246,7 +245,7 @@ const ProductDetailPage = () => {
                                 variant="contained"
                                 color="success"
                                 sx={{ mr: 2 }}
-                                disabled={product.stock == 0} // Disable 'Buy now' if out of stock
+                                disabled={product.stock === 0} // Disable 'Buy now' if out of stock
                             >
                                 Buy now
                             </Button>
@@ -254,7 +253,7 @@ const ProductDetailPage = () => {
                                 variant="contained"
                                 color="primary"
                                 onClick={handleAddToCart}
-                                disabled={product.stock == 0} // Disable 'Buy now' if out of stock
+                                disabled={product.stock === 0} // Disable 'Buy now' if out of stock
                             >
                                 Add to cart
                             </Button>

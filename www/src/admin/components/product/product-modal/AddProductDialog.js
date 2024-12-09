@@ -7,6 +7,7 @@ import {
     DialogTitle,
     IconButton,
     TextField,
+    Typography
 } from "@mui/material";
 import * as React from "react";
 
@@ -198,14 +199,24 @@ export default function AddProductDialog({ open, onClose, onSave }) {
                         type="file"
                         accept="image/*"
                         hidden
-                        onChange={(e) =>
+                        onChange={(e) => {
+                            const file = e.target.files[0];
                             setProductData((prevData) => ({
                                 ...prevData,
-                                image: e.target.files[0],
-                            }))
-                        }
+                                image: file, // Lưu file vào state
+                            }));
+                        }}
                     />
                 </Button>
+
+                {productData.image && (
+                    <div style={{ marginTop: "1em" }}>
+                        <Typography variant="body2">
+                            {productData.image.name} {/* Hiển thị tên file */}
+                        </Typography>
+                    </div>
+                )}
+
 
                 <div style={{ marginTop: "1.25em" }}>
                     <h4>Màu sắc và hình ảnh</h4>
