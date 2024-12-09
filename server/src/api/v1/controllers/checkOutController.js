@@ -16,6 +16,19 @@ const {
 	Checkout_Email_Template,
 } = require("~/public/templates/emailTemplate");
 
+
+function extractAddressComponents(text) {
+    const communeMatch = text.match(/([\w\s]+ Commune)/);
+    const districtMatch = text.match(/([\w\s]+ District)/);
+    const provinceMatch = text.match(/([\w\s]+ Province)/);
+
+    return {
+        village: communeMatch ? communeMatch[1] : null,
+        district: districtMatch ? districtMatch[1] : null,
+        city: provinceMatch ? provinceMatch[1] : null,
+    };
+}
+
 module.exports = {
 	async checkout(req, res) {
 		try {
@@ -38,12 +51,15 @@ module.exports = {
 				});
 			}
 
+
 			const isLogin = !!req.user;
 
 			let user = await User.findOne({ email: email });
 
 			if (!user) {
 				const password = generatePassword();
+				const extractedComponents = extractAddressComponents(shippingAddress.detail);
+
 				user = await User.create({
 					username: shippingAddress.name,
 					email: email,
@@ -51,8 +67,14 @@ module.exports = {
 					phone: shippingAddress.phone,
 					addresses: [
 						{
-							street: shippingAddress.street,
-							city: shippingAddress.city,
+
+							village: extractedComponents.village,
+							district: extractedComponents.district,
+							city: extractedComponents.city,
+							detail: shippingAddress.detail,
+							receiver: shippingAddress.name,
+							phone: shippingAddress.phone,
+							isDefault: true,
 						},
 					],
 				});
@@ -242,11 +264,11 @@ module.exports = {
 				if (!loyalty) {
 					await Loyalty.create({
 						userId,
-						pointsEarned: Math.floor(order.totalAmount / 100),
+						pointsEarned: Math.floor(order.totalAmount * 0.05),
 						pointsRedeemed: 0,
 					});
 				} else {
-					loyalty.pointsEarned += Math.floor(order.totalAmount / 100);
+					loyalty.pointsEarned += Math.floor(order.totalAmount * 0.05);
 					await loyalty.save();
 				}
 

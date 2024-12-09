@@ -99,6 +99,11 @@ function App() {
                                             element={<CategoryPage />}
                                         />
 
+                                        <Route
+                                            path="/success"
+                                            element={<OrderSuccessPage />}
+                                        />
+
                                         {isAuthenticated && (
                                             <>
                                                 <Route
@@ -108,12 +113,6 @@ function App() {
                                                     }
                                                 />
 
-                                                <Route
-                                                    path="/success"
-                                                    element={
-                                                        <OrderSuccessPage />
-                                                    }
-                                                />
                                                 <Route
                                                     path="/profile"
                                                     element={<Profile />}

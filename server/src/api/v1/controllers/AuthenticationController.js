@@ -10,6 +10,7 @@ const {
 	addAddress,
 	setDefaultAddress,
 	checkValidateResetToken,
+	removeAddress
 } = require("~/api/v1/services/AccountService");
 
 require("dotenv").config();
@@ -352,8 +353,10 @@ module.exports = {
 	setDefaultAddress: async (req, res, next) => {
 		try {
 			const { id } = req.params;
+			const userId = req.cookies.userId;
+
 			const { code, message, elements, detail } = await setDefaultAddress(
-				req.body,
+				userId,
 				id,
 			);
 
@@ -368,4 +371,22 @@ module.exports = {
 			next(err);
 		}
 	},
+
+	removeAddress: async (req, res, next) => {
+		try {
+			const { id } = req.params;
+			const userId = req.cookies.userId;
+
+			const { code, message, elements } = await removeAddress(userId, id);
+
+			return res.status(code).json({
+				code,
+				message,
+				elements,
+			});
+		} catch (err) {
+			console.error(err);
+			next(err);
+		}
+	}
 };

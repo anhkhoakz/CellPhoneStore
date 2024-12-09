@@ -24,6 +24,7 @@ const hashPassword = require("~v1/helpers/hashPassword");
 
 const generateResetToken = require("~v1/helpers/generateKey");
 const { set } = require("~/app");
+const { removeAddress } = require("../controllers/AuthenticationController");
 
 require("dotenv").config();
 
@@ -467,9 +468,9 @@ module.exports = {
 		}
 	},
 
-	setDefaultAddress: async (data, id) => {
+	setDefaultAddress: async (userId, id) => {
 		try {
-			const user = await _user.findById({ _id: id });
+			const user = await _user.findById({ _id: userId });
 
 			if (!user) {
 				return {
@@ -482,8 +483,11 @@ module.exports = {
 				user.addresses = [];
 			}
 
+			
+
 			for (const address of user.addresses) {
-				if (address.id === data.id) {
+				console.log(address._id, id);
+				if (address._id.toString() === id) {
 					address.isDefault = true;
 				} else {
 					address.isDefault = false;
@@ -505,4 +509,41 @@ module.exports = {
 			};
 		}
 	},
+
+	removeAddress: async (userId, id) => {
+		try {
+			const user = await _user.findById({ _id: userId });
+
+			if (!user) {
+				return {
+					code: 404,
+					message: "User not found",
+				};
+			}
+
+			if (!user.addresses) {
+				user.addresses = [];
+			}
+
+			const updatedAddresses = user.addresses.filter(
+				(address) => address._id.toString() !== id,
+			);
+
+			user.addresses = updatedAddresses;
+
+			const updatedUser = await user.save();
+
+			return {
+				code: 200,
+				message: "Address removed successfully!",
+				elements: updatedUser,
+			};
+		} catch (error) {
+			console.error(error);
+			return {
+				code: 500,
+				message: "Internal server error",
+			};
+		}
+	}
 };

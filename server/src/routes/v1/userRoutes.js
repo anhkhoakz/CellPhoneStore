@@ -60,4 +60,10 @@ router.patch(
 	AuthenticationController.setDefaultAddress,
 );
 
+router.patch(
+	"/removeAddress/:id",
+	verifyAccessToken,
+	AuthenticationController.removeAddress,
+);
+
 module.exports = router;

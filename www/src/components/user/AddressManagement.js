@@ -11,6 +11,8 @@ import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 import AddAddress from "./AddAddress";
 
+import { useCookies } from "react-cookie";
+
 const AddressManagement = ({
     addresses,
     onAddAddress,
@@ -19,8 +21,11 @@ const AddressManagement = ({
 }) => {
     const [open, setOpen] = useState(false);
     const [defaultAddress, setDefaultAddress] = useState(
-        addresses.find((addr) => addr.isDefault)?.id || "",
+        addresses.find((addr) => addr.isDefault)?._id || ""
     );
+
+    const [cookies] = useCookies([]);
+
     const [selectedAddress, setSelectedAddress] = useState(null);
 
     const handleClickOpen = () => {
@@ -33,17 +38,53 @@ const AddressManagement = ({
 
     const handleDefaultAddressChange = (event) => {
         const selectedId = event.target.value;
-        setDefaultAddress(selectedId);
-        onSetDefaultAddress(selectedId);
+
+        // Update default address
+        fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/api/v1/users/setDefaultAddress/${selectedId}`,
+            {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${cookies.accessToken}`,
+                },
+                credentials: "include",
+            }
+        )
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+                if (data.success) {
+                    setDefaultAddress(selectedId);
+                    onSetDefaultAddress(selectedId);
+                }
+            });
 
         // Update selected address to display its contact info
-        const selectedAddr = addresses.find((addr) => addr.id === selectedId);
+        const selectedAddr = addresses.find((addr) => addr._id === selectedId);
         setSelectedAddress(selectedAddr);
     };
 
     const handleRemoveAddress = (e, id) => {
-        e.stopPropagation();
-        onRemoveAddress(id);
+
+
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users/removeAddress/${id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${cookies.accessToken}`,
+            },
+            credentials: "include",
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+                if (data.success) {
+                    e.stopPropagation();
+                    onRemoveAddress(id);
+                }
+            });
+        
     };
 
     return (
@@ -58,8 +99,8 @@ const AddressManagement = ({
             >
                 {addresses.map((addr) => (
                     <MenuItem
-                        key={addr.id}
-                        value={addr.id}
+                        key={addr._id}
+                        value={addr._id}
                         style={{
                             display: "flex",
                             justifyContent: "space-between",
@@ -71,7 +112,9 @@ const AddressManagement = ({
                         </span>
                         {!addr.isDefault && (
                             <IconButton
-                                onClick={(e) => handleRemoveAddress(e, addr.id)}
+                                onClick={(e) =>
+                                    handleRemoveAddress(e, addr._id)
+                                }
                                 size="small"
                             >
                                 <Close />
@@ -88,10 +131,10 @@ const AddressManagement = ({
                         Contact Information
                     </Typography>
                     <Typography variant="body2">
-                        <strong>Name:</strong> {selectedAddress.contactName}
+                        <strong>Name:</strong> {selectedAddress.receiver}
                     </Typography>
                     <Typography variant="body2">
-                        <strong>Phone:</strong> {selectedAddress.contactPhone}
+                        <strong>Phone:</strong> {selectedAddress.phone}
                     </Typography>
                 </div>
             )}

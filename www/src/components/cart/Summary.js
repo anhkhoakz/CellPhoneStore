@@ -223,7 +223,6 @@ const Summary = ({ total, shipping, items }) => {
             body: JSON.stringify({
                 couponCode: discountCode,
                 shippingAddress: {
-                    street: "Street",
                     city: "City",
                     district: "District",
                     village: "Village",
@@ -396,7 +395,7 @@ const Summary = ({ total, shipping, items }) => {
                 onClick={handleSubmit}
                 sx={{ fontWeight: "bold", width: "100%" }}
             >
-                Register
+                Checkout
             </Button>
 
             {toastMessage && (

@@ -107,7 +107,7 @@ const UserInfo = ({ user, onUserInfoChange }) => {
             <Typography variant="h6">User Information</Typography>
             <TextField
                 label="Name"
-                name="name"
+                name="username"
                 value={user.username || ""}
                 onChange={handleChange}
                 fullWidth
@@ -118,8 +118,8 @@ const UserInfo = ({ user, onUserInfoChange }) => {
             <TextField
                 label="Email"
                 name="email"
+                disabled
                 value={user.email || ""}
-                onChange={handleChange}
                 fullWidth
                 margin="normal"
                 error={!!errors.email}
