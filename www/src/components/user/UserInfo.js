@@ -108,7 +108,7 @@ const UserInfo = ({ user, onUserInfoChange }) => {
             <TextField
                 label="Name"
                 name="name"
-                value={user.username}
+                value={user.username || ""}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
@@ -118,7 +118,7 @@ const UserInfo = ({ user, onUserInfoChange }) => {
             <TextField
                 label="Email"
                 name="email"
-                value={user.email}
+                value={user.email || ""}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
@@ -128,7 +128,7 @@ const UserInfo = ({ user, onUserInfoChange }) => {
             <TextField
                 label="Phone number"
                 name="phone"
-                value={user.phone}
+                value={user.phone || ""}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"

@@ -18,8 +18,8 @@ import { useNavigate } from "react-router-dom";
 import ToastNoti from "../toast-noti/ToastNoti";
 
 const Summary = ({ total, shipping, items }) => {
-    const [name, setName] = useState("userJohn Doe");
-    const [phone, setPhone] = useState("+1 234 567 890");
+    const [name, setName] = useState("");
+    const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
     const [toastMessage, setToastMessage] = useState("");
     const [toastType, setToastType] = useState("success");
