@@ -41,6 +41,7 @@ const HomePage = () => {
                         price: product.productDetails.price,
                         image: product.productDetails.image,
                         description: product.productDetails.description,
+                        ratings: product.productDetails.ratings,
                         isHot: true,
                     }));
 

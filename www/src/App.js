@@ -95,7 +95,7 @@ function App() {
                                             element={<ForgotPasswordPage />}
                                         />
                                         <Route
-                                            path="/catagory/:category"
+                                            path="/category/:category"
                                             element={<CategoryPage />}
                                         />
 

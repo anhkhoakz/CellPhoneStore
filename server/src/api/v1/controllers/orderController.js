@@ -224,6 +224,7 @@ module.exports = {
                   price: 1,
                   image: 1,
                   description: 1,
+                  ratings: 1,
                 },
               },
             },
