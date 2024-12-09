@@ -99,8 +99,9 @@ const ProductList = ({ title, products }) => {
                 >
                     {visibleProducts.map((product, index) => (
                         <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
-                            <ProductCard product={product} />
+                            <ProductCard product={product} isHot={product.isHot} isNew={product.isNew} />
                         </Grid>
+
                     ))}
                 </Grid>
 

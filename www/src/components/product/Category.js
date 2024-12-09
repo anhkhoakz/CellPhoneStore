@@ -13,10 +13,11 @@ const Category = ({ categories }) => {
                 display: "flex",
                 gap: "1em",
                 flexWrap: "wrap",
-                justifyContent: "center", // Căn giữa các phần tử theo chiều ngang
+                justifyContent: "space-between", // Thay đổi thành space-between
                 margin: "0 auto", // Đảm bảo hộp cha được căn giữa trên toàn trang
                 maxWidth: "80%", // Giới hạn chiều rộng của hộp cha (tuỳ chỉnh)
             }}>
+
                 {categories.map((category) => (
                     <Link
                         key={category.name}
@@ -25,10 +26,19 @@ const Category = ({ categories }) => {
                     >
                         <Button
                             variant="outlined"
-                            sx={{ padding: "1em", width: "150px" }}
+                            sx={{
+                                padding: "1em",
+                                width: "150px",
+                                "&:hover": {
+                                    backgroundColor: "#1977d3", // Thêm màu nền khi hover
+                                    color: "#fff", // Thay đổi màu chữ khi hover
+                                    borderColor: "#1977d3", // Thêm viền khi hover
+                                },
+                            }}
                         >
                             {category.name}
                         </Button>
+
                     </Link>
                 ))}
             </Box>

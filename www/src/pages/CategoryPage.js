@@ -2,8 +2,6 @@ import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom"; // Để lấy tham số danh mục từ URL
 import ProductCard from "../components/product/ProductCard";
-// Giả lập dữ liệu sản phẩm cho các danh mục
-
 
 const CategoryPage = () => {
     const { category } = useParams(); // Lấy tham số danh mục từ URL
@@ -12,29 +10,23 @@ const CategoryPage = () => {
 
     // Giả lập gọi API và lấy dữ liệu sản phẩm theo category
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/products/category/${category}`,
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-            .then((res) => res.json())
-            .then((data) => {
-
-                if(data.success)
-                {
-                    console.log("Data:", data);
-
-                    setProducts(data.message);
-                }
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-                setLoading(false);
-    });
-
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/products/category/${category}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.success) {
+                setProducts(data.message);
+            }
+            setLoading(false);
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+            setLoading(false);
+        });
     }, [category]);
 
     return (
@@ -60,7 +52,8 @@ const CategoryPage = () => {
                 ) : (
                     <Grid container spacing={4}>
                         {products.map((product) => (
-                            <Grid item xs={12} sm={6} md={4} key={product.productId}>
+                            // Đặt các item trong grid, mỗi hàng chứa 4 sản phẩm
+                            <Grid item xs={12} sm={6} md={3} key={product.productId}>
                                 <ProductCard product={product} />
                             </Grid>
                         ))}

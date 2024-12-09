@@ -28,7 +28,7 @@ const Navigation = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const navigate = useNavigate();
-    const [cookies, setCookie, removeCookie] = useCookies([]);
+    const [cookies, removeCookie] = useCookies([]);
 
     // Kiểm tra xem người dùng đã đăng nhập hay chưa
     useEffect(() => {
