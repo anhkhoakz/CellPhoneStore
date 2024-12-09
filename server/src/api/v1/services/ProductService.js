@@ -205,7 +205,7 @@ class ProductService {
 			return { code: 500, message: "Failed to update product" };
 		}
 
-		return { code: 200, message: "Product updated successfully" };
+		return { code: 200, message: "Product updated successfully", product: updatedProduct };
 	}
 
 	async deleteProduct(id) {

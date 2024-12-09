@@ -11,14 +11,14 @@ const { getLoyaltyPoints } = require("~v1/controllers/LoyaltyController");
 const { verifyAccessToken } = require("~v1/middleware/tokenMiddleware");
 const roleAuth = require("~/api/v1/middleware/roleAuth");
 
-// router.get(
-//     '/',
-//     verifyAccessToken,
-//     roleAuth('admin'),
-//     AuthenticationController.getAllUsers,
-// );
+router.get(
+    '/',
+    verifyAccessToken,
+    roleAuth('admin'),
+    AuthenticationController.getAllUsers,
+);
 
-router.get("/", AuthenticationController.getAllUsers);
+// router.get("/", AuthenticationController.getAllUsers);
 
 router.get("/loyalty", verifyAccessToken, getLoyaltyPoints);
 

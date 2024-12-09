@@ -123,13 +123,13 @@ class ProductController {
 
 		const files = req.files;
 		try {
-			const { code, message } = await productService.updateProduct(
+			const { code, message, product } = await productService.updateProduct(
 				id,
 				data,
 				files,
 			);
 
-			res.status(code).json({ message: message, data });
+			res.status(code).json({ message: message, product });
 		} catch (error) {
 			res.status(500).json({
 				message: error.message,
