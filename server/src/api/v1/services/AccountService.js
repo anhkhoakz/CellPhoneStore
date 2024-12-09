@@ -187,7 +187,7 @@ module.exports = {
 
 			return {
 				code: 200,
-				message: { accessToken, userId: user._id },
+				message: { accessToken, userId: user._id, role: user.role },
 			};
 		} catch (error) {
 			return {

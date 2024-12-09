@@ -27,7 +27,12 @@ import ProductRatingPage from "./pages/ProductRatingPage";
 import SearchPage from "./pages/SearchPage";
 import Profile from "./pages/UserProfilePage";
 
+import { useCookies } from "react-cookie";
+
 function App() {
+    const [cookies] = useCookies([]);
+    const isAuthenticated = cookies.userId || cookies.accessToken;
+    const isAdmin = cookies._ga_QM7W25Wv18 === "admin";
     return (
         <Router>
             <div className="App">
@@ -49,10 +54,7 @@ function App() {
                                             path="/login"
                                             element={<LoginPage />}
                                         />
-                                        <Route
-                                            path="/orderManagement"
-                                            element={<OrderManagementPage />}
-                                        />
+
                                         <Route
                                             path="/cart"
                                             element={<CartPage />}
@@ -65,18 +67,12 @@ function App() {
                                             path="/product/:id"
                                             element={<ProductDetailPage />}
                                         />
-                                        <Route
-                                            path="/success"
-                                            element={<OrderSuccessPage />}
-                                        />
+
                                         <Route
                                             path="/search"
                                             element={<SearchPage />}
                                         />
-                                        <Route
-                                            path="/profile"
-                                            element={<Profile />}
-                                        />
+
                                         <Route
                                             path="/verify"
                                             element={<OtpPage />}
@@ -93,18 +89,7 @@ function App() {
                                             path="/payment-guide"
                                             element={<PaymentGuide />}
                                         />
-                                        <Route
-                                            path="/invoice"
-                                            element={<InvoicePage />}
-                                        />
-                                        <Route
-                                            path="rating"
-                                            element={<ProductRatingPage />}
-                                        />
-                                        <Route
-                                            path="/coupon"
-                                            element={<CouponPage />}
-                                        />
+
                                         <Route
                                             path="/forgot-password/:token"
                                             element={<ForgotPasswordPage />}
@@ -113,6 +98,43 @@ function App() {
                                             path="/catagory/:category"
                                             element={<CategoryPage />}
                                         />
+
+                                        {isAuthenticated && (
+                                            <>
+                                                <Route
+                                                    path="/orderManagement"
+                                                    element={
+                                                        <OrderManagementPage />
+                                                    }
+                                                />
+
+                                                <Route
+                                                    path="/success"
+                                                    element={
+                                                        <OrderSuccessPage />
+                                                    }
+                                                />
+                                                <Route
+                                                    path="/profile"
+                                                    element={<Profile />}
+                                                />
+                                                <Route
+                                                    path="/rating"
+                                                    element={
+                                                        <ProductRatingPage />
+                                                    }
+                                                />
+                                                <Route
+                                                    path="/coupon"
+                                                    element={<CouponPage />}
+                                                />
+
+                                                <Route
+                                                    path="/invoice"
+                                                    element={<InvoicePage />}
+                                                />
+                                            </>
+                                        )}
                                         <Route
                                             path="/*"
                                             element={<Error404 />}
@@ -127,8 +149,9 @@ function App() {
                             </>
                         }
                     />
-
-                    <Route path="/admin/*" element={<AdminRoutes />} />
+                    {isAdmin && (
+                        <Route path="/admin/*" element={<AdminRoutes />} />
+                    )}
                 </Routes>
             </div>
         </Router>

@@ -233,6 +233,7 @@ module.exports = {
 			return res.status(code).json({
 				code,
 				message: accessToken,
+				role: message.role,
 			});
 		} catch (err) {
 			console.error(err);
@@ -242,33 +243,32 @@ module.exports = {
 
 	checkLogin: async (req, res, next) => {
 		try {
-			console.log("Cookies:", req.cookies);
-			const userId = req.cookies.userId;
-
-			console.log("User ID:", userId);
+			const userId = req.cookies?.userId;
 
 			if (!userId) {
 				return res.status(401).json({
+					success: false,
 					message: "Unauthorized: No user ID provided.",
 				});
 			}
 
 			const user = await User.findById(userId);
 
-			console.log("User:", user);
-
 			if (user) {
 				return res.status(200).json({
-					true: true,
+					success: true,
+					message: user.role,
 				});
 			}
 
 			return res.status(401).json({
+				success: false,
 				message: "Unauthorized: User not found.",
 			});
 		} catch (err) {
 			console.error("Error in checkLogin:", err);
 			return res.status(500).json({
+				success: false,
 				message: "Internal Server Error",
 			});
 		}
