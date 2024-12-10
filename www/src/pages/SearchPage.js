@@ -65,9 +65,7 @@ const SearchPage = () => {
 
 		let filteredResults = products;
 
-		// Tìm kiếm theo tên và giá
 		if (query) {
-			// Tìm kiếm theo tên và giá
 			filteredResults = products.filter((item) =>
 				item.name.toLowerCase().includes(query.toLowerCase()),
 			);
@@ -134,7 +132,6 @@ const SearchPage = () => {
 				</Typography>
 			)}
 
-			{/* Phần lọc theo category */}
 			<Box sx={{ mb: 3, display: "flex", gap: 2 }}>
 				<FormControl variant="outlined" sx={{ minWidth: 200 }}>
 					<InputLabel>Category</InputLabel>
