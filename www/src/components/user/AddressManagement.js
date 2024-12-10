@@ -1,16 +1,17 @@
+import React, { useState, useEffect } from "react";
 import { Close } from "@mui/icons-material";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import IconButton from "@mui/material/IconButton";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import Typography from "@mui/material/Typography";
-import React, { useState } from "react";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    MenuItem,
+    Select,
+    Typography,
+} from "@mui/material";
 import AddAddress from "./AddAddress";
-
 import { useCookies } from "react-cookie";
 
 const AddressManagement = ({
@@ -20,13 +21,18 @@ const AddressManagement = ({
     onRemoveAddress,
 }) => {
     const [open, setOpen] = useState(false);
-    const [defaultAddress, setDefaultAddress] = useState(
-        addresses.find((addr) => addr.isDefault)?._id || ""
-    );
-
+    const [defaultAddress, setDefaultAddress] = useState("");
     const [cookies] = useCookies([]);
-
     const [selectedAddress, setSelectedAddress] = useState(null);
+
+    // Thiết lập địa chỉ mặc định khi component được render
+    useEffect(() => {
+        const defaultAddr = addresses.find((addr) => addr.isDefault);
+        if (defaultAddr) {
+            setDefaultAddress(defaultAddr._id);
+            setSelectedAddress(defaultAddr);
+        }
+    }, [addresses]);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -38,8 +44,8 @@ const AddressManagement = ({
 
     const handleDefaultAddressChange = (event) => {
         const selectedId = event.target.value;
-
-        // Update default address
+    
+        // Gửi yêu cầu API để thay đổi địa chỉ mặc định
         fetch(
             `${process.env.REACT_APP_BACKEND_URL}/api/v1/users/setDefaultAddress/${selectedId}`,
             {
@@ -53,44 +59,51 @@ const AddressManagement = ({
         )
             .then((res) => res.json())
             .then((data) => {
-                console.log(data);
                 if (data.success) {
+                    // Cập nhật trạng thái địa chỉ mặc định
                     setDefaultAddress(selectedId);
-                    onSetDefaultAddress(selectedId);
+    
+                    // Cập nhật danh sách địa chỉ cục bộ
+                    const updatedAddresses = addresses.map((addr) => ({
+                        ...addr,
+                        isDefault: addr._id === selectedId,
+                    }));
+                    onSetDefaultAddress(selectedId, updatedAddresses);
+    
+                    // Hiển thị thông tin địa chỉ mới
+                    const selectedAddr = updatedAddresses.find(
+                        (addr) => addr._id === selectedId
+                    );
+                    setSelectedAddress(selectedAddr);
                 }
             });
-
-        // Update selected address to display its contact info
-        const selectedAddr = addresses.find((addr) => addr._id === selectedId);
-        setSelectedAddress(selectedAddr);
     };
+    
 
     const handleRemoveAddress = (e, id) => {
-
-
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users/removeAddress/${id}`, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${cookies.accessToken}`,
-            },
-            credentials: "include",
-        })
+        fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/api/v1/users/removeAddress/${id}`,
+            {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${cookies.accessToken}`,
+                },
+                credentials: "include",
+            }
+        )
             .then((res) => res.json())
             .then((data) => {
-                console.log(data);
                 if (data.success) {
                     e.stopPropagation();
                     onRemoveAddress(id);
                 }
             });
-        
     };
 
     return (
         <div>
             <Typography variant="h6">Address management</Typography>
-
             <Typography variant="subtitle1">Select default address</Typography>
             <Select
                 value={defaultAddress}
@@ -124,7 +137,6 @@ const AddressManagement = ({
                 ))}
             </Select>
 
-            {/* Hiển thị thông tin liên hệ của địa chỉ đã chọn */}
             {selectedAddress && (
                 <div style={{ marginTop: "20px" }}>
                     <Typography variant="subtitle1">

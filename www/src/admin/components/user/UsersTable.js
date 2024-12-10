@@ -193,12 +193,12 @@ export default function UsersTable() {
                 onStatusChange={handleStatusChange}
                 onAddClick={handleOpenAddDialog}
                 addLabel="Add User"
-                searchPlaceholder="Tìm kiếm người dùng"
-                statusLabel="Trạng thái"
+                searchPlaceholder="Find user"
+                statusLabel="Status"
                 statusOptions={[
-                    { value: "all", label: "Tất cả" },
-                    { value: "active", label: "Hoạt động" },
-                    { value: "inactive", label: "Đã khóa" },
+                    { value: "all", label: "All" },
+                    { value: "active", label: "Active" },
+                    { value: "inactive", label: "Locked" },
                 ]}
             />
 
@@ -232,9 +232,6 @@ export default function UsersTable() {
                                         key={row.userId}
                                         isEven={isEven}
                                     >
-                                        <TableCell padding="checkbox">
-                                            <input type="checkbox" />
-                                        </TableCell>
                                         {columns.map((column) => {
                                             const value = row[column.id];
                                             return column.id ===

@@ -28,7 +28,7 @@ const SearchBar = ({ onSearch, onStatusChange }) => {
             display="flex"
             justifyContent="center"
             alignItems="center"
-            sx={{ gap: 2 }}
+            sx={{ gap: 2, marginBottom: "1em" }}
         >
             <TextField
                 variant="outlined"

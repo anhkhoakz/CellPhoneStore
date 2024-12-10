@@ -219,7 +219,7 @@ export default function AddProductDialog({ open, onClose, onSave }) {
 
 
                 <div style={{ marginTop: "1.25em" }}>
-                    <h4>Màu sắc và hình ảnh</h4>
+                    <h4>Colors and images</h4>
                     {productData.variants.map((colorData, index) => (
                         <div
                             key={index}
