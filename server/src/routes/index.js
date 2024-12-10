@@ -51,7 +51,7 @@ const apiRouter = (app) => {
 	app.get(
 		"/oauth2/redirect/google",
 		passport.authenticate("google", {
-			failureRedirect: "/login",
+			failureRedirect: `${process.env.FRONTEND_URL}/login`,
 			failureMessage: true,
 		}),
 

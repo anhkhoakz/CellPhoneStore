@@ -205,7 +205,7 @@ class ProductService {
 			return { code: 500, message: "Failed to update product" };
 		}
 
-		return { code: 200, message: "Product updated successfully" };
+		return { code: 200, message: "Product updated successfully", product: updatedProduct };
 	}
 
 	async deleteProduct(id) {
@@ -298,6 +298,22 @@ class ProductService {
 	//         return { code: 500, message: 'Server error', error };
 	//     }
 	// }
+
+	async getNewProducts() {
+		try {
+
+			const products = await Product.find({}).sort({ createAt: -1 }).limit(8);
+			
+			if (products.length === 0) {
+				return { code: 404, message: "No products found", success: false };
+			}
+
+			return { code: 200, message: products, success: true };
+		} catch (error) {
+			return { code: 500, message: "Server error", error, success: false };
+		}
+	}
+
 
 	async searchProducts(query) {
 		try {

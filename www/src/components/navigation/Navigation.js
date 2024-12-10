@@ -28,7 +28,7 @@ const Navigation = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const navigate = useNavigate();
-    const [cookies, setCookie, removeCookie] = useCookies([]);
+    const [cookies, removeCookie] = useCookies([]);
 
     // Kiểm tra xem người dùng đã đăng nhập hay chưa
     useEffect(() => {
@@ -135,28 +135,38 @@ const Navigation = () => {
                         alignItems: "center",
                     }}
                 >
-                    <IconButton
-                        component={Link}
-                        to="/orderManagement"
-                        color="inherit"
-                    >
-                        <i className="bi bi-box-seam"></i>
-                        <Typography variant="body2" sx={{ ml: 1 }}>
-                            Orders
-                        </Typography>
-                    </IconButton>
+                    {isLoggedIn && (
+                        <IconButton
+                            component={Link}
+                            to="/orderManagement"
+                            color="inherit"
+                        >
+                            <i className="bi bi-box-seam"></i>
+                            <Typography variant="body2" sx={{ ml: 1 }}>
+                                Orders
+                            </Typography>
+                        </IconButton>
+                    )}
+
                     <IconButton component={Link} to="/cart" color="inherit">
                         <i className="bi bi-cart"></i>
                         <Typography variant="body2" sx={{ ml: 1 }}>
                             Cart
                         </Typography>
                     </IconButton>
-                    <IconButton component={Link} to="/coupon" color="inherit">
-                        <i className="bi bi-gift"></i>
-                        <Typography variant="body2" sx={{ ml: 1 }}>
-                            Coupon
-                        </Typography>
-                    </IconButton>
+
+                    {isLoggedIn && (
+                        <IconButton
+                            component={Link}
+                            to="/coupon"
+                            color="inherit"
+                        >
+                            <i className="bi bi-gift"></i>
+                            <Typography variant="body2" sx={{ ml: 1 }}>
+                                Coupon
+                            </Typography>
+                        </IconButton>
+                    )}
 
                     {/* Nếu đã đăng nhập thì hiển thị menu Profile */}
                     {isLoggedIn ? (

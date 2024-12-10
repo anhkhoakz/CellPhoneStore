@@ -20,17 +20,23 @@ const AddAddress = ({ onAddAddress, onClose }) => {
     const [provinces, setProvinces] = useState([]);
     const [districts, setDistricts] = useState([]);
     const [wards, setWards] = useState([]);
+
+    const [receiver, setReceiver] = useState("");
+    const [phone, setPhone] = useState("");
+
     const [errors, setErrors] = useState({
         address: "",
         province: "",
         district: "",
         ward: "",
+        receiver: "",
+        phone: "",
     });
 
     useEffect(() => {
         const fetchData = async () => {
             const response = await fetch(
-                "https://cdn.jsdelivr.net/gh/ThangLeQuoc/vietnamese-provinces-database@master/json/simplified_json_generated_data_vn_units_minified.json",
+                "https://cdn.jsdelivr.net/gh/ThangLeQuoc/vietnamese-provinces-database@master/json/simplified_json_generated_data_vn_units_minified.json"
             );
             const data = await response.json();
             setProvinces(data);
@@ -42,7 +48,7 @@ const AddAddress = ({ onAddAddress, onClose }) => {
         const selectedProvince = e.target.value;
         setProvince(selectedProvince);
         const selectedProvinceData = provinces.find(
-            (prov) => prov.FullNameEn === selectedProvince,
+            (prov) => prov.FullNameEn === selectedProvince
         );
         setDistricts(selectedProvinceData.District);
         setWard("");
@@ -53,28 +59,32 @@ const AddAddress = ({ onAddAddress, onClose }) => {
         const selectedDistrict = e.target.value;
         setDistrict(selectedDistrict);
         const selectedProvince = provinces.find(
-            (prov) => prov.FullNameEn === province,
+            (prov) => prov.FullNameEn === province
         );
         const selectedDistrictData = selectedProvince.District.find(
-            (dist) => dist.FullNameEn === selectedDistrict,
+            (dist) => dist.FullNameEn === selectedDistrict
         );
         setWards(selectedDistrictData.Ward);
         setWard("");
     };
 
     const handleAddAddress = () => {
-        let formErrors = { address: "", province: "", district: "", ward: "" };
+        let formErrors = { address: "", province: "", district: "", ward: "", receiver: "", phone: "" };
         if (!address)
             formErrors.address = "Detailed address cannot be left blank.";
         if (!province) formErrors.province = "Please select province.";
         if (!district) formErrors.district = "Please select district.";
         if (!ward) formErrors.ward = "Please select commune/ward.";
+        if (!receiver) formErrors.receiver = "Receiver name cannot be left blank.";
+        if (!phone) formErrors.phone = "Phone number cannot be left blank.";
         setErrors(formErrors);
         if (
             !formErrors.address &&
             !formErrors.province &&
             !formErrors.district &&
-            !formErrors.ward
+            !formErrors.ward &&
+            !formErrors.receiver &&
+            !formErrors.phone
         ) {
             const fullAddress = `${address}, ${ward}, ${district}, ${province}`;
 
@@ -92,8 +102,10 @@ const AddAddress = ({ onAddAddress, onClose }) => {
                         city: province,
                         district: district,
                         village: ward,
+                        receiver: receiver,
+                        phone: phone,
                     }),
-                },
+                }
             )
                 .then((response) => {
                     if (response.ok) {
@@ -103,8 +115,11 @@ const AddAddress = ({ onAddAddress, onClose }) => {
                 })
                 .then((data) => {
                     console.log(data);
-                    onAddAddress(data.detail);
-                    onClose();
+                    if(data.code === 200)
+                    {
+                        onAddAddress(data.detail);
+                        onClose();
+                    }
                 })
                 .catch((error) => {
                     console.error(error);
@@ -116,15 +131,6 @@ const AddAddress = ({ onAddAddress, onClose }) => {
         <Box
             style={{ maxWidth: "500px", margin: "0px auto", minHeight: "35vh" }}
         >
-            <TextField
-                label="Detailed address"
-                fullWidth
-                margin="normal"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                error={!!errors.address}
-                helperText={errors.address}
-            />
             <FormControl fullWidth margin="normal" error={!!errors.province}>
                 <InputLabel>Province</InputLabel>
                 <Select
@@ -176,6 +182,37 @@ const AddAddress = ({ onAddAddress, onClose }) => {
                 </Select>
                 {errors.ward && <FormHelperText>{errors.ward}</FormHelperText>}
             </FormControl>
+
+            <TextField
+                label="Detailed address"
+                fullWidth
+                margin="normal"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                error={!!errors.address}
+                helperText={errors.address}
+            />
+
+            <TextField
+                label="Receiver name"
+                fullWidth
+                margin="normal"
+                value={receiver}
+                onChange={(e) => setReceiver(e.target.value)}
+                error={!!errors.receiver}
+                helperText={errors.receiver}
+            />
+
+            <TextField
+                label="Phone number"
+                type="tel"
+                fullWidth
+                margin="normal"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                error={!!errors.phone}
+                helperText={errors.phone}
+            />
             <Box textAlign="center" mt={2}>
                 <Button
                     variant="contained"

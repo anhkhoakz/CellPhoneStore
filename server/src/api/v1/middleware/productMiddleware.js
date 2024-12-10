@@ -38,7 +38,7 @@ const checkProductValidation = (req, res, next) => {
 	}
 
 	// Validate category (ensure it's a valid value)
-	const validCategories = ["phone", "laptop", "ipad"];
+	const validCategories = ["phone", "laptop", "tablet", "headphone"];
 	if (!validCategories.includes(category)) {
 		return res.status(400).json({
 			message: `Category must be one of the following: ${validCategories.join(", ")}`,

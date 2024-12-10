@@ -33,10 +33,11 @@ const ProductList = ({ title, products }) => {
     };
 
     const itemsPerRow = getItemsPerRow();
-    const visibleProducts = products.slice(
-        currentIndex,
-        currentIndex + itemsPerRow,
-    ); // Hiển thị sản phẩm theo số lượng cột
+    const visibleProducts = [];
+    for (let i = 0; i < Math.min(itemsPerRow, products.length); i++) {
+        // Lấy sản phẩm theo vòng lặp (khi vượt quá số sản phẩm thì quay lại đầu danh sách)
+        visibleProducts.push(products[(currentIndex + i) % products.length]);
+    }
 
     const handleNext = () => {
         setCurrentIndex((currentIndex + itemsPerRow) % products.length);
@@ -99,8 +100,9 @@ const ProductList = ({ title, products }) => {
                 >
                     {visibleProducts.map((product, index) => (
                         <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
-                            <ProductCard product={product} />
+                            <ProductCard product={product} isHot={product.isHot} isNew={product.isNew} />
                         </Grid>
+
                     ))}
                 </Grid>
 

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+            integrity="sha512-UXfikgakSZBii5lkvmDCRO+IYWQhTtwMOJ+3EmGEA+oA82kvbSskgw3OI16Jx1kINgF8aqOkYE+c9h4m6muONg=="
+            crossorigin="anonymous"
+        />
+    </head>
+    <body>
+        <main class="container">
+            <form action="">
+                <div class="form-group">
+                    <select
+                        name="Thanh Pho"
+                        aria-label="Chon thanh pho ..."
+                        required
+                    >
+                        <option selected disabled value="">
+                            Chon thanh pho ...
+                        </option>
+                    </select>
+
+                    <select name="Quan" id="" aria-label="Chon quan" required>
+                        <option selected disabled value="">
+                            Chon quan ...
+                        </option>
+                    </select>
+
+                    <select name="Phuong" id="" aria-label="Chon phuong">
+                        <option selected disabled value="">
+                            Chon phuong ...
+                        </option>
+                    </select>
+                </div>
+            </form>
+
+            <p id="selectedAll"></p>
+        </main>
+
+        <script>
+            const select = document.querySelector('select[name="Thanh Pho"]');
+            const selectDistrict = document.querySelector(
+                'select[name="Quan"]',
+            );
+            const selectWard = document.querySelector('select[name="Phuong"]');
+            const selectedAll = document.getElementById('selectedAll');
+
+            let dataCache = null;
+
+            const fetchData = async () => {
+                if (!dataCache) {
+                    const response = await fetch(
+                        'https://cdn.jsdelivr.net/gh/ThangLeQuoc/vietnamese-provinces-database@master/json/simplified_json_generated_data_vn_units_minified.json',
+                    );
+                    dataCache = await response.json();
+                }
+                return dataCache;
+            };
+
+            const populateSelect = (
+                selectElement,
+                items,
+                valueKey,
+                textKey,
+            ) => {
+                selectElement.innerHTML = '';
+                items.forEach((item) => {
+                    const option = document.createElement('option');
+                    option.value = item[valueKey];
+                    option.textContent = item[textKey];
+                    selectElement.appendChild(option);
+                });
+            };
+
+            const handleCityChange = async () => {
+                const data = await fetchData();
+                const selectedCity = data.find(
+                    (item) => item.CodeName === select.value,
+                );
+                populateSelect(
+                    selectDistrict,
+                    selectedCity.District,
+                    'CodeName',
+                    'FullName',
+                );
+                selectWard.innerHTML = '';
+            };
+
+            const handleDistrictChange = async () => {
+                const data = await fetchData();
+                const selectedCity = data.find(
+                    (item) => item.CodeName === select.value,
+                );
+                const selectedDistrict = selectedCity.District.find(
+                    (item) => item.CodeName === selectDistrict.value,
+                );
+                populateSelect(
+                    selectWard,
+                    selectedDistrict.Ward,
+                    'CodeName',
+                    'FullName',
+                );
+            };
+
+            const handleWardChange = () => {
+                selectedAll.textContent = `Thanh pho: ${select.value}, Quan: ${selectDistrict.value}, Phuong: ${selectWard.value}`;
+            };
+
+            select.addEventListener('change', handleCityChange);
+            selectDistrict.addEventListener('change', handleDistrictChange);
+            selectWard.addEventListener('change', handleWardChange);
+
+            (async () => {
+                const data = await fetchData();
+                populateSelect(select, data, 'CodeName', 'FullName');
+            })();
+        </script>
+    </body>
+</html>

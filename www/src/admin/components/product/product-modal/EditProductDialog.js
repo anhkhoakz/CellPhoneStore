@@ -25,6 +25,7 @@ export default function EditProductDialog({
         description: "",
         price: "",
         stock: "",
+        image: null,
         variants: [],
     });
 
@@ -91,12 +92,13 @@ export default function EditProductDialog({
     };
 
     const isFormValid = () => {
-        const { productId, name, price, stock, variants } = editedProductData;
+        const { productId, name, price, stock, variants, image } = editedProductData;
         return (
             productId &&
             name &&
             price &&
             stock &&
+            image &&
             variants.every(
                 (colorData) =>
                     colorData.name && colorData.image && colorData.price,

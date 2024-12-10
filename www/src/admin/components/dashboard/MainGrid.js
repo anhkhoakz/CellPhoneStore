@@ -6,8 +6,8 @@ import { TreasureChest as ProductIcon } from "@phosphor-icons/react/dist/ssr/Tre
 import { Truck as DeliveryIcon } from "@phosphor-icons/react/dist/ssr/Truck";
 import { Users as UsersIcon } from "@phosphor-icons/react/dist/ssr/Users";
 import * as React from "react";
+import { useCookies } from "react-cookie";
 import Copyright from "../../internals/components/Copyright";
-import PageViewsBarChart from "./PageViewsBarChart";
 import SessionsChart from "./SessionsChart";
 import { Summary } from "./summary";
 
@@ -60,6 +60,10 @@ export default function MainGrid() {
 	const [product, setProduct] = React.useState([]);
 	const [orders, setOrders] = React.useState([]);
 	const [deliveries, setDeliveries] = React.useState([]);
+	const [revenue, setRevenue] = React.useState([]);
+	const [cookies] = useCookies([]);
+	const [totalRevenue, setTotalRevenue] = React.useState(0);
+	const [trendRevenue, setTrendRevenue] = React.useState([]);
 	// const [visits, setVisits] = React.useState([]);
 	// const [products, setProducts] = React.useState([]);
 	// const [sales, setSales] = React.useState([]);
@@ -68,6 +72,13 @@ export default function MainGrid() {
 		try {
 			const response = await fetch(
 				`${process.env.REACT_APP_BACKEND_URL}/api/v1/users`,
+				{
+					method: "GET",
+					credentials: "include",
+					headers: {
+						Authorization: `Bearer ${cookies.accessToken}`,
+					},
+				},
 			);
 			const data = await response.json();
 			const users = data.users;
@@ -75,24 +86,38 @@ export default function MainGrid() {
 		} catch (error) {
 			console.error("Error fetching users:", error);
 		}
-	}, []);
+	}, [cookies]);
 
 	const fetchProducts = React.useCallback(async () => {
 		try {
 			const response = await fetch(
 				`${process.env.REACT_APP_BACKEND_URL}/api/v1/products`,
+				{
+					method: "GET",
+					credentials: "include",
+					headers: {
+						Authorization: `Bearer ${cookies.accessToken}`,
+					},
+				},
 			);
 			const data = await response.json();
 			setProduct(data);
 		} catch (error) {
 			console.error("Error fetching users:", error);
 		}
-	}, []);
+	}, [cookies]);
 
 	const fetchOrders = React.useCallback(async () => {
 		try {
 			const response = await fetch(
 				`${process.env.REACT_APP_BACKEND_URL}/api/v1/orders`,
+				{
+					method: "GET",
+					credentials: "include",
+					headers: {
+						Authorization: `Bearer ${cookies.accessToken}`,
+					},
+				},
 			);
 			const data = await response.json();
 			const orders = data.message;
@@ -105,13 +130,36 @@ export default function MainGrid() {
 		} catch (error) {
 			console.error("Error fetching users:", error);
 		}
-	}, []);
+	}, [cookies]);
+
+	const fetchRevenue = React.useCallback(async () => {
+		try {
+			const response = await fetch(
+				`${process.env.REACT_APP_BACKEND_URL}/api/v1/orders/revenue`,
+				{
+					method: "GET",
+					credentials: "include",
+					headers: {
+						Authorization: `Bearer ${cookies.accessToken}`,
+					},
+				},
+			);
+			const data = await response.json();
+
+			setRevenue(data);
+			setTotalRevenue(data.totalRevenue);
+			setTrendRevenue(data.dailyRevenue);
+		} catch (error) {
+			console.error("Error fetching users:", error);
+		}
+	}, [cookies]);
 
 	React.useEffect(() => {
 		fetchUsers();
 		fetchProducts();
 		fetchOrders();
-	}, [fetchUsers, fetchProducts, fetchOrders]);
+		fetchRevenue();
+	}, [fetchUsers, fetchProducts, fetchOrders, fetchRevenue]);
 
 	return (
 		<Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "105em" } }}>
@@ -167,12 +215,13 @@ export default function MainGrid() {
 				>
 					<Summary amount={deliveries} icon={DeliveryIcon} title="Deliveries" />
 				</Grid>
-				<Grid size={{ xs: 12, md: 6 }}>
-					<SessionsChart />
+
+				<Grid size={{ xs: 12, md: 12 }}>
+					<SessionsChart total={totalRevenue} trend={trendRevenue} />
 				</Grid>
-				<Grid size={{ xs: 12, md: 6 }}>
-					<PageViewsBarChart />
-				</Grid>
+				{/* <Grid size={{ xs: 12, md: 6 }}>
+					<StatCard />
+				</Grid> */}
 			</Grid>
 
 			<Copyright sx={{ my: 4 }} />

@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Add New Product</title>
+        <style>
+            form {
+                width: 50%;
+                margin: auto;
+            }
+            input,
+            textarea {
+                display: block;
+                margin-bottom: 10px;
+                padding: 8px;
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Add New Product</h1>
+        <form id="productForm" enctype="multipart/form-data">
+            <!-- Basic product details -->
+            <label for="name">Product Name:</label>
+            <input type="text" id="name" name="name" required />
+
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" required />
+
+            <label for="description">Description:</label>
+            <textarea
+                id="description"
+                name="description"
+                maxlength="600"
+            ></textarea>
+
+            <label for="category">Category:</label>
+            <input type="text" id="category" name="category" required />
+
+            <label for="stock">Stock:</label>
+            <input type="number" id="stock" name="stock" required />
+
+            <!-- Variants Section -->
+            <
+            <h3>Variants</h3>
+            <div id="variantsContainer">
+                <div class="variant" id="variant1">
+                    <label for="variantName1">Variant Name:</label>
+                    <input
+                        type="text"
+                        id="variantName1"
+                        name="variants[0][name]"
+                    />
+
+                    <label for="variantStock1">Variant Stock:</label>
+                    <input
+                        type="number"
+                        id="variantStock1"
+                        name="variants[0][stock]"
+                    />
+
+                    <label for="variantPrice1">Variant Price:</label>
+                    <input
+                        type="number"
+                        id="variantPrice1"
+                        name="variants[0][price]"
+                    />
+
+                    <label for="variantImage1">Variant Image:</label>
+                    <input
+                        type="file"
+                        id="variantImage1"
+                        name="variantImages[]"
+                    />
+                </div>
+            </div>
+
+            <button type="button" onclick="addVariant()">
+                Add Another Variant
+            </button>
+
+            <!-- Image and additional images -->
+            <div style="margin-top: 1.2rem">
+                <label for="image">Main Image:</label>
+                <input type="file" id="image" name="image" required />
+            </div>
+
+            <button type="submit">Submit Product</button>
+        </form>
+
+        <script>
+            let variantCount = 1;
+
+            // Function to add another variant block
+            function addVariant() {
+                const container = document.getElementById('variantsContainer');
+                const newVariant = `
+            <div class="variant" id="variant${variantCount}">
+                <label for="variantName${variantCount}">Variant Name:</label>
+                <input type="text" id="variantName${variantCount}" name="variants[${variantCount}][name]">
+
+                <label for="variantStock${variantCount}">Variant Stock:</label>
+                <input type="number" id="variantStock${variantCount}" name="variants[${variantCount}][stock]">
+
+                <label for="variantPrice${variantCount}">Variant Price:</label>
+                <input type="number" id="variantPrice${variantCount}" name="variants[${variantCount}][price]">
+
+                <label for="variantImage${variantCount}">Variant Image:</label>
+                <input type="file" id="variantImage${variantCount}" name="variantImages[]">
+            </div>
+        `;
+                container.insertAdjacentHTML('beforeend', newVariant);
+                variantCount++;
+            }
+            // Handling form submission
+
+            document
+                .getElementById('productForm')
+                .addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const formData = new FormData(this);
+
+                    fetch('http://localhost:8080/api/v1/products', {
+                        method: 'POST',
+                        body: formData,
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            console.log('Success:', data);
+                            alert(data.message);
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                            alert(error);
+                        });
+                });
+        </script>
+    </body>
+</html>

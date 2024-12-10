@@ -15,6 +15,8 @@ import SearchBar from "../header/SearchBar";
 import AddProductDialog from "./product-modal/AddProductDialog";
 import EditProductDialog from "./product-modal/EditProductDialog";
 
+import {useCookies} from "react-cookie";
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontWeight: 600,
     backgroundColor: theme.palette.primary.light,
@@ -53,6 +55,7 @@ export default function ProductsTable() {
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = React.useState(false); // State for confirm dialog
     const [productToDelete, setProductToDelete] = React.useState(null); // Product selected for deletion
 
+    const [cookies, setCookie] = useCookies([]);
     React.useEffect(() => {
         fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/products`)
             .then((response) => response.json())
@@ -99,6 +102,11 @@ export default function ProductsTable() {
         fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/products`, {
             method: "POST",
             body: newProduct,
+            credentials: "include",
+            headers: {
+                Accept: "application/json",
+                authorization: `Bearer ${cookies.accessToken}`,
+            },
         })
             .then((response) => response.json())
             .then((data) => {
@@ -144,6 +152,11 @@ export default function ProductsTable() {
             {
                 method: "PATCH",
                 body: formData,
+                credentials: "include",
+                headers: {
+                    Accept: "application/json",
+                    authorization: `Bearer ${cookies.accessToken}`,
+                }
             },
         )
             .then((response) => response.json())
@@ -153,7 +166,7 @@ export default function ProductsTable() {
                 setRows((prevRows) =>
                     prevRows.map((row) =>
                         row.productId === updatedProduct.productId
-                            ? updatedProduct
+                            ? data.product
                             : row,
                     ),
                 );

@@ -45,10 +45,12 @@ const CartItem = ({ item, onQuantityChange, onRemoveItem }) => {
         <>
             <Grid
                 container
+            
                 spacing={2}
+                margin={"auto"}
                 alignItems="center"
                 sx={{
-                    borderBottom: "1px solid #ddd",
+                    marginBottom:  "1px solid #f0f0f0",
                     paddingBottom: 2,
                     flexDirection: { xs: "column", sm: "row" },
                     textAlign: { xs: "center", sm: "left" },

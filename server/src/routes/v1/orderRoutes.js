@@ -26,4 +26,6 @@ router.patch(
 	orderController.ratingOrder,
 );
 
+router.get("/revenue", orderController.getRevenue);
+
 module.exports = router;

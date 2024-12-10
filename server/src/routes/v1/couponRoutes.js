@@ -17,11 +17,12 @@ const {verifyAccessToken} = require("~v1/middleware/tokenMiddleware");
 router.post("/", CreateCoupon);
 router.get("/", GetCoupons);
 
+
 router.get("/available", verifyAccessToken, GetAvailableCoupons);
 router.get("/my", verifyAccessToken, getMyCoupons);
 router.get("/:id", GetCoupon);
 
-// router.post("/getCouponsByCondition",verifyAccessToken, getCouponsByCondition);
+router.post("/getCouponsByCondition",verifyAccessToken, getCouponsByCondition);
 
 
 router.put("/:id", UpdateCoupon);

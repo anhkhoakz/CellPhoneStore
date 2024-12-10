@@ -116,11 +116,11 @@ const ChangePassword = ({ user, onPasswordChangeSuccess }) => {
             // Gọi hàm callback để đóng modal
 
             if (check === 200) {
-                console.log("Mật khẩu đã được thay đổi thành công!");
                 onPasswordChangeSuccess(); // Call the callback to close the modal
             }
 
-            console.log("Mật khẩu không thể thay đổi!");
+         
+            setErrors({oldPassword: "Current password is incorrect"});
         }
     };
 
@@ -215,6 +215,11 @@ const ChangePassword = ({ user, onPasswordChangeSuccess }) => {
                     ),
                 }}
             />
+
+            <Typography variant="body2" color="error">
+                {errors.general}
+            </Typography>
+
             <Box textAlign="center" mt={2}>
                 <Button
                     variant="contained"

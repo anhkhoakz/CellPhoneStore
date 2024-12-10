@@ -51,6 +51,8 @@ const SearchBar = ({ onSearch, onStatusChange }) => {
                     <MenuItem value="confirmed">Confirm</MenuItem>
                     <MenuItem value="shipping">Shipping</MenuItem>
                     <MenuItem value="delivered">Delivered</MenuItem>
+                    <MenuItem value="cancelled">Cancelled</MenuItem>
+
                 </Select>
             </FormControl>
         </Box>

@@ -7,20 +7,22 @@ import {
     useMediaQuery,
     useTheme,
     Rating,
+    Box,
 } from "@mui/material";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom to navigate
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, isHot, isNew }) => {
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down("md"));
 
     // Determine card size based on screen size
-    const cardWidth = isSmallScreen ? 150 : isMediumScreen ? 180 : 220;
-    const cardHeight = isSmallScreen ? 280 : isMediumScreen ? 320 : 350;
+    const cardWidth = isSmallScreen ? 150 : isMediumScreen ? 220 : 220;
+    const cardHeight = isSmallScreen ? 280 : isMediumScreen ? 350 : 350;
 
     const imageSize = cardWidth;
 
+    // Format price to VND
     const formatPrice = (price) => {
         return new Intl.NumberFormat("vi-VN", {
             style: "currency",
@@ -28,12 +30,26 @@ const ProductCard = ({ product }) => {
         }).format(price);
     };
 
+    // Calculate average rating
     const totalRatings = product.ratings?.length;
     const totalScore = product.ratings?.reduce(
         (acc, rating) => acc + rating.rating,
         0
     );
     const averageRating = totalRatings > 0 ? totalScore / totalRatings : 0;
+
+    // Dynamic font sizes based on screen size
+    const titleFontSize = isSmallScreen ? "1em" : isMediumScreen ? "1.2em" : "1.25em";
+    const priceFontSize = isSmallScreen ? "16px" : isMediumScreen ? "18px" : "20px";
+
+    // Hàm trả về nhãn (HOT hoặc NEW)
+    const getLabel = () => {
+        if (isHot) return "HOT";
+        if (isNew) return "NEW";
+        return null;
+    };
+
+    const label = getLabel(); // Lấy nhãn nếu có
 
     return (
         <Link
@@ -46,8 +62,29 @@ const ProductCard = ({ product }) => {
                     height: cardHeight,
                     boxShadow: 3,
                     margin: "auto",
+                    position: "relative", // Positioning for the HOT or NEW label
                 }}
             >
+                {/* Nếu có nhãn thì hiển thị */}
+                {label && (
+                    <Box
+                        sx={{
+                            position: "absolute",
+                            top: 5,
+                            left: 5,
+                            backgroundColor: label === "HOT" ? "red" : "green", // Đổi màu cho NEW
+                            color: "white",
+                            padding: "5px 10px",
+                            borderRadius: "5px",
+                            fontSize: "0.8em",
+                            fontWeight: "bold",
+                            zIndex: 10,
+                        }}
+                    >
+                        {label}
+                    </Box>
+                )}
+
                 <div
                     style={{
                         width: "100%",
@@ -77,7 +114,7 @@ const ProductCard = ({ product }) => {
                         component="div"
                         sx={{
                             textAlign: "left",
-                            fontSize: "1.25em",
+                            fontSize: titleFontSize,
                             "&:hover": { cursor: "pointer" },
                         }}
                         data-id={product.productId}
@@ -87,7 +124,10 @@ const ProductCard = ({ product }) => {
                     <Typography
                         variant="body2"
                         color="text.secondary"
-                        sx={{ fontSize: "18px", textAlign: "left" }}
+                        sx={{
+                            fontSize: priceFontSize,
+                            textAlign: "left",
+                        }}
                     >
                         {formatPrice(product.price)}{" "}
                         {/* Display price in VND */}

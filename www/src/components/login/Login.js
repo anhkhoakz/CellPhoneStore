@@ -9,6 +9,8 @@ import {
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 
+
+
 import { red } from "@mui/material/colors";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +19,7 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-    const [_cookies] = useCookies(["accessToken"]);
+    const [cookies, setCookies] = useCookies([]);
     const navigate = useNavigate();
 
     // Validation state
@@ -69,8 +71,12 @@ const Login = () => {
             .then((res) => res.json())
             .then((data) => {
                 if (data.code === 200) {
-                    console.log("Login success", data);
-                    navigate("/");
+                    if (data.role === "admin") {
+                        setCookies("_ga_QM7W25Wv18", "admin", { path: "/" });
+                        window.location.replace("/admin")
+                        return;
+                    }
+                    window.location.replace("/")
                 } else {
                     setErrorMessage(data.message);
                     console.log("Login failed", data.message);
