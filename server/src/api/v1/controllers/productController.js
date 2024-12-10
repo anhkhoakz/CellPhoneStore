@@ -85,8 +85,7 @@ class ProductController {
 	// 	}
 	// }
 
-
-    async searchProducts(req, res) {
+	async searchProducts(req, res) {
 		const { q, sort, category, minPrice, maxPrice } = req.query;
 
 		try {
@@ -94,29 +93,27 @@ class ProductController {
 				q,
 				sort,
 				category,
-				minPrice,
-				maxPrice,
+				minPrice: Number.parseFloat(minPrice) || undefined,
+				maxPrice: Number.parseFloat(maxPrice) || undefined,
 			});
 
-			res
-				.status(searchResults.status)
-				.json(searchResults.data || searchResults.message);
+			res.status(200).json({ success: true, message: searchResults.data });
 		} catch (error) {
-			res.status(500).json({ message: "Error searching products", error });
+			console.error("Error searching products:", error);
+			res
+				.status(500)
+				.json({ success: false, message: "Error searching products", error });
 		}
 	}
 
 	async getNewProducts(req, res) {
 		try {
-
-
 			const { code, message, success } = await productService.getNewProducts();
 			res.status(code).json({ message, success });
 		} catch (error) {
 			res.status(500).json({ message: "Server error", error });
 		}
 	}
-
 
 	async updateProduct(req, res) {
 		const id = req.params.id;

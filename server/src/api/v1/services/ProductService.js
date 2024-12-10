@@ -10,9 +10,8 @@ class ProductService {
 		try {
 			const products = await Product.find({ category });
 			if (products.length === 0) {
-				return { code: 404, message: "No products found", success: false };			
+				return { code: 404, message: "No products found", success: false };
 			}
-
 
 			return { code: 200, message: products, success: true };
 		} catch (error) {
@@ -27,7 +26,7 @@ class ProductService {
 				return { code: 404, message: "No products found" };
 			}
 
-			return {code: 200, message: products };
+			return { code: 200, message: products };
 		} catch (error) {
 			res.status(500).json({ message: "Server error", error });
 		}
@@ -205,7 +204,11 @@ class ProductService {
 			return { code: 500, message: "Failed to update product" };
 		}
 
-		return { code: 200, message: "Product updated successfully", product: updatedProduct };
+		return {
+			code: 200,
+			message: "Product updated successfully",
+			product: updatedProduct,
+		};
 	}
 
 	async deleteProduct(id) {
@@ -301,9 +304,8 @@ class ProductService {
 
 	async getNewProducts() {
 		try {
-
 			const products = await Product.find({}).sort({ createAt: -1 }).limit(8);
-			
+
 			if (products.length === 0) {
 				return { code: 404, message: "No products found", success: false };
 			}
@@ -314,7 +316,6 @@ class ProductService {
 		}
 	}
 
-
 	async searchProducts(query) {
 		try {
 			const response = await client.search({
@@ -324,7 +325,7 @@ class ProductService {
 						must: [
 							{
 								multi_match: {
-									query: query.q,
+									query: query.q || "",
 									fields: ["name", "description", "category"],
 								},
 							},
@@ -379,8 +380,10 @@ class ProductService {
 			console.log("Total score:", totalScore);
 			const averageRating = totalScore / totalRatings;
 
-
-			return { code: 200, message: {score: averageRating, reviews: totalRatings } };
+			return {
+				code: 200,
+				message: { score: averageRating, reviews: totalRatings },
+			};
 		} catch (error) {
 			return { code: 500, message: "Server error", error };
 		}

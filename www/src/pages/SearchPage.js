@@ -20,36 +20,43 @@ const SearchPage = () => {
 	const [priceRange, setPriceRange] = useState("");
 	const [category, setCategory] = useState("");
 
-	// Dữ liệu sản phẩm
-	const { products, setProducts } = useState([]);
+	const [products, setProducts] = useState([]);
 
 	useEffect(() => {
 		const params = new URLSearchParams(location.search);
 		const query = params.get("query");
 
-		let url = `${process.env.REACT_APP_BACKEND_URL}/api/v1/products/search`;
-		if (query) {
-			url += `?q=${query}`;
+		const queryParams = new URLSearchParams();
+		if (query) queryParams.append("q", query);
+		if (category) queryParams.append("category", category);
+		if (priceRange === "below_3") queryParams.append("maxPrice", 3000);
+		if (priceRange === "3_5") {
+			queryParams.append("minPrice", 3000);
+			queryParams.append("maxPrice", 5000);
 		}
+		if (priceRange === "5_10") {
+			queryParams.append("minPrice", 5000);
+			queryParams.append("maxPrice", 10000);
+		}
+		if (priceRange === "10_20") {
+			queryParams.append("minPrice", 10000);
+			queryParams.append("maxPrice", 20000);
+		}
+		if (priceRange === "above_20") queryParams.append("minPrice", 20000);
+		if (sort) queryParams.append("sort", sort);
 
-		fetch(`${url}`, {
+		const url = `${process.env.REACT_APP_BACKEND_URL}/api/v1/products/search?${queryParams.toString()}`;
+
+		fetch(url, {
 			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-			},
+			headers: { "Content-Type": "application/json" },
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				if (data.success) {
-					console.log("Data:", data);
-
-					setProducts(data.message);
-				}
+				if (data.success) setProducts(data.message);
 			})
-			.catch((error) => {
-				console.error("Error:", error);
-			});
-	}, [location.search]);
+			.catch((error) => console.error("Error:", error));
+	}, [location.search, sort, priceRange, category]);
 
 	useEffect(() => {
 		const params = new URLSearchParams(location.search);
@@ -106,7 +113,7 @@ const SearchPage = () => {
 		}
 
 		setResults(filteredResults);
-	}, [location.search, sort, priceRange, category]);
+	}, [location.search, sort, priceRange, category, products]);
 
 	return (
 		<Box
