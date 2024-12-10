@@ -1,11 +1,8 @@
 import { DiscountOutlined } from "@mui/icons-material";
-import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
 import InventorySharpIcon from "@mui/icons-material/InventorySharp";
 import PersonIcon from "@mui/icons-material/Person";
-import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -27,11 +24,6 @@ const mainListItems = [
     { text: "Discount", icon: <DiscountOutlined />, path: "/admin/discount" },
 ];
 
-const secondaryListItems = [
-    { text: "Settings", icon: <SettingsRoundedIcon /> },
-    { text: "About", icon: <InfoRoundedIcon /> },
-    { text: "Feedback", icon: <HelpRoundedIcon /> },
-];
 
 function RenderListItems({ items, isMain }) {
     const location = useLocation();
@@ -57,7 +49,6 @@ export default function MenuContent() {
     return (
         <Stack sx={{ flexGrow: 1, p: 1, justifyContent: "space-between" }}>
             <RenderListItems items={mainListItems} isMain />
-            <RenderListItems items={secondaryListItems} />
         </Stack>
     );
 }
