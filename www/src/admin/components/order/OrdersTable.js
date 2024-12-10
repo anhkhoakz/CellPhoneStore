@@ -289,11 +289,11 @@ export default function OrdersTable() {
                 customEndDate={customEndDate}
                 onCustomDateChange={handleCustomDateChange}
                 statusOptions={[
-                    { value: "all", label: "Tất cả" },
-                    { value: "pending", label: "pending" },
-                    { value: "shipping", label: "shipping" },
-                    { value: "delivered", label: "delivered" },
-                    { value: "cancelled", label: "cancelled" },
+                    { value: "all", label: "All" },
+                    { value: "pending", label: "Pending" },
+                    { value: "shipping", label: "Shipping" },
+                    { value: "delivered", label: "Delivered" },
+                    { value: "cancelled", label: "Cancelled" },
                 ]}
             />
             <TableContainer sx={{ maxHeight: 440 }}>

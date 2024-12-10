@@ -19,6 +19,7 @@ import {
     MenuItem,
     Toolbar,
     Typography,
+    Badge
 } from "@mui/material";
 import { useCookies } from "react-cookie";
 
@@ -29,6 +30,10 @@ const Navigation = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const navigate = useNavigate();
     const [cookies, removeCookie] = useCookies([]);
+
+    // Số lượng sản phẩm trong giỏ hàng
+    const [cartCount, setCartCount] = useState(5); // Mock số lượng sản phẩm là 5
+
 
     // Kiểm tra xem người dùng đã đăng nhập hay chưa
     useEffect(() => {
@@ -149,11 +154,14 @@ const Navigation = () => {
                     )}
 
                     <IconButton component={Link} to="/cart" color="inherit">
-                        <i className="bi bi-cart"></i>
+                        <Badge badgeContent={cartCount} color="error">
+                            <i className="bi bi-cart"></i>
+                        </Badge>
                         <Typography variant="body2" sx={{ ml: 1 }}>
                             Cart
                         </Typography>
                     </IconButton>
+
 
                     {isLoggedIn && (
                         <IconButton

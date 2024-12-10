@@ -4,6 +4,12 @@ import React from "react";
 const CouponItem = ({ coupon, onReceive }) => {
     if (!coupon) return null;
 
+    const formatDate = (isoString) => {
+        const date = new Date(isoString);
+        const options = { day: "2-digit", month: "2-digit", year: "numeric" };
+        return date.toLocaleDateString("vi-VN", options); 
+    };
+
     return (
         <Card
             variant="outlined"
@@ -58,7 +64,7 @@ const CouponItem = ({ coupon, onReceive }) => {
                             variant="body2"
                             sx={{ fontStyle: "italic", color: "#616161" }}
                         >
-                            Expiry Date: {coupon.expiryDate}
+                            Expiry Date: {formatDate(coupon.expiryDate)}
                         </Typography>
                     </Box>
                     {onReceive && (

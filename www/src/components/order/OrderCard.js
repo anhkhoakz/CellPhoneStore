@@ -94,6 +94,12 @@ const OrderCard = ({ order }) => {
         }).format(price);
     };
 
+    const formatDate = (isoString) => {
+        const date = new Date(isoString);
+        const options = { day: "2-digit", month: "2-digit", year: "numeric" };
+        return date.toLocaleDateString("vi-VN", options);
+    };
+
     const [toastMessage, setToastMessage] = useState("");
     const [toastType, setToastType] = useState("success");
 
@@ -104,8 +110,19 @@ const OrderCard = ({ order }) => {
                     <Typography variant="h6" sx={{ fontWeight: "bold", color: "#3f51b5" }}>
                         Order #{order._id}
                     </Typography>
-                    <Typography color="textSecondary" sx={{ marginBottom: 2 }}>
-                        Order Date: {order.createdAt}
+                    <Typography color="textSecondary">
+                        Order Date: {formatDate(order.createdAt)}
+                    </Typography>
+
+                    <Typography
+                        color="textSecondary"
+                        sx={{
+                            marginBottom: 2,
+                            fontStyle: "italic",
+                            color: order.status === "cancelled" ? "red" : "green",
+                        }}
+                    >
+                        Status: {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                     </Typography>
 
                     {order.items.map((product, index) => (

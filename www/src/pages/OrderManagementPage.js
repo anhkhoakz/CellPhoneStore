@@ -52,44 +52,10 @@ const OrderManagementPage = () => {
         setStatusFilter(status);
     };
 
-    const filteredByStatus = filteredOrders.filter(
+    const filteredByStatus = orders.filter(
         (order) => statusFilter === "All" || order.status === statusFilter,
     );
 
-    const getColor = (color) => {
-        if (color === "#fff3e0") return "#ff6d00";
-        if (color === "#e8f5e9") return "#2e7d32";
-        if (color === "#F6FB88") return "#BCC146";
-        return "#c62828";
-    };
-
-    const renderOrders = (orders, title, color) => (
-        <Paper
-            sx={{
-                padding: 3,
-                margin: "1em 0",
-                backgroundColor: color,
-                borderRadius: 2,
-            }}
-        >
-            <Typography
-                variant="h5"
-                gutterBottom
-                sx={{ fontWeight: "bold", color: getColor(color) }}
-            >
-                {title}
-            </Typography>
-            {orders.length > 0 ? (
-                orders.map((order) => (
-                    <OrderCard key={order._id} order={order} />
-                ))
-            ) : (
-                <Typography align="center" color="textSecondary">
-                    No {title.toLowerCase()}.
-                </Typography>
-            )}
-        </Paper>
-    );
 
     return (
         <Container
@@ -116,49 +82,7 @@ const OrderManagementPage = () => {
             {filteredByStatus.length === 0 ? (
                 <OrderEmpty />
             ) : (
-                <>
-                    {(statusFilter === "All" || statusFilter === "pending") &&
-                        renderOrders(
-                            filteredByStatus.filter(
-                                (order) => order.status === "pending",
-                            ),
-                            "Pending Orders",
-                            "#F6FB88",
-                        )}
-
-                    {(statusFilter === "All" || statusFilter === "confirmed") &&
-                        renderOrders(
-                            filteredByStatus.filter(
-                                (order) => order.status === "confirmed",
-                            ),
-                            "Confirmed Orders",
-                            "#fff3e0",
-                        )}
-                    {(statusFilter === "All" || statusFilter === "shipping") &&
-                        renderOrders(
-                            filteredByStatus.filter(
-                                (order) => order.status === "shipping",
-                            ),
-                            "Shipping Orders",
-                            "#fff3e0",
-                        )}
-                    {(statusFilter === "All" || statusFilter === "delivered") &&
-                        renderOrders(
-                            filteredByStatus.filter(
-                                (order) => order.status === "delivered",
-                            ),
-                            "Delivered Orders",
-                            "#e8f5e9",
-                        )}
-                    {(statusFilter === "All" || statusFilter === "cancelled") &&
-                        renderOrders(
-                            filteredByStatus.filter(
-                                (order) => order.status === "cancelled",
-                            ),
-                            "Cancelled Orders",
-                            "#ffebee",
-                        )}
-                </>
+                filteredByStatus.map((order) => <OrderCard key={order._id} order={order} />)
             )}
         </Container>
     );
