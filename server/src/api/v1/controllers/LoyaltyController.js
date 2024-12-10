@@ -3,9 +3,11 @@ const Loyalty = require("~v1/models/Loyalty");
 module.exports = {
     async getLoyaltyPoints(req, res) {
         try {
-            const userId = req.user.UserId;
+            const userId = req.user.userId;
+
 
             const loyaltyPoints = await Loyalty.findOne({ userId });
+
 
             if (!loyaltyPoints) {
                 return res.status(200).json({
