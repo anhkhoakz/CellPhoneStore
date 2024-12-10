@@ -42,6 +42,8 @@ services:
       dockerfile: Dockerfile
     environment:
       - NEXT_PUBLIC_SERVER_URL=http://localhost/api
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     ports:
       - "3000:3000"
     depends_on:
@@ -70,6 +72,7 @@ volumes:
   mongo-data:
     driver: local
   elasticsearch:
+
 
 networks:
   app-network:

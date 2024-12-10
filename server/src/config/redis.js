@@ -2,7 +2,8 @@ const redis = require("redis");
 require("dotenv").config();
 
 const client = redis.createClient({
-	url: process.env.REDIS_URL || "redis://localhost:6379",
+	host: process.env.REDIS_HOST || "redis",
+	port: process.env.REDIS_PORT || 6379,
 });
 
 const connectToRedis = async () => {
@@ -15,6 +16,8 @@ const connectToRedis = async () => {
 		console.error("Error connecting to Redis:", err);
 	}
 };
+
+connectToRedis();
 
 client.on("error", (err) => {
 	console.error("Redis error:", err);
@@ -30,5 +33,4 @@ const setAsync = async (key, value, options) =>
 const getAsync = async (key) => await client.get(key);
 const delAsync = async (key) => await client.del(key);
 
-connectToRedis();
 module.exports = { client, setAsync, getAsync, delAsync };
