@@ -2,14 +2,13 @@ const redis = require("redis");
 require("dotenv").config();
 
 const client = redis.createClient({
-	host: process.env.REDIS_HOST || "redis",
-	port: process.env.REDIS_PORT || 6379,
+	host: process.env.REDIS_HOST,
+	port: process.env.REDIS_PORT,
 });
 
 const connectToRedis = async () => {
 	try {
 		await client.connect();
-
 		const result = await client.ping();
 		console.log("Redis ping response:", result);
 	} catch (err) {

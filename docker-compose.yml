@@ -23,6 +23,9 @@ services:
       dockerfile: Dockerfile
     environment:
       - MONGO_URI=mongodb://mongo:27017/CellPhoneStore
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - ELASTICSEARCH_HOST=http://elasticsearch:9200
     depends_on:
       - mongo
       - redis
@@ -34,7 +37,6 @@ services:
         condition: on-failure
     ports:
       - "8080:8080"
-
 
   frontend:
     build:
