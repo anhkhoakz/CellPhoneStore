@@ -106,6 +106,11 @@ const OrderCard = ({ order }) => {
     const [toastMessage, setToastMessage] = useState("");
     const [toastType, setToastType] = useState("success");
 
+    const handleViewBill = () => {
+        navigate(`/bill/${order._id}`, { state: { order } });
+    };
+    
+
     return (
         <>
             <Card
@@ -158,17 +163,32 @@ const OrderCard = ({ order }) => {
                             Total: {formatPrice(order.totalAmount)}
                         </Typography>
 
-                        {/* Nút "Rate Order" chỉ hiển thị nếu trạng thái là "delivered" */}
-                        {order.status === "delivered" && (
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleRateOrder}
-                                disabled={order.isRating}
-                            >
-                                {!order.isRating ? "Rate Order" : "Rated"}
-                            </Button>
-                        )}
+                        <Box>
+                            {order.status === "delivered" && (
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={handleViewBill}
+                                    sx={{ marginRight: 2 }}
+                                >
+                                    View Bill
+                                </Button>
+                            )}
+
+                            {/* Nút "Rate Order" chỉ hiển thị nếu trạng thái là "delivered" */}
+                            {order.status === "delivered" && (
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={handleRateOrder}
+                                    disabled={order.isRating}
+                                >
+                                    {!order.isRating ? "Rate Order" : "Rated"}
+                                </Button>
+                            )}
+                        </Box>
+
+
                         {/* Nút "Cancel" chỉ hiển thị nếu trạng thái là "pending" */}
                         {(order.status === "pending" ||
                             order.status === "confirmed") && (

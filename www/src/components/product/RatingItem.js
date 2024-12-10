@@ -71,7 +71,7 @@ const RatingItem = ({ product, review, setReview }) => {
                     name={`rating-${product.productId}`}
                     value={review?.rating || 5}
                     onChange={handleRatingChange}
-                    precision={0.5}
+                    precision={1}
                 />
                 <Typography variant="body1" mt={2}>
                     Your review:

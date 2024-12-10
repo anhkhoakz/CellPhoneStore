@@ -20,12 +20,12 @@ import CouponPage from "./pages/CouponPage";
 import Error403 from "./pages/Error403";
 import Error404 from "./pages/Error404";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
-import InvoicePage from "./pages/InvoicePage";
 import OtpPage from "./pages/OTPPage";
 import PaymentGuide from "./pages/PaymentGuidePage";
 import ProductRatingPage from "./pages/ProductRatingPage";
 import SearchPage from "./pages/SearchPage";
 import Profile from "./pages/UserProfilePage";
+import BillPage from "./pages/BillPage";
 
 import { useCookies } from "react-cookie";
 
@@ -129,8 +129,8 @@ function App() {
                                                 />
 
                                                 <Route
-                                                    path="/invoice"
-                                                    element={<InvoicePage />}
+                                                    path="/bill/:id"
+                                                    element={<BillPage />}
                                                 />
                                             </>
                                         )}

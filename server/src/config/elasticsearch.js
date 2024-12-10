@@ -10,7 +10,7 @@ const client = new Client({
 		password: process.env.ELASTIC_PASSWORD,
 	},
 	tls: {
-		rejectUnauthorized: false,
+		rejectUnauthorized: false, // Use with caution in production
 	},
 });
 
@@ -21,15 +21,38 @@ client
 	})
 	.catch((err) => {
 		console.error("Elasticsearch disconnected", err);
+		process.exit(1); // Stop execution if connection fails
 	});
 
-// // Create index products if not exists
-// client.indices.exists({ index: "products" }).then((exists) => {
-// 	if (!exists.body) {
-// 		client.indices.create({
-// 			index: "products",
-// 		});
-// 	}
-// });
+// Create index 'products' if it does not exist
+client.indices
+	.exists({ index: "products" })
+	.then((exists) => {
+		if (!exists.body) {
+			// Create the index only if it doesn't exist
+			client.indices
+				.create({
+					index: "products",
+				})
+				.then(() => {
+					console.info("Index 'products' created");
+				})
+				.catch((createErr) => {
+					if (
+						createErr.meta.body.error.type ===
+						"resource_already_exists_exception"
+					) {
+						console.info("Index 'products' already exists, no need to create.");
+					} else {
+						console.error("Failed to create index 'products'", createErr);
+					}
+				});
+		} else {
+			console.info("Index 'products' already exists, skipping creation.");
+		}
+	})
+	.catch((err) => {
+		console.error("Error checking index existence", err);
+	});
 
 module.exports = client;
