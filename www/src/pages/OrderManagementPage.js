@@ -56,7 +56,6 @@ const OrderManagementPage = () => {
         (order) => statusFilter === "All" || order.status === statusFilter,
     );
 
-
     return (
         <Container
             sx={{
@@ -82,7 +81,9 @@ const OrderManagementPage = () => {
             {filteredByStatus.length === 0 ? (
                 <OrderEmpty />
             ) : (
-                filteredByStatus.map((order) => <OrderCard key={order._id} order={order} />)
+                filteredByStatus.map((order) => (
+                    <OrderCard key={order._id} order={order} />
+                ))
             )}
         </Container>
     );

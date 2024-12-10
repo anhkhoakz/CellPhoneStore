@@ -5,8 +5,8 @@ import {
     Grid,
     MenuItem,
     Rating,
+    TextField,
     Typography,
-    TextField
 } from "@mui/material";
 
 import React, { useState, useEffect } from "react";
@@ -28,7 +28,6 @@ const ProductDetailPage = () => {
     const [score, setScore] = useState(0);
     const [reviews, setReviews] = useState(0);
 
-
     const [error, setError] = useState(false);
 
     const { id } = useParams();
@@ -41,7 +40,6 @@ const ProductDetailPage = () => {
     };
 
     const [cookies] = useCookies(["accessToken"]);
-
 
     useEffect(() => {
         const fetchRating = async () => {
@@ -94,8 +92,6 @@ const ProductDetailPage = () => {
         fetchProduct();
     }, [id]);
 
-
-
     const handleColorChange = (event) => {
         const color = product.variants.find(
             (c) => c.name === event.target.value,
@@ -141,8 +137,6 @@ const ProductDetailPage = () => {
         return <ProductNotFound />;
     }
 
-
-
     return (
         <Box sx={{ padding: "1.25em", marginTop: "4em" }}>
             {/* Product Detail */}
@@ -171,10 +165,9 @@ const ProductDetailPage = () => {
                                     margin: "auto",
                                 }}
                                 src={`${process.env.REACT_APP_BACKEND_URL}/images/${selectedColor?.image || product.image}`}
-                                alt={`${product?.name} - ${selectedColor?.name || ''}`}
+                                alt={`${product?.name} - ${selectedColor?.name || ""}`}
                             />
                         </Box>
-
                     </Grid>
 
                     {/* Content Section */}
@@ -187,7 +180,11 @@ const ProductDetailPage = () => {
                             >
                                 {product.name}
                             </Typography>
-                            <Typography variant="h5" color={product.stock > 0 ? "" : "red"} sx={{ mb: 1 }}>
+                            <Typography
+                                variant="h5"
+                                color={product.stock > 0 ? "" : "red"}
+                                sx={{ mb: 1 }}
+                            >
                                 {product.stock > 0 ? "" : "Out of stock"}
                             </Typography>
                             <Typography
@@ -201,14 +198,16 @@ const ProductDetailPage = () => {
                             </Typography>
 
                             <Box sx={{ mb: 2 }}>
-
                                 <Rating
                                     name="product-rating"
                                     value={score || 0}
                                     precision={0.5}
                                     readOnly
                                 />
-                                <Typography variant="body2" sx={{ color: "gray" }}>
+                                <Typography
+                                    variant="body2"
+                                    sx={{ color: "gray" }}
+                                >
                                     ({reviews || 0} reviews)
                                 </Typography>
                             </Box>

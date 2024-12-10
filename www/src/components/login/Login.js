@@ -9,8 +9,6 @@ import {
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 
-
-
 import { red } from "@mui/material/colors";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
@@ -73,10 +71,10 @@ const Login = () => {
                 if (data.code === 200) {
                     if (data.role === "admin") {
                         setCookies("_ga_QM7W25Wv18", "admin", { path: "/" });
-                        window.location.replace("/admin")
+                        window.location.replace("/admin");
                         return;
                     }
-                    window.location.replace("/")
+                    window.location.replace("/");
                 } else {
                     setErrorMessage(data.message);
                     console.log("Login failed", data.message);

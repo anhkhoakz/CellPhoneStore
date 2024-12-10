@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import TimedBanner from "../components/banner/TimedBanner";
-import ProductList from "../components/product/ProductList";
 import Category from "../components/product/Category";
+import ProductList from "../components/product/ProductList";
 
 const HomePage = () => {
-
     const categories = [
         { name: "Phone" },
         { name: "Laptop" },

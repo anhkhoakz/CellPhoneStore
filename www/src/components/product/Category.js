@@ -1,6 +1,6 @@
+import { Box, Button, Typography } from "@mui/material";
 // components/category/Category.js
 import React from "react";
-import { Box, Button, Typography } from "@mui/material";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
 
 const Category = ({ categories }) => {

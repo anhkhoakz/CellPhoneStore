@@ -483,8 +483,6 @@ module.exports = {
 				user.addresses = [];
 			}
 
-			
-
 			for (const address of user.addresses) {
 				console.log(address._id, id);
 				if (address._id.toString() === id) {
@@ -545,5 +543,5 @@ module.exports = {
 				message: "Internal server error",
 			};
 		}
-	}
+	},
 };

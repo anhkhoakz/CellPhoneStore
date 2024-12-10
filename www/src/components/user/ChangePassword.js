@@ -119,8 +119,7 @@ const ChangePassword = ({ user, onPasswordChangeSuccess }) => {
                 onPasswordChangeSuccess(); // Call the callback to close the modal
             }
 
-         
-            setErrors({oldPassword: "Current password is incorrect"});
+            setErrors({ oldPassword: "Current password is incorrect" });
         }
     };
 

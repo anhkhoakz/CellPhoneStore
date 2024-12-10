@@ -17,44 +17,43 @@ function AreaGradient({ color, id }) {
     );
 }
 
-
 const formatRevenueData = (trend) => {
-    return trend.map((item) => {
-        if (!item._id) {
-            console.error("Missing _id in item:", item);
-            return null; // Bỏ qua mục nếu không có _id
-        }
-
-        try {
-            // Tách ngày, tháng, năm từ chuỗi _id (định dạng yyyy-MM-dd)
-            const [year, month, day] = item._id.split("-").map(Number);
-            const parsedDate = new Date(year, month - 1, day); // Chuyển đổi thành đối tượng Date
-
-            if (isNaN(parsedDate)) {
-                console.error(`Invalid date: ${item._id}`);
-                return null; // Bỏ qua mục nếu ngày không hợp lệ
+    return trend
+        .map((item) => {
+            if (!item._id) {
+                console.error("Missing _id in item:", item);
+                return null; // Bỏ qua mục nếu không có _id
             }
 
-            return {
-                date: parsedDate.toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                }), // Định dạng ngày thành "Dec 3"
-                revenue: item.dailyRevenue || 0, // Đảm bảo doanh thu không bị undefined
-            };
-        } catch (error) {
-            console.error("Error processing date:", item._id, error);
-            return null; // Xử lý lỗi không mong muốn
-        }
-    }).filter(Boolean); // Loại bỏ các mục null
+            try {
+                // Tách ngày, tháng, năm từ chuỗi _id (định dạng yyyy-MM-dd)
+                const [year, month, day] = item._id.split("-").map(Number);
+                const parsedDate = new Date(year, month - 1, day); // Chuyển đổi thành đối tượng Date
+
+                if (isNaN(parsedDate)) {
+                    console.error(`Invalid date: ${item._id}`);
+                    return null; // Bỏ qua mục nếu ngày không hợp lệ
+                }
+
+                return {
+                    date: parsedDate.toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                    }), // Định dạng ngày thành "Dec 3"
+                    revenue: item.dailyRevenue || 0, // Đảm bảo doanh thu không bị undefined
+                };
+            } catch (error) {
+                console.error("Error processing date:", item._id, error);
+                return null; // Xử lý lỗi không mong muốn
+            }
+        })
+        .filter(Boolean); // Loại bỏ các mục null
 };
 
-
-
 export default function RevenueChart({ total, trend }) {
-    console.log("Trend data:", trend); 
-    const formattedData = formatRevenueData(trend); 
-    const data = formattedData.map((item) => item.date); 
+    console.log("Trend data:", trend);
+    const formattedData = formatRevenueData(trend);
+    const data = formattedData.map((item) => item.date);
 
     const theme = useTheme();
     const colorPalette = [
@@ -62,7 +61,6 @@ export default function RevenueChart({ total, trend }) {
         theme.palette.primary.main,
         theme.palette.primary.dark,
     ];
-
 
     return (
         <Card variant="outlined" sx={{ width: "100%" }}>
@@ -86,7 +84,10 @@ export default function RevenueChart({ total, trend }) {
                             }).format(total)}
                         </Typography>
                     </Stack>
-                    <Typography variant="caption" sx={{ color: "text.secondary" }}>
+                    <Typography
+                        variant="caption"
+                        sx={{ color: "text.secondary" }}
+                    >
                         Daily revenue for the last 30 days
                     </Typography>
                 </Stack>
@@ -125,7 +126,10 @@ export default function RevenueChart({ total, trend }) {
                         },
                     }}
                 >
-                    <AreaGradient color={theme.palette.primary.dark} id="revenue" />
+                    <AreaGradient
+                        color={theme.palette.primary.dark}
+                        id="revenue"
+                    />
                 </LineChart>
             </CardContent>
         </Card>

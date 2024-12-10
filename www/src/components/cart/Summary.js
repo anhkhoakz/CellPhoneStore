@@ -10,10 +10,10 @@ import {
     Typography,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import LoggedCustomerInfo from "./LoggedCustomerInfo";
-import CustomerInfo from "./CustomerInfo"; // Import CustomerInfo
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
+import CustomerInfo from "./CustomerInfo"; // Import CustomerInfo
+import LoggedCustomerInfo from "./LoggedCustomerInfo";
 
 import ToastNoti from "../toast-noti/ToastNoti";
 
@@ -53,7 +53,7 @@ const Summary = ({ total, shipping, items }) => {
                     Authorization: `Bearer ${cookies.accessToken}`,
                 },
                 credentials: "include",
-            }
+            },
         )
             .then((res) => res.json())
             .then((data) => {
@@ -62,18 +62,21 @@ const Summary = ({ total, shipping, items }) => {
                 if (data.success) {
                     // Set user data
                     const defaultAddressDetails = data.message.addresses
-                    .filter((address) => address.isDefault) // Filter addresses with isDefault = true
-                    .map((address) => address);
+                        .filter((address) => address.isDefault) // Filter addresses with isDefault = true
+                        .map((address) => address);
 
-
-                    setName(defaultAddressDetails[0].receiver ||data.message.username);
-                    setPhone(defaultAddressDetails[0].phone || data.message.phone);
+                    setName(
+                        defaultAddressDetails[0].receiver ||
+                            data.message.username,
+                    );
+                    setPhone(
+                        defaultAddressDetails[0].phone || data.message.phone,
+                    );
                     setEmail(data.message.email);
                     setSavedAddresses(
-                        data.message.addresses.map((address) => address.detail)
+                        data.message.addresses.map((address) => address.detail),
                     );
 
-                  
                     setSelectedAddress(defaultAddressDetails[0].detail);
                 }
             })
@@ -145,20 +148,28 @@ const Summary = ({ total, shipping, items }) => {
     }, [cookies.accessToken]);
 
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/coupons/getCouponsByCondition`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${cookies.accessToken}`,
-            },
-            credentials: "include",
+        fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/api/v1/coupons/getCouponsByCondition`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${cookies.accessToken}`,
+                },
+                credentials: "include",
 
-            body: JSON.stringify({ condition: {minOrderValue: total, applicableCategories:categories} }),
-        })
+                body: JSON.stringify({
+                    condition: {
+                        minOrderValue: total,
+                        applicableCategories: categories,
+                    },
+                }),
+            },
+        )
             .then((res) => res.json())
             .then((data) => {
                 console.log(data || "No data received");
-                console.log(categories)
+                console.log(categories);
 
                 if (data.success) {
                     setAvailableCoupons(data.data);
@@ -180,7 +191,7 @@ const Summary = ({ total, shipping, items }) => {
         const discountPoint = useLoyaltyPoints ? loyaltyPoints : 0;
 
         const discount = availableCoupons.find(
-            (coupon) => coupon.code === discountCode
+            (coupon) => coupon.code === discountCode,
         );
 
         const discountType = discount ? discount.type : "";
@@ -193,14 +204,14 @@ const Summary = ({ total, shipping, items }) => {
                     shippingCost -
                     (total * discountValue) / 100 -
                     discountPoint,
-                0
+                0,
             );
         }
 
         if (discountType === "fixed") {
             return Math.max(
                 total + shippingCost - discountValue - discountPoint,
-                0
+                0,
             );
         }
 

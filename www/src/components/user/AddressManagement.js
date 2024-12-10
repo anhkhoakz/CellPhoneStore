@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import { Close } from "@mui/icons-material";
 import {
     Button,
@@ -11,8 +10,9 @@ import {
     Select,
     Typography,
 } from "@mui/material";
-import AddAddress from "./AddAddress";
+import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
+import AddAddress from "./AddAddress";
 
 const AddressManagement = ({
     addresses,
@@ -44,7 +44,7 @@ const AddressManagement = ({
 
     const handleDefaultAddressChange = (event) => {
         const selectedId = event.target.value;
-    
+
         // Gửi yêu cầu API để thay đổi địa chỉ mặc định
         fetch(
             `${process.env.REACT_APP_BACKEND_URL}/api/v1/users/setDefaultAddress/${selectedId}`,
@@ -55,30 +55,29 @@ const AddressManagement = ({
                     Authorization: `Bearer ${cookies.accessToken}`,
                 },
                 credentials: "include",
-            }
+            },
         )
             .then((res) => res.json())
             .then((data) => {
                 if (data.success) {
                     // Cập nhật trạng thái địa chỉ mặc định
                     setDefaultAddress(selectedId);
-    
+
                     // Cập nhật danh sách địa chỉ cục bộ
                     const updatedAddresses = addresses.map((addr) => ({
                         ...addr,
                         isDefault: addr._id === selectedId,
                     }));
                     onSetDefaultAddress(selectedId, updatedAddresses);
-    
+
                     // Hiển thị thông tin địa chỉ mới
                     const selectedAddr = updatedAddresses.find(
-                        (addr) => addr._id === selectedId
+                        (addr) => addr._id === selectedId,
                     );
                     setSelectedAddress(selectedAddr);
                 }
             });
     };
-    
 
     const handleRemoveAddress = (e, id) => {
         fetch(
@@ -90,7 +89,7 @@ const AddressManagement = ({
                     Authorization: `Bearer ${cookies.accessToken}`,
                 },
                 credentials: "include",
-            }
+            },
         )
             .then((res) => res.json())
             .then((data) => {

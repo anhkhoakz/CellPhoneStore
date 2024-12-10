@@ -18,24 +18,28 @@ services:
       - mongo
 
   backend:
-    image: my_stack_backend
+    build:
+      context: ./server
+      dockerfile: Dockerfile
     environment:
-      - MONGO_URI=mongodb://mongo:27017/mydatabase
+      - MONGO_URI=mongodb://mongo:27017/CellPhoneStore
     depends_on:
       - mongo
+      - redis
+      - elasticsearch
     networks:
       - app-network
     deploy:
-      replicas: 3
       restart_policy:
         condition: on-failure
     ports:
-      - "5000:5000"
-      - "5001:5001"
-      - "5002:5002"
+      - "8080:8080"
+
 
   frontend:
-    image: my_stack_frontend
+    build:
+      context: ./www
+      dockerfile: Dockerfile
     environment:
       - NEXT_PUBLIC_SERVER_URL=http://localhost/api
     ports:
@@ -45,24 +49,28 @@ services:
     networks:
       - app-network
 
-  proxy:
-    image: nginx:alpine
-    hostname: proxy.midterm.nodejs
-    ports:
-      - "80:80"
-      - "443:443"
+  elasticsearch:
+    image: elastic/elasticsearch:8.15.5
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/conf.d:/etc/nginx/conf.d
-    depends_on:
-      - frontend
+      - ./docker-elk/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,Z
+      - ./docker-elk/elasticsearch:/usr/share/elasticsearch/data:Z
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      node.name: elasticsearch
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+      ELASTIC_PASSWORD: REPLIES-aiming-linking-milan-dessert
+      discovery.type: single-node
     networks:
       - app-network
+    restart: unless-stopped
 
 volumes:
   mongo-data:
     driver: local
+  elasticsearch:
 
 networks:
   app-network:
-    driver: overlay
+    driver: bridge
