@@ -202,6 +202,11 @@ export default function EditProductDialog({
                         }
                     />
                 </Button>
+                {/* {editedProductData.image ? (
+                    <p>{editedProductData.image}</p> // Hiển thị tên hình ảnh hiện tại
+                ) : productData.image ? (
+                    <p>{productData.image}</p> // Hiển thị tên hình ảnh của sản phẩm cũ nếu có
+                ) : null} */}
 
                 <div style={{ marginTop: "1.25em" }}>
                     <h4>Màu sắc và hình ảnh</h4>
@@ -270,6 +275,12 @@ export default function EditProductDialog({
                                     }
                                 />
                             </Button>
+                            {colorData.image ? (
+                                <p>{colorData.image}</p>
+                            ) : colorData.image === null && productData.variants && productData.variants[index] && productData.variants[index].image ? (
+                                <p>{productData.variants[index].image}</p>
+                            ) : null}
+
                             <IconButton
                                 color="error"
                                 onClick={() => handleRemoveColor(index)}
