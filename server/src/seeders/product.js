@@ -1,4 +1,5 @@
 // seed.js
+
 const mongoose = require("mongoose");
 const mongooseSequence = require("mongoose-sequence")(mongoose);
 const Schema = mongoose.Schema;
@@ -176,32 +177,6 @@ const seedProducts = async () => {
 
 	for (const product of products) {
 		const newProduct = await Product.create(product);
-		await client.index({
-			index: "products",
-			id: newProduct._id.toString(),
-			document: {
-				name: newProduct.name,
-				description: newProduct.description,
-				category: newProduct.category,
-				price: newProduct.price,
-				stock: newProduct.stock,
-				sold: newProduct.sold,
-				variants: newProduct.variants,
-				image: newProduct.image,
-				ratings: newProduct.ratings.map((rating) => ({
-					userId: rating.userId,
-					rating: rating.rating,
-				})),
-				comments: newProduct.comments.map((comment) => ({
-					username: comment.username,
-					comment: comment.comment,
-					createAt: comment.createAt,
-				})),
-				createAt: newProduct.createAt,
-				updateAt: newProduct.updateAt,
-			},
-		});
-
 		console.log(
 			"Saved product:",
 			newProduct.name,

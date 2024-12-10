@@ -16,7 +16,6 @@ const connectToRedis = async () => {
 	}
 };
 
-connectToRedis();
 
 client.on("error", (err) => {
 	console.error("Redis error:", err);
@@ -32,4 +31,4 @@ const setAsync = async (key, value, options) =>
 const getAsync = async (key) => await client.get(key);
 const delAsync = async (key) => await client.del(key);
 
-module.exports = { client, setAsync, getAsync, delAsync };
+module.exports = { client, setAsync, getAsync, delAsync, connectToRedis };

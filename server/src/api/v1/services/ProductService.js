@@ -89,6 +89,7 @@ class ProductService {
 				variantImages.push(file.filename);
 			}
 		}
+		
 
 		data.image = mainImage;
 		if (data.variants && Array.isArray(data.variants)) {

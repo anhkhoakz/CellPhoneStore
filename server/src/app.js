@@ -13,10 +13,13 @@ const cors = require("cors");
 const createError = require("http-errors");
 const compression = require("compression");
 
+const { connectToRedis } = require("~/config/redis");
+
 require("dotenv").config();
 
 // connect to database
 database.connect();
+connectToRedis();
 
 const app = express();
 
