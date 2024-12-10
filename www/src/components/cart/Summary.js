@@ -41,37 +41,46 @@ const Summary = ({ total, shipping, items }) => {
     const [cookies] = useCookies([]);
     const navigate = useNavigate();
 
+    const categories = items.map((item) => item.category);
 
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users/${cookies.userId}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${cookies.accessToken}`,
-            },
-            credentials: "include",
-        })
+        fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/api/v1/users/${cookies.userId}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${cookies.accessToken}`,
+                },
+                credentials: "include",
+            }
+        )
             .then((res) => res.json())
             .then((data) => {
                 console.log(data);
 
                 if (data.success) {
                     // Set user data
-                    setName(data.message.username);
-                    setPhone(data.message.phone);
-                    setEmail(data.message.email);
-                    setSavedAddresses(data.message.addresses.map(address => address.detail));
-                }
+                    const defaultAddressDetails = data.message.addresses
+                    .filter((address) => address.isDefault) // Filter addresses with isDefault = true
+                    .map((address) => address);
 
-                if (data.message.addresses.length > 0) {
-                    setSelectedAddress(data.message.addresses[0].detail);
+
+                    setName(defaultAddressDetails[0].receiver ||data.message.username);
+                    setPhone(defaultAddressDetails[0].phone || data.message.phone);
+                    setEmail(data.message.email);
+                    setSavedAddresses(
+                        data.message.addresses.map((address) => address.detail)
+                    );
+
+                  
+                    setSelectedAddress(defaultAddressDetails[0].detail);
                 }
             })
             .catch((error) => {
                 console.error("Error:", error);
             });
     }, [cookies.accessToken]);
-
 
     useEffect(() => {
         if (!selectedAddress) return; // Early return if no address is selected
@@ -136,17 +145,20 @@ const Summary = ({ total, shipping, items }) => {
     }, [cookies.accessToken]);
 
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/coupons/my`, {
-            method: "GET",
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/coupons/getCouponsByCondition`, {
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${cookies.accessToken}`,
             },
             credentials: "include",
+
+            body: JSON.stringify({ condition: {minOrderValue: total, applicableCategories:categories} }),
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log(data);
+                console.log(data || "No data received");
+                console.log(categories)
 
                 if (data.success) {
                     setAvailableCoupons(data.data);
@@ -167,11 +179,9 @@ const Summary = ({ total, shipping, items }) => {
     const calculateTotal = () => {
         const discountPoint = useLoyaltyPoints ? loyaltyPoints : 0;
 
-        const discount = availableCoupons.find( 
+        const discount = availableCoupons.find(
             (coupon) => coupon.code === discountCode
         );
-
-        console.log("Discount:", discount);
 
         const discountType = discount ? discount.type : "";
 
@@ -179,7 +189,10 @@ const Summary = ({ total, shipping, items }) => {
 
         if (discountType === "percentage") {
             return Math.max(
-                total + shippingCost - (total * discountValue) / 100 - discountPoint,
+                total +
+                    shippingCost -
+                    (total * discountValue) / 100 -
+                    discountPoint,
                 0
             );
         }
@@ -190,7 +203,7 @@ const Summary = ({ total, shipping, items }) => {
                 0
             );
         }
-        
+
         return Math.max(total + shippingCost - discountPoint, 0);
     };
 
@@ -292,90 +305,89 @@ const Summary = ({ total, shipping, items }) => {
             <Typography variant="h6" gutterBottom>
                 Shipping
             </Typography>
-            
 
-                {!savedAddresses.isEmpty && (
-                    <FormControl fullWidth margin="normal">
-                        <InputLabel id="delivery-method-label">
-                            Delivery Method
-                        </InputLabel>
-                        <Select
-                            labelId="delivery-method-label"
-                            value={shippingCost|| 0}
-                            onChange={(e) =>{
-                                const value = Number(e.target.value);
-                                setShippingCost(value);
-                        
-                                // Determine shipping type based on selected value
-                                if (value === shippingMethod.standard) {
-                                    setShippingType("standard");
-                                } else if (value === shippingMethod.express) {
-                                    setShippingType("express");
-                                }
-                            }}
-                            label="Delivery Method"
-                        >
-                            <MenuItem value={shippingMethod.standard}>
-                                Standard Delivery -{" "}
-                                {shippingMethod.standard?.toLocaleString() || "0"} ₫
-                            </MenuItem>
-                            <MenuItem value={shippingMethod.express}>
-                                Express Delivery -{" "}
-                                {shippingMethod.express?.toLocaleString() || "0"} ₫
-                            </MenuItem>
-                        </Select>
-                    </FormControl>
-                )}
-        
+            {!savedAddresses.isEmpty && (
+                <FormControl fullWidth margin="normal">
+                    <InputLabel id="delivery-method-label">
+                        Delivery Method
+                    </InputLabel>
+                    <Select
+                        labelId="delivery-method-label"
+                        value={shippingCost || 0}
+                        onChange={(e) => {
+                            const value = Number(e.target.value);
+                            setShippingCost(value);
+
+                            // Determine shipping type based on selected value
+                            if (value === shippingMethod.standard) {
+                                setShippingType("standard");
+                            } else if (value === shippingMethod.express) {
+                                setShippingType("express");
+                            }
+                        }}
+                        label="Delivery Method"
+                    >
+                        <MenuItem value={shippingMethod.standard}>
+                            Standard Delivery -{" "}
+                            {shippingMethod.standard?.toLocaleString() || "0"} ₫
+                        </MenuItem>
+                        <MenuItem value={shippingMethod.express}>
+                            Express Delivery -{" "}
+                            {shippingMethod.express?.toLocaleString() || "0"} ₫
+                        </MenuItem>
+                    </Select>
+                </FormControl>
+            )}
+
             {/* Discount Code Section */}
 
             {isLoggedIn && (
                 <>
-            <Typography variant="h6" gutterBottom>
-                Discount Code
-            </Typography>
-            <FormControl fullWidth margin="normal">
-                <InputLabel>Select Coupon</InputLabel>
-                <Select
-                    value={discountCode}
-                    onChange={handleCouponSelect}
-                    label="Select Coupon"
-                >
-                    <MenuItem value="">None</MenuItem>
-                    {availableCoupons.map((coupon) => (
-                        <MenuItem key={coupon.code} value={coupon.code}>
-                            {coupon.code} - {coupon.description}
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
-
-            {/* Loyalty Points Section */}
-            
-                <Typography variant="h6" gutterBottom>
-                    Loyalty Points
-                </Typography>
-                <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="space-between"
-                >
-                    <Typography variant="body1">
-                        Available Points: {loyaltyPoints}
+                    <Typography variant="h6" gutterBottom>
+                        Discount Code
                     </Typography>
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                disabled={loyaltyPoints < 50000}
-                                checked={useLoyaltyPoints}
-                                onChange={handleLoyaltySwitch}
-                                color="primary"
-                            />
-                        }
-                        label="Use Loyalty Points"
-                        labelPlacement="start"
-                    />
-                </Box>
+                    <FormControl fullWidth margin="normal">
+                        <InputLabel>Select Coupon</InputLabel>
+                        <Select
+                            value={discountCode}
+                            onChange={handleCouponSelect}
+                            label="Select Coupon"
+                        >
+                            <MenuItem value="">None</MenuItem>
+                            {availableCoupons.map((coupon) => (
+                                <MenuItem key={coupon.code} value={coupon.code}>
+                                    {coupon.code} - {coupon.description}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    {/* Loyalty Points Section */}
+
+                    <Typography variant="h6" gutterBottom>
+                        Loyalty Points
+                    </Typography>
+                    <Box
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="space-between"
+                    >
+                        <Typography variant="body1">
+                            Available Points: {loyaltyPoints}
+                        </Typography>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    disabled={loyaltyPoints < 50000}
+                                    checked={useLoyaltyPoints}
+                                    onChange={handleLoyaltySwitch}
+                                    color="primary"
+                                />
+                            }
+                            label="Use Loyalty Points"
+                            labelPlacement="start"
+                        />
+                    </Box>
                 </>
             )}
             <hr className="my-4" />

@@ -45,7 +45,7 @@ const LoggedCustomerInfo = ({
             <FormControl fullWidth variant="outlined" margin="normal">
                 <InputLabel>Saved Address</InputLabel>
                 <Select
-                    value={selectedAddress}
+                    value={selectedAddress || ""}
                     onChange={(e) => setSelectedAddress(e.target.value)}
                     label="Saved Address"
                 >

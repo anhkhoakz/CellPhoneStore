@@ -224,43 +224,48 @@ module.exports = {
         }
     },
 
-    // async getCouponsByCondition(req, res) {
-    //     try {
-    //         const userId = req.user.userId;
-    //         const {condition} = req.body;
+    async getCouponsByCondition(req, res) {
+        try {
+            const userId = req.user.userId;
+            const {condition} = req.body;
 
-    //         let coupons = await Coupon.find({ usedBy: { $nin: [userId] } });
+           
 
-    //         if (!coupons) {
-    //             return res.status(404).json({
-    //                 success: false,
-    //                 message: "Coupons not found",
-    //             });
-    //         }
+            let coupons = await Coupon.find({ usedBy: { $nin: [userId] }, claimedBy: { $in: [userId] }, quantity: { $gt: 0 }, expiryDate: { $gte: new Date() } });
 
-    //         if (condition.minOrderValue) {
-    //             coupons = coupons.filter(
-    //                 (coupon) => coupon.minOrderValue >= condition.minOrderValue
-    //             );
-    //         }
+         
+            if (!coupons) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Coupons not found",
+                });
+            }
 
-    //         if (condition.applicableCategories) {
-    //             coupons = coupons.filter((coupon) =>
-    //                 coupon.applicableCategories.some((category) =>
-    //                     condition.applicableCategories.includes(category)
-    //                 )
-    //             );
-    //         }
+            if (condition.minOrderValue) {
+                coupons = coupons.filter((coupon) => 
+                    coupon.condition?.minOrderValue !== undefined && // Ensure minOrderValue exists
+                    Number(coupon.condition.minOrderValue) <= Number(condition.minOrderValue) // Convert to numbers before comparing
+                );
+            }
+            
 
-    //         return res.status(200).json({
-    //             success: true,
-    //             data: coupons,
-    //         });
-    //     } catch (error) {
-    //         return res.status(500).json({
-    //             success: false,
-    //             message: error.message,
-    //         });
-    //     }
-    // }
+            if (Array.isArray(condition.applicableCategories) && condition.applicableCategories.length > 0) {
+                coupons = coupons.filter((coupon) =>
+                    condition.applicableCategories.every((category) =>
+                        coupon.condition?.applicableCategories?.includes(category)
+                    )
+                );
+            }
+
+            return res.status(200).json({
+                success: true,
+                data: coupons,
+            });
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: error.message,
+            });
+        }
+    }
 };
