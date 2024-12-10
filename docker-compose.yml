@@ -5,15 +5,11 @@ services:
       - mongo-data:/data/db
     ports:
       - "27017:27017"
-    networks:
-      - app-network
 
   redis:
     image: redis/redis-stack-server:latest
     ports:
       - "6379:6379"
-    networks:
-      - app-network
     depends_on:
       - mongo
 
@@ -30,8 +26,6 @@ services:
       - mongo
       - redis
       - elasticsearch
-    networks:
-      - app-network
     deploy:
       restart_policy:
         condition: on-failure
@@ -48,8 +42,6 @@ services:
       - "3000:3000"
     depends_on:
       - backend
-    networks:
-      - app-network
 
   elasticsearch:
     image: elastic/elasticsearch:8.15.5
@@ -64,16 +56,9 @@ services:
       ES_JAVA_OPTS: -Xms512m -Xmx512m
       ELASTIC_PASSWORD: REPLIES-aiming-linking-milan-dessert
       discovery.type: single-node
-    networks:
-      - app-network
     restart: unless-stopped
 
 volumes:
   mongo-data:
     driver: local
   elasticsearch:
-
-
-networks:
-  app-network:
-    driver: bridge
