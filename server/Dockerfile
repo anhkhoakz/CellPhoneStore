@@ -14,7 +14,7 @@ RUN pnpm install
 COPY . .
 
 # ENV NODE_ENV=production
-ENV MONGO_URI=mongodb://mongo:27017/midtermNodejs
+ENV DB_URL=mongodb://mongo:27017/CellPhoneStore
 ENV REDIS_HOST=redis
 ENV REDIS_PORT=6379
 

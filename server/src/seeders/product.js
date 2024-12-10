@@ -64,6 +64,40 @@ productSchema.plugin(mongooseSequence, {
 
 const Product = mongoose.model("Product", productSchema);
 
+
+const addProductToIndex = async (product) =>{
+    try {
+        await client.index({
+            index: "products",
+            id: product._id.toString(),
+            document: {
+                name: product.name,
+                description: product.description,
+                category: product.category,
+                price: product.price,
+                stock: product.stock,
+                sold: product.sold,
+                variants: product.variants,
+                image: product.image,
+                ratings: product.ratings.map((rating) => ({
+                    userId: rating.userId,
+                    rating: rating.rating,
+                })),
+                comments: product.comments.map((comment) => ({
+                    username: comment.username,
+                    comment: comment.comment,
+                    createAt: comment.createAt,
+                })),
+                createAt: product.createAt,
+                updateAt: product.updateAt,
+            },
+        });
+        console.log("Product indexed in Elasticsearch");
+    } catch (error) {
+        console.error("Error indexing product:", error);
+    }
+}
+
 const seedProducts = async () => {
 	await mongoose.connect("mongodb://localhost:27017/CellPhoneStore");
 	await Product.deleteMany({}); // Clear existing data
@@ -177,12 +211,19 @@ const seedProducts = async () => {
 
 	for (const product of products) {
 		const newProduct = await Product.create(product);
+
+        
+        await addProductToIndex(newProduct);
+
 		console.log(
 			"Saved product:",
 			newProduct.name,
 			"with productId:",
 			newProduct.productId,
 		);
+
+
+        
 	}
 
 	console.log("Products seeded!");
