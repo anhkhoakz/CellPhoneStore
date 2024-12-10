@@ -1,6 +1,7 @@
 import { Box, Button, Typography } from "@mui/material";
 // components/category/Category.js
 import React from "react";
+import { Box, Button, Typography, Divider } from "@mui/material";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
 
 const Category = ({ categories }) => {
@@ -9,8 +10,8 @@ const Category = ({ categories }) => {
             sx={{
                 margin: "2em auto", // Tạo khoảng cách trên và dưới
                 padding: "1em",
-                backgroundColor: "#f9f9f9",
-                maxWidth: "70%",
+                // backgroundColor: "#f9f9f9",
+                maxWidth: "100%",
                 textAlign: "center", // Căn giữa nội dung bên trong Box
             }}
         >
@@ -59,6 +60,14 @@ const Category = ({ categories }) => {
                     </Link>
                 ))}
             </Box>
+            <Divider
+                sx={{
+                    marginTop: 4,
+                    width: "80%",
+                    margin: "40px auto 0 auto",
+                    backgroundColor: "blue",
+                }}
+            />
         </Box>
     );
 };
