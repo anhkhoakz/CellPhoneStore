@@ -331,112 +331,121 @@ const Welcome_Email_Template = `
 `;
 
 const Checkout_Email_Template = `
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Welcome to Our Community</title>
-      <style>
-          body {
-              font-family: Arial, sans-serif;
-              margin: 0;
-              padding: 0;
-              background-color: #f4f4f4;
-              color: #333;
-          }
-          .container {
-              max-width: 600px;
-              margin: 30px auto;
-              background: #ffffff;
-              border-radius: 8px;
-              box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-              overflow: hidden;
-              border: 1px solid #ddd;
-          }
-          .header {
-              background-color: #007BFF;
-              color: white;
-              padding: 20px;
-              text-align: center;
-              font-size: 26px;
-              font-weight: bold;
-          }
-          .content {
-              padding: 25px;
-              line-height: 1.8;
-          }
-          .welcome-message {
-              font-size: 18px;
-              margin: 20px 0;
-          }
-          .button {
-              display: inline-block;
-              padding: 12px 25px;
-              margin: 20px 0;
-              background-color: #007BFF;
-              color: white;
-              text-decoration: none;
-              border-radius: 5px;
-              text-align: center;
-              font-size: 16px;
-              font-weight: bold;
-              transition: background-color 0.3s;
-          }
-          .button:hover {
-              background-color: #0056b3;
-          }
-          .footer {
-              background-color: #f4f4f4;
-              padding: 15px;
-              text-align: center;
-              color: #777;
-              font-size: 12px;
-              border-top: 1px solid #ddd;
-          }
-          p {
-              margin: 0 0 15px;
-          }
-      </style>
-  </head>
-  <body>
-      <div class="container">
-          <div class="header">Welcome to CellPhoneStore!</div>
-          <div class="content">
-              <p class="welcome-message">Hello {name},</p>
-
-              <p>Here is your order details:</p>
-                <p>Name: {name}</p>
-                <p>Phone: {phone}</p>
-                <p>Email: {email}</p>
-                <p>Shipping Address: {shippingAddress}</p>
-                <p>Shipping Option: {shippingOption}</p>
-                <p>Total: {total}</p>
-                <p>Status: pending</p>
-                <p>Invoid details:</p>
-                
-                <table style='width: 100%; border-collapse: collapse;'>
-                    <tr style='background-color: #f2f2f2;'>
-                        <th style='border: 1px solid #ddd; padding: 8px;'>Item</th>
-                        <th style='border: 1px solid #ddd; padding: 8px;'>Price</th>
-                        <th style='border: 1px solid #ddd; padding: 8px;'>Quantity</th>
-                        <th style='border: 1px solid #ddd; padding: 8px;'>Color</th>
-                    </tr>
-                
-                    
-
-                <p>Thank you for purchase!</p>
-
-
-              <span class="verification-code">{verificationCode}</span>
-          </div>
-          <div class="footer">
-              <p>&copy; ${new Date().getFullYear()} CellPhoneStore. All rights reserved.</p>
-          </div>
-      </div>
-  </body>
-  </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+        .header {
+            background-color: #007BFF;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+        }
+        .content {
+            padding: 25px;
+            line-height: 1.8;
+        }
+        .welcome-message {
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 25px;
+            margin: 20px 0;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .footer {
+            background-color: #f4f4f4;
+            padding: 15px;
+            text-align: center;
+            color: #777;
+            font-size: 12px;
+            border-top: 1px solid #ddd;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        p {
+            margin: 0 0 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">Thank You for Your Purchase!</div>
+        <div class="content">
+            <p class="welcome-message">Hello {name},</p>
+            <p>We have received your order. Here are the details:</p>
+            <p><strong>Order Summary:</strong></p>
+            <p><strong>Name:</strong> {name}</p>
+            <p><strong>Email:</strong> {email}</p>
+            <p><strong>Phone:</strong> {phone}</p>
+            <p><strong>Shipping Address:</strong> {shippingAddress}</p>
+            <p><strong>Shipping Option:</strong> {shippingOption}</p>
+            <p><strong>Total Amount:</strong> ${total}</p>
+            
+            <p><strong>Invoice Details:</strong></p>
+            <table>
+                <tr>
+                    <th>Item</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Color</th>
+                </tr>
+                {itemsRows}
+            </table>
+            <p>Thank you for choosing CellPhoneStore. We hope to serve you again soon!</p>
+        </div>
+        <div class="footer">
+            <p>&copy; ${new Date().getFullYear()} CellPhoneStore. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
 `;
+
 
 module.exports = {
 	Verification_Email_Template,

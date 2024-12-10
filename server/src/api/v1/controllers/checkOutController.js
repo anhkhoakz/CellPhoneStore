@@ -146,12 +146,26 @@ module.exports = {
 				await coupon.save();
 			}
 
-			const emailTemplate = Checkout_Email_Template.replace(
-				"{name}",
-				user.username,
-			).replace("{email}", user.email);
+			const itemsRows = items.map(item => `
+				<tr>
+					<td>${item.name}</td>
+					<td>${item.price}</td>
+					<td>${item.quantity}</td>
+					<td>${item.color || "N/A"}</td>
+				</tr>
+			`).join("");
+	
+			const emailTemplate = Checkout_Email_Template
+				.replace("{name}", user.username)
+				.replace("{email}", user.email)
+				.replace("{phone}", shippingAddress.phone)
+				.replace("{shippingAddress}", shippingAddress.detail)
+				.replace("{shippingOption}", shippingOption)
+				.replace("{total}", total)
+				.replace("{itemsRows}", itemsRows);
 
-			await sendEmail(user.email, "Your Account Details", emailTemplate);
+
+			await sendEmail(user.email, "Order Confirmation", emailTemplate);
 
 			res.status(201).json({
 				success: true,
