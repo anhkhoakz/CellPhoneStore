@@ -98,9 +98,9 @@ const CartPage = () => {
                     const newItems = items.map((item) =>
                         item.id === id
                             ? {
-                                ...item,
-                                quantity: Math.max(0, item.quantity + value),
-                            }
+                                  ...item,
+                                  quantity: Math.max(0, item.quantity + value),
+                              }
                             : item,
                     );
                     setItems(newItems);
@@ -177,17 +177,21 @@ const CartPage = () => {
                                 >
                                     {items.length} items
                                 </Typography>
-                                <Divider  />
+                                <Divider />
                                 {items.map((item, index) => (
                                     <div key={item.id}>
                                         <CartItem
                                             item={item}
-                                            onQuantityChange={handleQuantityChange}
+                                            onQuantityChange={
+                                                handleQuantityChange
+                                            }
                                             onRemoveItem={handleRemoveItem}
                                         />
 
                                         {/* Thêm Divider nếu không phải là item cuối cùng */}
-                                        {index < items.length - 1 && <Divider />}
+                                        {index < items.length - 1 && (
+                                            <Divider />
+                                        )}
                                     </div>
                                 ))}
                                 <Divider sx={{ mb: 2 }} />

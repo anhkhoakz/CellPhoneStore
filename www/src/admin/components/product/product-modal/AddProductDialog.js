@@ -7,7 +7,7 @@ import {
     DialogTitle,
     IconButton,
     TextField,
-    Typography
+    Typography,
 } from "@mui/material";
 import * as React from "react";
 
@@ -216,7 +216,6 @@ export default function AddProductDialog({ open, onClose, onSave }) {
                         </Typography>
                     </div>
                 )}
-
 
                 <div style={{ marginTop: "1.25em" }}>
                     <h4>Colors and images</h4>

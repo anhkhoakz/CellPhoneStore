@@ -12,9 +12,7 @@ import { useCookies } from "react-cookie";
 
 import { useEffect } from "react";
 
-
 const LoginPage = () => {
-   
     const navigate = useNavigate();
 
     console.log("Backend URL:", process.env.REACT_APP_BACKEND_URL);
@@ -27,12 +25,12 @@ const LoginPage = () => {
             .then((res) => res.json())
             .then((data) => {
                 if (data.success) {
-                    if(data.role === "admin") {
+                    if (data.role === "admin") {
                         navigate("/admin");
                     }
                     navigate("/");
                 }
-            })
+            });
     }, []);
 
     return (

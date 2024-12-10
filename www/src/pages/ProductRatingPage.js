@@ -1,9 +1,18 @@
-import { Box, Button, Grid, Typography, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
-import RatingItem from "../components/product/RatingItem";
-import ToastNoti from "../components/toast-noti/ToastNoti";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
+import RatingItem from "../components/product/RatingItem";
+import ToastNoti from "../components/toast-noti/ToastNoti";
 
 const ProductRatingPage = () => {
     const [reviews, setReviews] = useState({});
@@ -19,14 +28,17 @@ const ProductRatingPage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/orders/myOrder/${orderId}`, {
-            method: "GET",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${cookies.accessToken}`,
+        fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/api/v1/orders/myOrder/${orderId}`,
+            {
+                method: "GET",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${cookies.accessToken}`,
+                },
             },
-        })
+        )
             .then((res) => res.json())
             .then((data) => {
                 console.log(data);
@@ -46,15 +58,18 @@ const ProductRatingPage = () => {
 
         console.log("Submitted Reviews:", submittedReviews);
 
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/orders/${orderId}/rating`, {
-            method: "PATCH",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-                "authorization": `Bearer ${cookies.accessToken}`,
+        fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/api/v1/orders/${orderId}/rating`,
+            {
+                method: "PATCH",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                    authorization: `Bearer ${cookies.accessToken}`,
+                },
+                body: JSON.stringify({ ratings: submittedReviews }),
             },
-            body: JSON.stringify({ ratings: submittedReviews }),
-        })
+        )
             .then((res) => res.json())
             .then((data) => {
                 console.log(data);
@@ -125,13 +140,21 @@ const ProductRatingPage = () => {
             </Box>
 
             {/* Confirmation Dialog */}
-            <Dialog open={isConfirmDialogOpen} onClose={handleCloseConfirmDialog}>
+            <Dialog
+                open={isConfirmDialogOpen}
+                onClose={handleCloseConfirmDialog}
+            >
                 <DialogTitle>Confirm Submission</DialogTitle>
                 <DialogContent>
-                    <Typography>Are you sure you want to submit your reviews?</Typography>
+                    <Typography>
+                        Are you sure you want to submit your reviews?
+                    </Typography>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseConfirmDialog} color="secondary">
+                    <Button
+                        onClick={handleCloseConfirmDialog}
+                        color="secondary"
+                    >
                         Cancel
                     </Button>
                     <Button onClick={handleConfirmSubmit} color="primary">

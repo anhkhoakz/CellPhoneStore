@@ -24,7 +24,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
 	session({
-		secret: "your_secret_key",
+		secret: "bLN2TC21pE9I3X544rMZyWvUbMhq8d4hUlBcX/VII4E=",
 		resave: false,
 		saveUninitialized: false,
 	}),
@@ -36,7 +36,7 @@ app.use(
 	cors({
 		origin: process.env.FRONTEND_URL,
 		methods: ["GET", "POST", "PATCH", "DELETE"],
-		allowedHeaders: ["Content-Type", "Authorization"],
+		allowedHeaders: ["Content-Type", "Authorization", "Accept"],
 		credentials: true,
 	}),
 );

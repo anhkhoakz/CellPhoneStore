@@ -7,7 +7,7 @@ const CouponItem = ({ coupon, onReceive }) => {
     const formatDate = (isoString) => {
         const date = new Date(isoString);
         const options = { day: "2-digit", month: "2-digit", year: "numeric" };
-        return date.toLocaleDateString("vi-VN", options); 
+        return date.toLocaleDateString("vi-VN", options);
     };
 
     return (
@@ -43,7 +43,9 @@ const CouponItem = ({ coupon, onReceive }) => {
                         >
                             {coupon.condition && (
                                 <div>
-                                    <strong style={{color: "black"}}>Condition:</strong>
+                                    <strong style={{ color: "black" }}>
+                                        Condition:
+                                    </strong>
                                     {Object.entries(coupon.condition).map(
                                         ([key, val], index) => (
                                             <div
@@ -55,7 +57,7 @@ const CouponItem = ({ coupon, onReceive }) => {
                                             >
                                                 {key}: {val}
                                             </div>
-                                        )
+                                        ),
                                     )}
                                 </div>
                             )}

@@ -1,18 +1,18 @@
-import * as React from "react";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import MenuItem from "@mui/material/MenuItem";
-import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { enGB } from "date-fns/locale";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
+import * as React from "react";
 
 export default function EditDiscountDialog({
     open,
@@ -64,7 +64,7 @@ export default function EditDiscountDialog({
         const newCategories = checked
             ? [...formData.condition.applicableCategories, value]
             : formData.condition.applicableCategories.filter(
-                  (category) => category !== value
+                  (category) => category !== value,
               );
 
         setFormData({
@@ -165,7 +165,7 @@ export default function EditDiscountDialog({
                             control={
                                 <Checkbox
                                     checked={formData.condition.applicableCategories.includes(
-                                        "phone"
+                                        "phone",
                                     )}
                                     onChange={handleCategoryChange}
                                     value="phone"
@@ -177,7 +177,7 @@ export default function EditDiscountDialog({
                             control={
                                 <Checkbox
                                     checked={formData.condition.applicableCategories.includes(
-                                        "laptop"
+                                        "laptop",
                                     )}
                                     onChange={handleCategoryChange}
                                     value="laptop"
@@ -189,7 +189,7 @@ export default function EditDiscountDialog({
                             control={
                                 <Checkbox
                                     checked={formData.condition.applicableCategories.includes(
-                                        "tablet"
+                                        "tablet",
                                     )}
                                     onChange={handleCategoryChange}
                                     value="tablet"
@@ -202,7 +202,7 @@ export default function EditDiscountDialog({
                             control={
                                 <Checkbox
                                     checked={formData.condition.applicableCategories.includes(
-                                        "headphone"
+                                        "headphone",
                                     )}
                                     onChange={handleCategoryChange}
                                     value="headphone"

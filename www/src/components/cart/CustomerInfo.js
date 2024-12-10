@@ -1,13 +1,13 @@
 import {
     Box,
-    TextField,
-    Typography,
     Button,
     FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
     FormHelperText,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+    Typography,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
@@ -51,7 +51,7 @@ const CustomerInfo = ({ setName, setPhone, setAddress, setEmail }) => {
     useEffect(() => {
         const fetchData = async () => {
             const response = await fetch(
-                "https://cdn.jsdelivr.net/gh/ThangLeQuoc/vietnamese-provinces-database@master/json/simplified_json_generated_data_vn_units_minified.json"
+                "https://cdn.jsdelivr.net/gh/ThangLeQuoc/vietnamese-provinces-database@master/json/simplified_json_generated_data_vn_units_minified.json",
             );
             const data = await response.json();
             setProvinces(data);
@@ -68,7 +68,7 @@ const CustomerInfo = ({ setName, setPhone, setAddress, setEmail }) => {
         const selectedProvince = e.target.value;
         setProvince(selectedProvince);
         const selectedProvinceData = provinces.find(
-            (prov) => prov.FullNameEn === selectedProvince
+            (prov) => prov.FullNameEn === selectedProvince,
         );
         setDistricts(selectedProvinceData.District);
         setWard("");
@@ -79,10 +79,10 @@ const CustomerInfo = ({ setName, setPhone, setAddress, setEmail }) => {
         const selectedDistrict = e.target.value;
         setDistrict(selectedDistrict);
         const selectedProvince = provinces.find(
-            (prov) => prov.FullNameEn === province
+            (prov) => prov.FullNameEn === province,
         );
         const selectedDistrictData = selectedProvince.District.find(
-            (dist) => dist.FullNameEn === selectedDistrict
+            (dist) => dist.FullNameEn === selectedDistrict,
         );
         setWards(selectedDistrictData.Ward);
         setWard("");

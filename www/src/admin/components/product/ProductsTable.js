@@ -15,7 +15,7 @@ import SearchBar from "../header/SearchBar";
 import AddProductDialog from "./product-modal/AddProductDialog";
 import EditProductDialog from "./product-modal/EditProductDialog";
 
-import {useCookies} from "react-cookie";
+import { useCookies } from "react-cookie";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontWeight: 600,
@@ -156,7 +156,7 @@ export default function ProductsTable() {
                 headers: {
                     Accept: "application/json",
                     authorization: `Bearer ${cookies.accessToken}`,
-                }
+                },
             },
         )
             .then((response) => response.json())

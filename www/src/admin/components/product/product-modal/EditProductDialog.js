@@ -92,7 +92,8 @@ export default function EditProductDialog({
     };
 
     const isFormValid = () => {
-        const { productId, name, price, stock, variants, image } = editedProductData;
+        const { productId, name, price, stock, variants, image } =
+            editedProductData;
         return (
             productId &&
             name &&
@@ -277,7 +278,10 @@ export default function EditProductDialog({
                             </Button>
                             {colorData.image ? (
                                 <p>{colorData.image}</p>
-                            ) : colorData.image === null && productData.variants && productData.variants[index] && productData.variants[index].image ? (
+                            ) : colorData.image === null &&
+                              productData.variants &&
+                              productData.variants[index] &&
+                              productData.variants[index].image ? (
                                 <p>{productData.variants[index].image}</p>
                             ) : null}
 

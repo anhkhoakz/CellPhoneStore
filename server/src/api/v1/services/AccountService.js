@@ -7,7 +7,7 @@ require("dotenv").config();
 const {
 	Verification_Email_Template,
 	Forgot_Password_Template,
-} = require("../../../../../public/templates/emailTemplate");
+} = require("~/public/templates/emailTemplate");
 
 const sendEmail = require("~v1/services/sendEmail");
 
@@ -483,8 +483,6 @@ module.exports = {
 				user.addresses = [];
 			}
 
-			
-
 			for (const address of user.addresses) {
 				console.log(address._id, id);
 				if (address._id.toString() === id) {
@@ -545,5 +543,5 @@ module.exports = {
 				message: "Internal server error",
 			};
 		}
-	}
+	},
 };

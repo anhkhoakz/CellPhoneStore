@@ -1,5 +1,3 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import {
     ExitToApp as ExitToAppIcon,
     Menu as MenuIcon,
@@ -8,6 +6,7 @@ import {
 } from "@mui/icons-material";
 import {
     AppBar,
+    Badge,
     Box,
     Drawer,
     IconButton,
@@ -19,9 +18,10 @@ import {
     MenuItem,
     Toolbar,
     Typography,
-    Badge
 } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navigation = () => {
     const [searchQuery, setSearchQuery] = useState("");
@@ -33,7 +33,6 @@ const Navigation = () => {
 
     // Số lượng sản phẩm trong giỏ hàng
     const [cartCount, setCartCount] = useState(5); // Mock số lượng sản phẩm là 5
-
 
     // Kiểm tra xem người dùng đã đăng nhập hay chưa
     useEffect(() => {
@@ -161,7 +160,6 @@ const Navigation = () => {
                             Cart
                         </Typography>
                     </IconButton>
-
 
                     {isLoggedIn && (
                         <IconButton

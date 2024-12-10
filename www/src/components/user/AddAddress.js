@@ -36,7 +36,7 @@ const AddAddress = ({ onAddAddress, onClose }) => {
     useEffect(() => {
         const fetchData = async () => {
             const response = await fetch(
-                "https://cdn.jsdelivr.net/gh/ThangLeQuoc/vietnamese-provinces-database@master/json/simplified_json_generated_data_vn_units_minified.json"
+                "https://cdn.jsdelivr.net/gh/ThangLeQuoc/vietnamese-provinces-database@master/json/simplified_json_generated_data_vn_units_minified.json",
             );
             const data = await response.json();
             setProvinces(data);
@@ -48,7 +48,7 @@ const AddAddress = ({ onAddAddress, onClose }) => {
         const selectedProvince = e.target.value;
         setProvince(selectedProvince);
         const selectedProvinceData = provinces.find(
-            (prov) => prov.FullNameEn === selectedProvince
+            (prov) => prov.FullNameEn === selectedProvince,
         );
         setDistricts(selectedProvinceData.District);
         setWard("");
@@ -59,23 +59,31 @@ const AddAddress = ({ onAddAddress, onClose }) => {
         const selectedDistrict = e.target.value;
         setDistrict(selectedDistrict);
         const selectedProvince = provinces.find(
-            (prov) => prov.FullNameEn === province
+            (prov) => prov.FullNameEn === province,
         );
         const selectedDistrictData = selectedProvince.District.find(
-            (dist) => dist.FullNameEn === selectedDistrict
+            (dist) => dist.FullNameEn === selectedDistrict,
         );
         setWards(selectedDistrictData.Ward);
         setWard("");
     };
 
     const handleAddAddress = () => {
-        let formErrors = { address: "", province: "", district: "", ward: "", receiver: "", phone: "" };
+        let formErrors = {
+            address: "",
+            province: "",
+            district: "",
+            ward: "",
+            receiver: "",
+            phone: "",
+        };
         if (!address)
             formErrors.address = "Detailed address cannot be left blank.";
         if (!province) formErrors.province = "Please select province.";
         if (!district) formErrors.district = "Please select district.";
         if (!ward) formErrors.ward = "Please select commune/ward.";
-        if (!receiver) formErrors.receiver = "Receiver name cannot be left blank.";
+        if (!receiver)
+            formErrors.receiver = "Receiver name cannot be left blank.";
         if (!phone) formErrors.phone = "Phone number cannot be left blank.";
         setErrors(formErrors);
         if (
@@ -105,7 +113,7 @@ const AddAddress = ({ onAddAddress, onClose }) => {
                         receiver: receiver,
                         phone: phone,
                     }),
-                }
+                },
             )
                 .then((response) => {
                     if (response.ok) {
@@ -115,8 +123,7 @@ const AddAddress = ({ onAddAddress, onClose }) => {
                 })
                 .then((data) => {
                     console.log(data);
-                    if(data.code === 200)
-                    {
+                    if (data.code === 200) {
                         onAddAddress(data.detail);
                         onClose();
                     }

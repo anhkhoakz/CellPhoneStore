@@ -10,10 +10,10 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
+import ToastNoti from "../../../components/toast-noti/ToastNoti";
 import OrderBar from "./OrderBar";
 import CanceledReasonDialog from "./order-modal/CanceledReasonDialog";
 import OrderDetailDialog from "./order-modal/OrderDetailDialog";
-import ToastNoti from "../../../components/toast-noti/ToastNoti";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontWeight: 600,
@@ -36,10 +36,10 @@ const StatusTableCell = styled(TableCell)(({ theme, status }) => ({
         status === "cancelled"
             ? theme.palette.error.main
             : status === "delivered"
-            ? theme.palette.success.main
-            : status === "pending"
-            ? "#FF9800"
-            : theme.palette.text.primary,
+              ? theme.palette.success.main
+              : status === "pending"
+                ? "#FF9800"
+                : theme.palette.text.primary,
     fontWeight: "bold",
     padding: "16px",
 }));
@@ -105,7 +105,7 @@ export default function OrdersTable() {
 
     const updateStatus = (updatedRows, orderId, newStatus) => {
         const orderIndex = updatedRows.findIndex(
-            (order) => order._id === orderId
+            (order) => order._id === orderId,
         );
         if (orderIndex !== -1) {
             fetch(
@@ -117,7 +117,7 @@ export default function OrdersTable() {
                     },
 
                     body: JSON.stringify({ status: newStatus }),
-                }
+                },
             )
                 .then((res) => res.json())
                 .then((data) => {
@@ -144,7 +144,7 @@ export default function OrdersTable() {
         if (selectedOrderId) {
             const updatedRows = [...rows];
             const orderIndex = updatedRows.findIndex(
-                (order) => order._id === selectedOrderId
+                (order) => order._id === selectedOrderId,
             );
             if (orderIndex !== -1) {
                 fetch(
@@ -155,7 +155,7 @@ export default function OrdersTable() {
                             "Content-Type": "application/json",
                         },
                         body: JSON.stringify({ noted: reason }),
-                    }
+                    },
                 )
                     .then((res) => res.json())
                     .then((data) => {
@@ -164,16 +164,17 @@ export default function OrdersTable() {
                             updatedRows[orderIndex].status = "cancelled";
                             setRows(updatedRows);
 
-							setToastType("success");
-							setToastMessage(data.message);
+                            setToastType("success");
+                            setToastMessage(data.message);
+                        } else {
+                            setToastType("error");
+                            setToastMessage(data.message);
                         }
-						else {
-							setToastType("error");
-							setToastMessage(data.message);
-						}
                     });
 
-					setTimeout(() => { setToastMessage(""); } , 3000);
+                setTimeout(() => {
+                    setToastMessage("");
+                }, 3000);
             }
         }
         setIsCanceledReasonDialogOpen(false);
@@ -217,7 +218,7 @@ export default function OrdersTable() {
         status,
         dateRange,
         customStartDate,
-        customEndDate
+        customEndDate,
     ) => {
         return rows.filter((row) => {
             const matchesStatus = status === "all" || row.status === status;
@@ -273,7 +274,7 @@ export default function OrdersTable() {
         status,
         dateRange,
         customStartDate,
-        customEndDate
+        customEndDate,
     );
 
     return (
@@ -315,7 +316,7 @@ export default function OrdersTable() {
                         {filteredRows
                             .slice(
                                 page * rowsPerPage,
-                                page * rowsPerPage + rowsPerPage
+                                page * rowsPerPage + rowsPerPage,
                             )
                             .map((row, index) => {
                                 const isEven = index % 2 === 0;
@@ -356,7 +357,7 @@ export default function OrdersTable() {
                                                         }}
                                                         onClick={() =>
                                                             handleOpenOrderDetailDialog(
-                                                                row
+                                                                row,
                                                             )
                                                         }
                                                     />
@@ -374,7 +375,7 @@ export default function OrdersTable() {
                                                             onChange={(e) =>
                                                                 handleChangeStatus(
                                                                     e,
-                                                                    row._id
+                                                                    row._id,
                                                                 )
                                                             }
                                                             sx={{

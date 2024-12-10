@@ -1,4 +1,10 @@
-import { Box, CircularProgress, Grid, Typography, Pagination } from "@mui/material";
+import {
+    Box,
+    CircularProgress,
+    Grid,
+    Pagination,
+    Typography,
+} from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom"; // Để lấy tham số danh mục từ URL
 import ProductCard from "../components/product/ProductCard";
@@ -12,24 +18,27 @@ const CategoryPage = () => {
 
     // Giả lập gọi API và lấy dữ liệu sản phẩm theo category
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/products/category/${category}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
+        fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/api/v1/products/category/${category}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
             },
-        })
-        .then((res) => res.json())
-        .then((data) => {
-            if (data.success) {
-                setProducts(data.message); // Lấy sản phẩm từ API
-                setTotalPages(Math.ceil(data.message.length / 12)); // Tính tổng số trang
-            }
-            setLoading(false);
-        })
-        .catch((error) => {
-            console.error("Error:", error);
-            setLoading(false);
-        });
+        )
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.success) {
+                    setProducts(data.message); // Lấy sản phẩm từ API
+                    setTotalPages(Math.ceil(data.message.length / 12)); // Tính tổng số trang
+                }
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                setLoading(false);
+            });
     }, [category]);
 
     // Xử lý thay đổi trang
@@ -53,7 +62,11 @@ const CategoryPage = () => {
                 minHeight: "80vh",
             }}
         >
-            <Typography variant="h4" gutterBottom sx={{ textAlign: "center", fontWeight: "bold" }}>
+            <Typography
+                variant="h4"
+                gutterBottom
+                sx={{ textAlign: "center", fontWeight: "bold" }}
+            >
                 {category.toUpperCase()} PRODUCTS
             </Typography>
 
@@ -69,14 +82,26 @@ const CategoryPage = () => {
                         {/* Hiển thị các sản phẩm của trang hiện tại */}
                         <Grid container spacing={4}>
                             {getPaginatedProducts().map((product) => (
-                                <Grid item xs={12} sm={6} md={3} key={product.productId}>
+                                <Grid
+                                    item
+                                    xs={12}
+                                    sm={6}
+                                    md={3}
+                                    key={product.productId}
+                                >
                                     <ProductCard product={product} />
                                 </Grid>
                             ))}
                         </Grid>
 
                         {/* Phân trang */}
-                        <Box sx={{ display: "flex", justifyContent: "center", marginTop: 3 }}>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                marginTop: 3,
+                            }}
+                        >
                             <Pagination
                                 count={totalPages} // Tổng số trang
                                 page={page} // Trang hiện tại

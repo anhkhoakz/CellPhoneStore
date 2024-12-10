@@ -1,14 +1,14 @@
-import React from "react";
 import {
+    Box,
     Card,
-    CardMedia,
     CardContent,
+    CardMedia,
+    Rating,
     Typography,
     useMediaQuery,
     useTheme,
-    Rating,
-    Box,
 } from "@mui/material";
+import React from "react";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom to navigate
 
 const ProductCard = ({ product, isHot, isNew }) => {
@@ -34,13 +34,21 @@ const ProductCard = ({ product, isHot, isNew }) => {
     const totalRatings = product.ratings?.length;
     const totalScore = product.ratings?.reduce(
         (acc, rating) => acc + rating.rating,
-        0
+        0,
     );
     const averageRating = totalRatings > 0 ? totalScore / totalRatings : 0;
 
     // Dynamic font sizes based on screen size
-    const titleFontSize = isSmallScreen ? "1em" : isMediumScreen ? "1.2em" : "1.25em";
-    const priceFontSize = isSmallScreen ? "16px" : isMediumScreen ? "18px" : "20px";
+    const titleFontSize = isSmallScreen
+        ? "1em"
+        : isMediumScreen
+          ? "1.2em"
+          : "1.25em";
+    const priceFontSize = isSmallScreen
+        ? "16px"
+        : isMediumScreen
+          ? "18px"
+          : "20px";
 
     // Hàm trả về nhãn (HOT hoặc NEW)
     const getLabel = () => {
@@ -53,7 +61,7 @@ const ProductCard = ({ product, isHot, isNew }) => {
 
     return (
         <Link
-            to={`/product/${product.productId}`} // Ensure you have a route for product details
+            to={`/product/${product.productId}`}
             style={{ textDecoration: "none" }}
         >
             <Card
@@ -103,7 +111,7 @@ const ProductCard = ({ product, isHot, isNew }) => {
                             borderRadius: 1,
                             transition: "all 0.3s ease-in-out",
                             "&:hover": {
-                                transform: "scale(1.2)", // Zoom effect on hover
+                                transform: "scale(1.2)",
                             },
                         }}
                     />

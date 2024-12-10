@@ -1,8 +1,8 @@
 import { Box, Divider, List, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 import CouponItem from "../components/coupon/CouponItem";
 import ToastNoti from "../components/toast-noti/ToastNoti";
-import { useCookies } from "react-cookie";
 
 const CouponPage = () => {
     const [cookies, setCookie] = useCookies([]);
@@ -23,7 +23,7 @@ const CouponPage = () => {
                             "Content-Type": "application/json",
                             Authorization: `Bearer ${cookies.accessToken}`,
                         },
-                    }
+                    },
                 );
 
                 const data = await response.json();
@@ -53,7 +53,7 @@ const CouponPage = () => {
                             "Content-Type": "application/json",
                             Authorization: `Bearer ${cookies.accessToken}`,
                         },
-                    }
+                    },
                 );
 
                 const data = await response.json();
@@ -75,36 +75,44 @@ const CouponPage = () => {
     const handleReceiveCoupon = (id) => {
         // Find the coupon from availableCoupons
         const couponToReceive = availableCoupons.find(
-            (coupon) => coupon.code === id
+            (coupon) => coupon.code === id,
         );
 
         // Remove the coupon from availableCoupons
         const updatedAvailableCoupons = availableCoupons.filter(
-            (coupon) => coupon.code !== id
+            (coupon) => coupon.code !== id,
         );
 
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/coupons/receive/${id}`, {
-            method: "PATCH",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${cookies.accessToken}`,
+        fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/api/v1/coupons/receive/${id}`,
+            {
+                method: "PATCH",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${cookies.accessToken}`,
+                },
             },
-        }).then((response) => response.json()).then((data) => {
-            if (!data.success) {
-                console.error("Error:", data.message);
-                return;
-            }
-            
-            setAvailableCoupons(updatedAvailableCoupons); // Update available coupons
-            setMyCoupons((prevCoupons) => [...prevCoupons, couponToReceive]); // Add coupon to myCoupons
-    
-            // Show the toast notification
-            setShowToast(true);
-    
-            // Hide the toast after 3 seconds
-            setTimeout(() => setShowToast(false), 3000);
-        });
+        )
+            .then((response) => response.json())
+            .then((data) => {
+                if (!data.success) {
+                    console.error("Error:", data.message);
+                    return;
+                }
+
+                setAvailableCoupons(updatedAvailableCoupons); // Update available coupons
+                setMyCoupons((prevCoupons) => [
+                    ...prevCoupons,
+                    couponToReceive,
+                ]); // Add coupon to myCoupons
+
+                // Show the toast notification
+                setShowToast(true);
+
+                // Hide the toast after 3 seconds
+                setTimeout(() => setShowToast(false), 3000);
+            });
     };
 
     return (
