@@ -23,4 +23,13 @@ client
 		console.error("Elasticsearch disconnected", err);
 	});
 
+// // Create index products if not exists
+// client.indices.exists({ index: "products" }).then((exists) => {
+// 	if (!exists.body) {
+// 		client.indices.create({
+// 			index: "products",
+// 		});
+// 	}
+// });
+
 module.exports = client;

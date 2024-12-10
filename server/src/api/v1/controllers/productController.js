@@ -85,7 +85,8 @@ class ProductController {
 	// 	}
 	// }
 
-	async searchProducts(req, res) {
+
+    async searchProducts(req, res) {
 		const { q, sort, category, minPrice, maxPrice } = req.query;
 
 		try {
