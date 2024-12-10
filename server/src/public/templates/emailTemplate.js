@@ -424,7 +424,7 @@ const Checkout_Email_Template = `
             <p><strong>Phone:</strong> {phone}</p>
             <p><strong>Shipping Address:</strong> {shippingAddress}</p>
             <p><strong>Shipping Option:</strong> {shippingOption}</p>
-            <p><strong>Total Amount:</strong> ${total}</p>
+            <p><strong>Total Amount:</strong> {total}</p>
             
             <p><strong>Invoice Details:</strong></p>
             <table>
