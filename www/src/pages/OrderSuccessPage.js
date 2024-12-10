@@ -61,17 +61,6 @@ const OrderSuccessPage = () => {
 
                 <Button
                     component={Link}
-                    to="/invoice"
-                    variant="contained"
-                    color="primary"
-                    sx={{
-                        padding: "10px 1.25em",
-                    }}
-                >
-                    View Invoice
-                </Button>
-                <Button
-                    component={Link}
                     to="/orderManagement"
                     variant="contained"
                     color="primary"
