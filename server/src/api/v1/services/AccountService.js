@@ -7,7 +7,7 @@ require("dotenv").config();
 const {
 	Verification_Email_Template,
 	Forgot_Password_Template,
-} = require("../../../../../public/templates/emailTemplate");
+} = require("~/public/templates/emailTemplate");
 
 const sendEmail = require("~v1/services/sendEmail");
 

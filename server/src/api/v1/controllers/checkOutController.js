@@ -14,7 +14,7 @@ const sendEmail = require("~v1/services/sendEmail");
 const {
 	SendPassword_Email_Template,
 	Checkout_Email_Template,
-} = require("../../../../../public/templates/emailTemplate");
+} = require("~/public/templates/emailTemplate");
 
 
 function extractAddressComponents(text) {

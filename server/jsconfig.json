@@ -2,6 +2,7 @@
 	"compilerOptions": {
 		"baseUrl": ".",
 		"paths": {
+			"~/public": ["public"],
 			"~/*": ["src/*"],
 			"~v1/*": ["src/api/v1/*"]
 		}
