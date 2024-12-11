@@ -53,6 +53,7 @@ const SearchPage = () => {
         })
             .then((res) => res.json())
             .then((data) => {
+                console.log(data);
                 if (data.success) setProducts(data.message);
             })
             .catch((error) => console.error("Error:", error));

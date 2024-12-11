@@ -134,6 +134,7 @@ class ProductService {
 						comment: comment.comment,
 						createAt: comment.createAt,
 					})),
+					productId: product.productId,
 					createAt: product.createAt,
 					updateAt: product.updateAt,
 				},
