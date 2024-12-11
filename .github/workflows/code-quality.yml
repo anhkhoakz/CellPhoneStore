@@ -21,4 +21,4 @@ jobs:
 
         # Backend code quality
       - name: Move to the project directory
-        run: cd ../server && biome check --write --formatter-enabled=true --linter-enabled=true --organize-imports-enabled=true src/
+        run: cd server && biome check --write --formatter-enabled=true --linter-enabled=true --organize-imports-enabled=true src/
