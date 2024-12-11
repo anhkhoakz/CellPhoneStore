@@ -16,7 +16,7 @@ export default function MainGrid() {
     const [product, setProduct] = React.useState([]);
     const [orders, setOrders] = React.useState([]);
     const [deliveries, setDeliveries] = React.useState([]);
-    const [revenue, setRevenue] = React.useState([]);
+    const [_revenue, setRevenue] = React.useState([]);
     const [cookies] = useCookies([]);
     const [totalRevenue, setTotalRevenue] = React.useState(0);
     const [trendRevenue, setTrendRevenue] = React.useState([]);

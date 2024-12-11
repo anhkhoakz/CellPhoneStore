@@ -42,7 +42,7 @@ const CategoryPage = () => {
     }, [category]);
 
     // Xử lý thay đổi trang
-    const handleChangePage = (event, value) => {
+    const handleChangePage = (_event, value) => {
         setPage(value); // Cập nhật trang hiện tại
     };
 

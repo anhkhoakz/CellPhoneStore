@@ -17,8 +17,8 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-    const [cookies, setCookies] = useCookies([]);
-    const navigate = useNavigate();
+    const [_cookies, setCookies] = useCookies([]);
+    const _navigate = useNavigate();
 
     // Validation state
     const [emailError, setEmailError] = useState("");

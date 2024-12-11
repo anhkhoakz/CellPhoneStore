@@ -5,7 +5,7 @@ import CouponItem from "../components/coupon/CouponItem";
 import ToastNoti from "../components/toast-noti/ToastNoti";
 
 const CouponPage = () => {
-    const [cookies, setCookie] = useCookies([]);
+    const [cookies, _setCookie] = useCookies([]);
 
     const [myCoupons, setMyCoupons] = useState([]);
 

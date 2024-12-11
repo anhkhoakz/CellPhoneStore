@@ -32,7 +32,7 @@ const Navigation = () => {
     const [cookies, removeCookie] = useCookies([]);
 
     // Số lượng sản phẩm trong giỏ hàng
-    const [cartCount, setCartCount] = useState(5); // Mock số lượng sản phẩm là 5
+    const [cartCount, _setCartCount] = useState(5); // Mock số lượng sản phẩm là 5
 
     // Kiểm tra xem người dùng đã đăng nhập hay chưa
     useEffect(() => {

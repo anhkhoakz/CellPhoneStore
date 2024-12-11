@@ -210,16 +210,17 @@ const seedProducts = async () => {
 			image: "iphoneX.jpg",
 		},
 
-        {
+		{
 			name: "Laptop Lenovo ThinkPad P16s Gen 2 21HK004VVA",
-			description: "Description for Laptop Lenovo ThinkPad P16s Gen 2 21HK004VVA",
+			description:
+				"Description for Laptop Lenovo ThinkPad P16s Gen 2 21HK004VVA",
 			price: 12999000,
 			stock: 2,
 			category: "laptop",
 			image: "Laptop Lenovo ThinkPad P16s Gen 2 21HK004VVA.jpg",
 		},
 
-        {
+		{
 			name: "Lenovo Thinkpad T14 Gen 1 Core i5 1135G7",
 			description: "Description for Lenovo Thinkpad T14 Gen 1 Core i5 1135G7",
 			price: 13999000,
@@ -228,8 +229,7 @@ const seedProducts = async () => {
 			image: "Lenovo Thinkpad T14 Gen 1 Core i5.jpg",
 		},
 
-
-        {
+		{
 			name: "Laptop HUAWEI KLVD-WDH9 MATEBOOK 14",
 			description: "Description for Laptop HUAWEI KLVD-WDH9 MATEBOOK 14",
 			price: 17999000,
@@ -238,8 +238,7 @@ const seedProducts = async () => {
 			image: "Laptop HUAWEI KLVD-WDH9 MATEBOOK 14.jpg",
 		},
 
-
-        {
+		{
 			name: "Huawei MateBook D14 BE i3 1215U",
 			description: "Description for Huawei MateBook D14 BE i3 1215U",
 			price: 16999000,
@@ -248,7 +247,7 @@ const seedProducts = async () => {
 			image: "Huawei MateBook D14 BE i3 1215U.jpg",
 		},
 
-        {
+		{
 			name: "Laptop Dell Latitude 3420",
 			description: "Description for Laptop Dell Latitude 3420",
 			price: 15599000,
@@ -257,7 +256,7 @@ const seedProducts = async () => {
 			image: "Laptop Dell Latitude 3420.jpg",
 		},
 
-        {
+		{
 			name: "Laptop Dell Latitude 7410 Carbon",
 			description: "Description for Laptop Dell Latitude 7410 Carbon",
 			price: 17599000,
@@ -266,8 +265,7 @@ const seedProducts = async () => {
 			image: "Laptop Dell Latitude 7410 Carbon.jpg",
 		},
 
-        
-        {
+		{
 			name: "Laptop Asus ROG Zephyrus G16 GU605MV",
 			description: "Description for Laptop Asus ROG Zephyrus G16 GU605MV",
 			price: 24599000,
@@ -276,7 +274,7 @@ const seedProducts = async () => {
 			image: "Laptop Asus ROG Zephyrus G16 GU605MV.jpg",
 		},
 
-        {
+		{
 			name: "Laptop Asus Vivobook 16 X1605VA-MB105W",
 			description: "Description for Laptop Asus Vivobook 16 X1605VA-MB105W",
 			price: 27599000,
@@ -285,8 +283,7 @@ const seedProducts = async () => {
 			image: "Laptop Asus Vivobook 16 X1605VA-MB105W.jpg",
 		},
 
-
-        {
+		{
 			name: "Lenovo Tab M8 3",
 			description: "Description for Lenovo Tab M8 3",
 			price: 11599000,
@@ -295,7 +292,7 @@ const seedProducts = async () => {
 			image: "Lenovo Tab M8 3.jpg",
 		},
 
-        {
+		{
 			name: "Lenovo Tab M9",
 			description: "Description for Lenovo Tab M9",
 			price: 10599000,
@@ -304,17 +301,17 @@ const seedProducts = async () => {
 			image: "Lenovo Tab M9.jpg",
 		},
 
-        {
+		{
 			name: "Original Xiaomi Mi Pad 5 Pro 5 Gam Tablet PC 11",
-			description: "Description for Original Xiaomi Mi Pad 5 Pro 5 Gam Tablet PC 11",
+			description:
+				"Description for Original Xiaomi Mi Pad 5 Pro 5 Gam Tablet PC 11",
 			price: 13599000,
 			stock: 2,
 			category: "tablet",
 			image: "Original Xiaomi Mi Pad 5 Pro 5 Gam Tablet PC 11.jpg",
 		},
 
-
-        {
+		{
 			name: "Xiaomi Pad 6 Max 4G",
 			description: "Description for Xiaomi Pad 6 Max 4G",
 			price: 8999000,
@@ -323,7 +320,7 @@ const seedProducts = async () => {
 			image: "Xiaomi Pad 6 Max 4G.jpg",
 		},
 
-        {
+		{
 			name: "Xiaomi Redmi Pad Pro",
 			description: "Description for Xiaomi Redmi Pad Pro",
 			price: 10999000,
@@ -331,8 +328,8 @@ const seedProducts = async () => {
 			category: "tablet",
 			image: "Xiaomi Redmi Pad Pro.jpg",
 		},
-        
-        {
+
+		{
 			name: "Samsung Galaxy Tab A7",
 			description: "Description for Samsung Galaxy Tab A7",
 			price: 11999000,
@@ -341,7 +338,7 @@ const seedProducts = async () => {
 			image: "Samsung Galaxy Tab A7.jpg",
 		},
 
-        {
+		{
 			name: "Samsung Galaxy Tab S9 FE",
 			description: "Description for Samsung Galaxy Tab S9 FE",
 			price: 10999000,
@@ -350,7 +347,7 @@ const seedProducts = async () => {
 			image: "Samsung Galaxy Tab S9 FE.jpg",
 		},
 
-        {
+		{
 			name: "SamsungGalaxyTabS6 ite202",
 			description: "Description for SamsungGalaxyTabS6 ite202",
 			price: 7999000,
@@ -359,121 +356,117 @@ const seedProducts = async () => {
 			image: "SamsungGalaxyTabS6 ite202.jpg",
 		},
 
-
-        {
+		{
 			name: "iphone 13",
 			description: "Description for iphone 13",
 			price: 11999000,
 			stock: 10,
 			category: "phone",
 			image: "iphone13hong.jpg",
-            variants: [
-                {
-                    name: "hồng",
-                    stock: 5,
-                    price: 11999000,
-                    image: "iphone13hong.jpg",
-                },
-                {
-                    name: "xanh",
-                    stock: 2,
-                    price: 12555000,
-                    image: "iphone13xanh.jpg",
-                },
-                {
-                    name: "đen",
-                    stock: 3,
-                    price: 12399000,
-                    image: "iphone13den.jpg",
-                },
-            ],
+			variants: [
+				{
+					name: "hồng",
+					stock: 5,
+					price: 11999000,
+					image: "iphone13hong.jpg",
+				},
+				{
+					name: "xanh",
+					stock: 2,
+					price: 12555000,
+					image: "iphone13xanh.jpg",
+				},
+				{
+					name: "đen",
+					stock: 3,
+					price: 12399000,
+					image: "iphone13den.jpg",
+				},
+			],
 		},
 
-        {
+		{
 			name: "sam sung galaxy s22 ultra",
 			description: "Description for sam sung galaxy s22 ultra",
 			price: 12999000,
 			stock: 19,
 			category: "phone",
 			image: "samsunggalaxyS22ultratrang.jpg",
-            variants: [
-                {
-                    name: "trắng",
-                    stock: 12,
-                    price: 12999000,
-                    image: "samsunggalaxyS22ultratrang.jpg",
-                },
-                {
-                    name: "đen",
-                    stock: 7,
-                    price: 13200000,
-                    image: "samsungS22ultra.jpg",
-                }
-            ],
+			variants: [
+				{
+					name: "trắng",
+					stock: 12,
+					price: 12999000,
+					image: "samsunggalaxyS22ultratrang.jpg",
+				},
+				{
+					name: "đen",
+					stock: 7,
+					price: 13200000,
+					image: "samsungS22ultra.jpg",
+				},
+			],
 		},
-        
 
-        {
+		{
 			name: "iphone 12 pro max",
 			description: "Description for iphone 12 pro max",
 			price: 10999000,
 			stock: 15,
 			category: "phone",
 			image: "iphone12prothanchi.jpg",
-            variants: [
-                {
-                    name: "than chì",
-                    stock: 5,
-                    price: 10999000,
-                    image: "iphone12prothanchi.jpg",
-                },
-                {
-                    name: "vàng",
-                    stock: 7,
-                    price: 10990000,
-                    image: "iphone12promaxvangf.jpg",
-                },
-                {
-                    name: "xanh",
-                    stock: 3,
-                    price: 10999000,
-                    image: "iphone12proxanh.jpg",
-                }
-            ],
+			variants: [
+				{
+					name: "than chì",
+					stock: 5,
+					price: 10999000,
+					image: "iphone12prothanchi.jpg",
+				},
+				{
+					name: "vàng",
+					stock: 7,
+					price: 10990000,
+					image: "iphone12promaxvangf.jpg",
+				},
+				{
+					name: "xanh",
+					stock: 3,
+					price: 10999000,
+					image: "iphone12proxanh.jpg",
+				},
+			],
 		},
 
-
-        {
+		{
 			name: "iphone 11 (cũ)",
 			description: "Description for iphone 11",
 			price: 8999000,
 			stock: 18,
 			category: "phone",
 			image: "iphone11white.jpg",
-            variants: [
-                {
-                    name: "đen",
-                    stock: 5,
-                    price: 8999000,
-                    image: "iphone11black.jpg",
-                },
-                {
-                    name: "trắng",
-                    stock: 8,
-                    price: 8990000,
-                    image: "iphone11white.jpg",
-                },
-                {
-                    name: "xanh dương",
-                    stock: 5,
-                    price: 7799000,
-                    image: "iphone11blue.jpg",
-                }
-            ],
+			variants: [
+				{
+					name: "đen",
+					stock: 5,
+					price: 8999000,
+					image: "iphone11black.jpg",
+				},
+				{
+					name: "trắng",
+					stock: 8,
+					price: 8990000,
+					image: "iphone11white.jpg",
+				},
+				{
+					name: "xanh dương",
+					stock: 5,
+					price: 7799000,
+					image: "iphone11blue.jpg",
+				},
+			],
 		},
 
-
-        {
+		{
 			name: "iphone 8 (cũ)",
 			description: "Description for iphone 8",
 			price: 2399000,
@@ -482,7 +475,7 @@ const seedProducts = async () => {
 			image: "iphone8.jpg",
 		},
 
-        {
+		{
 			name: "iphone 8 plus (cũ)",
 			description: "Description for iphone 8 plus",
 			price: 3999000,
@@ -491,6 +484,18 @@ const seedProducts = async () => {
 			image: "iphone8plus.jpg",
 		},
 
+<<<<<<< HEAD
+=======
+		{
+			name: "iphone 8 plus (cũ)",
+			description: "Description for iphone 8 plus",
+			price: 3999000,
+			stock: 10,
+			category: "phone",
+			image: "iphone8plus.jpg",
+		},
+
+>>>>>>> accd81a2a6dac5bc837c3de8b6d20f4638e7a030
 		{
 			name: "Điện Thoại OPPO A18 128GB Xanh",
 			description: "Description for Điện Thoại OPPO A18 128GB Xanh",
@@ -508,15 +513,12 @@ const seedProducts = async () => {
 			category: "phone",
 			image: "Điện Thoại OPPO A57 64GB Đen.jpg",
 		},
-
-
 	];
 
 	for (const product of products) {
 		const newProduct = await Product.create(product);
 
-        
-        await addProductToIndex(newProduct);
+		await addProductToIndex(newProduct);
 
 		console.log(
 			"Saved product:",
