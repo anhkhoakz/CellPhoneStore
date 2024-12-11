@@ -55,7 +55,7 @@ export default function ProductsTable() {
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = React.useState(false); // State for confirm dialog
     const [productToDelete, setProductToDelete] = React.useState(null); // Product selected for deletion
 
-    const [cookies, setCookie] = useCookies([]);
+    const [cookies, _setCookie] = useCookies([]);
     React.useEffect(() => {
         fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/products`)
             .then((response) => response.json())

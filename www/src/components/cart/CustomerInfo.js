@@ -36,7 +36,7 @@ const CustomerInfo = ({ setName, setPhone, setAddress, setEmail }) => {
     const [provinces, setProvinces] = useState([]);
     const [districts, setDistricts] = useState([]);
     const [wards, setWards] = useState([]);
-    const [errors, setErrors] = useState({
+    const [errors, _setErrors] = useState({
         address: "",
         province: "",
         district: "",
@@ -45,7 +45,7 @@ const CustomerInfo = ({ setName, setPhone, setAddress, setEmail }) => {
 
     const debouncedAddress = useDebounce(address, 3000);
 
-    const [cookies] = useCookies([]);
+    const [_cookies] = useCookies([]);
 
     // Fetch provinces data
     useEffect(() => {

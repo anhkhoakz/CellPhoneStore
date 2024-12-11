@@ -30,7 +30,7 @@ const OrderManagementPage = () => {
             });
     }, [cookies.accessToken]);
 
-    const [filteredOrders, setFilteredOrders] = useState([]);
+    const [_filteredOrders, setFilteredOrders] = useState([]);
 
     useEffect(() => {
         setFilteredOrders(orders);
