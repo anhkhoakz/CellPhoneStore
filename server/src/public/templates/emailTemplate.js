@@ -419,7 +419,7 @@ const Checkout_Email_Template = `
             <p class="welcome-message">Hello {name},</p>
             <p>We have received your order. Here are the details:</p>
             <p><strong>Order Summary:</strong></p>
-            <p><strong>Name:</strong> {name}</p>
+            <p><strong>Name:</strong> {receiver name}</p>
             <p><strong>Email:</strong> {email}</p>
             <p><strong>Phone:</strong> {phone}</p>
             <p><strong>Shipping Address:</strong> {shippingAddress}</p>

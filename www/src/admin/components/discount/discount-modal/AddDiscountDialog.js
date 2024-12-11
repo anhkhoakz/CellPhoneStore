@@ -214,7 +214,7 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
                     locale={enGB}
                 >
                     <Box sx={{ margin: "1em 0 0.5em 0" }}>
-                        <label>Discounted Product Type</label>
+                        <label>Expiry Date</label>
                         <Box>
                             <DesktopDatePicker
                                 inputFormat="dd/MM/yyyy"

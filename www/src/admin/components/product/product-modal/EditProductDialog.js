@@ -109,7 +109,7 @@ export default function EditProductDialog({
 
     return (
         <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-            <DialogTitle>Chỉnh sửa Sản Phẩm</DialogTitle>
+            <DialogTitle>Edit Product</DialogTitle>
             <DialogContent>
                 <TextField
                     label="Product ID"
@@ -203,14 +203,17 @@ export default function EditProductDialog({
                         }
                     />
                 </Button>
-                {/* {editedProductData.image ? (
-                    <p>{editedProductData.image}</p> // Hiển thị tên hình ảnh hiện tại
+
+                
+                {editedProductData.image ? (
+                    <p>{editedProductData.image || productData.image}</p> 
                 ) : productData.image ? (
-                    <p>{productData.image}</p> // Hiển thị tên hình ảnh của sản phẩm cũ nếu có
-                ) : null} */}
+                    <p>{productData.image}</p>
+                ) : null}
+
 
                 <div style={{ marginTop: "1.25em" }}>
-                    <h4>Màu sắc và hình ảnh</h4>
+                    <h4>Colors and images</h4>
                     {editedProductData.variants.map((colorData, index) => (
                         <div
                             key={index}

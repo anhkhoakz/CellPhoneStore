@@ -43,7 +43,7 @@ function App() {
                         element={
                             <>
                                 <Header />
-                                <Navigation />
+                                <Navigation  />
                                 <main>
                                     <Routes>
                                         <Route

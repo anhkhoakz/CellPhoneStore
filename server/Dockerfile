@@ -15,8 +15,6 @@ COPY . /app
 
 COPY . .
 
-
-
 # ENV NODE_ENV=production
 ENV DB_URL=mongodb://mongo:27017/CellPhoneStore
 ENV REDIS_HOST=redis

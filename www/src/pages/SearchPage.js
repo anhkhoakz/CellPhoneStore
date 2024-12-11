@@ -16,107 +16,67 @@ const SearchPage = () => {
     const location = useLocation();
     const [searchQuery, setSearchQuery] = useState("");
     const [results, setResults] = useState([]);
-    const [sort, setSort] = useState("default");
+    const [sort, setSort] = useState(null);
     const [priceRange, setPriceRange] = useState("");
     const [category, setCategory] = useState("");
 
-    const [products, setProducts] = useState([]);
-
     useEffect(() => {
-        const params = new URLSearchParams(location.search);
-        const query = params.get("query");
+        const fetchProducts = async () => {
+            const params = new URLSearchParams(location.search);
+            const query = params.get("query");
 
-        const queryParams = new URLSearchParams();
-        if (query) queryParams.append("q", query);
-        if (category) queryParams.append("category", category);
-        if (priceRange === "below_3") queryParams.append("maxPrice", 3000);
-        if (priceRange === "3_5") {
-            queryParams.append("minPrice", 3000);
-            queryParams.append("maxPrice", 5000);
-        }
-        if (priceRange === "5_10") {
-            queryParams.append("minPrice", 5000);
-            queryParams.append("maxPrice", 10000);
-        }
-        if (priceRange === "10_20") {
-            queryParams.append("minPrice", 10000);
-            queryParams.append("maxPrice", 20000);
-        }
-        if (priceRange === "above_20") queryParams.append("minPrice", 20000);
-        if (sort) queryParams.append("sort", sort);
+            const queryObj = {
+                q: query || "",
+                category: category || null,
+            };
 
-        const url = `${process.env.REACT_APP_BACKEND_URL}/api/v1/products/search?${queryParams.toString()}`;
+            if (priceRange === "below_3") queryObj.maxPrice = 3000;
+            if (priceRange === "3_5") {
+                queryObj.minPrice = 3000;
+                queryObj.maxPrice = 5000;
+            }
+            if (priceRange === "5_10") {
+                queryObj.minPrice = 5000;
+                queryObj.maxPrice = 10000;
+            }
+            if (priceRange === "10_20") {
+                queryObj.minPrice = 10000;
+                queryObj.maxPrice = 20000;
+            }
+            if (priceRange === "above_20") queryObj.minPrice = 20000;
 
-        fetch(url, {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                console.log(data);
-                if (data.success) setProducts(data.message);
-            })
-            .catch((error) => console.error("Error:", error));
+            if (sort) {
+                queryObj.sort = sort;
+            }
+
+            try {
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/products/search`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(queryObj),
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    setResults(data.data || []);
+                } else {
+                    console.error("Error fetching products:", data.message);
+                    setResults([]);
+                }
+            } catch (error) {
+                console.error("Error performing search:", error);
+                setResults([]);
+            }
+        };
+
+        fetchProducts();
     }, [location.search, sort, priceRange, category]);
 
     useEffect(() => {
         const params = new URLSearchParams(location.search);
         const query = params.get("query");
-        setSearchQuery(query);
-
-        let filteredResults = products;
-
-        if (query) {
-            filteredResults = products.filter((item) =>
-                item.name.toLowerCase().includes(query.toLowerCase()),
-            );
-        }
-
-        // Lọc theo category
-        if (category) {
-            filteredResults = filteredResults.filter(
-                (item) => item.category === category,
-            );
-        }
-
-        // Lọc theo giá
-        if (priceRange) {
-            if (priceRange === "below_3") {
-                filteredResults = filteredResults.filter(
-                    (item) => item.price < 3000,
-                );
-            } else if (priceRange === "3_5") {
-                filteredResults = filteredResults.filter(
-                    (item) => item.price >= 3000 && item.price <= 5000,
-                );
-            } else if (priceRange === "5_10") {
-                filteredResults = filteredResults.filter(
-                    (item) => item.price >= 5000 && item.price <= 10000,
-                );
-            } else if (priceRange === "10_20") {
-                filteredResults = filteredResults.filter(
-                    (item) => item.price >= 10000 && item.price <= 20000,
-                );
-            } else if (priceRange === "above_20") {
-                filteredResults = filteredResults.filter(
-                    (item) => item.price > 20000,
-                );
-            }
-        }
-
-        // Sắp xếp kết quả
-        if (sort === "price_asc") {
-            filteredResults.sort((a, b) => a.price - b.price);
-        } else if (sort === "price_desc") {
-            filteredResults.sort((a, b) => b.price - a.price);
-        } else if (sort === "name_asc") {
-            filteredResults.sort((a, b) => a.name.localeCompare(b.name));
-        } else if (sort === "name_desc") {
-            filteredResults.sort((a, b) => b.name.localeCompare(a.name));
-        }
-
-        setResults(filteredResults);
-    }, [location.search, sort, priceRange, category, products]);
+        setSearchQuery(query || "");
+    }, [location.search]);
 
     return (
         <Box
@@ -133,7 +93,7 @@ const SearchPage = () => {
                     variant="h5"
                     sx={{ mb: 3, color: "primary.main", fontWeight: "bold" }}
                 >
-                    Kết quả tìm kiếm cho: "{searchQuery}"
+                    Search results for: "{searchQuery}"
                 </Typography>
             )}
 
@@ -152,7 +112,6 @@ const SearchPage = () => {
                     </Select>
                 </FormControl>
 
-                {/* Phần lọc theo giá */}
                 <FormControl variant="outlined" sx={{ minWidth: 200 }}>
                     <InputLabel>Price Range</InputLabel>
                     <Select
@@ -168,6 +127,7 @@ const SearchPage = () => {
                         <MenuItem value="above_20">Above 20M</MenuItem>
                     </Select>
                 </FormControl>
+
                 <FormControl variant="outlined" sx={{ minWidth: 200 }}>
                     <InputLabel>Sort by</InputLabel>
                     <Select
@@ -175,19 +135,15 @@ const SearchPage = () => {
                         onChange={(e) => setSort(e.target.value)}
                         label="Sort by"
                     >
-                        <MenuItem value="default">Default</MenuItem>
-                        <MenuItem value="price_asc">
-                            Price: Low to High
-                        </MenuItem>
-                        <MenuItem value="price_desc">
-                            Price: High to Low
-                        </MenuItem>
+                        <MenuItem value="">Default</MenuItem>
+                        <MenuItem value="price_asc">Price: Low to High</MenuItem>
+                        <MenuItem value="price_desc">Price: High to Low</MenuItem>
                         <MenuItem value="name_asc">Name: A to Z</MenuItem>
                         <MenuItem value="name_desc">Name: Z to A</MenuItem>
                     </Select>
                 </FormControl>
             </Box>
-            {/* Hiển thị kết quả tìm kiếm */}
+
             {results.length > 0 ? (
                 <Grid
                     container
@@ -199,7 +155,7 @@ const SearchPage = () => {
                     }}
                 >
                     {results.map((product) => (
-                        <Grid item key={product.productId}>
+                        <Grid item key={product.id}>
                             <ProductCard product={product} />
                         </Grid>
                     ))}

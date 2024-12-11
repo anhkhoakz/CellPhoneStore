@@ -15,4 +15,5 @@ EXPOSE 3000
 
 RUN pnpm build
 
-CMD ["pnpm", "start"]
+CMD ["pnpm", "start",]
+# CMD ["sh", "-c", "pnpm start && node src/seeders/product.js && node src/seeders/administrator.js && node src/seeders/coupon.js"]

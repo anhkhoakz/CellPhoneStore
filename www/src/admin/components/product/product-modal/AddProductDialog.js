@@ -123,7 +123,7 @@ export default function AddProductDialog({ open, onClose, onSave }) {
 
     return (
         <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-            <DialogTitle>Thêm Sản Phẩm Mới</DialogTitle>
+            <DialogTitle>Add New Product</DialogTitle>
             <DialogContent>
                 <TextField
                     label="Product Name"

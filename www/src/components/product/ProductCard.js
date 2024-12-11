@@ -117,13 +117,16 @@ const ProductCard = ({ product, isHot, isNew }) => {
                     />
                 </div>
                 <CardContent>
-                    <Typography
+                <Typography
                         variant="h6"
                         component="div"
                         sx={{
                             textAlign: "left",
                             fontSize: titleFontSize,
                             "&:hover": { cursor: "pointer" },
+                            overflow: "hidden", 
+                            textOverflow: "ellipsis", 
+                            whiteSpace: "nowrap",
                         }}
                         data-id={product.productId}
                     >

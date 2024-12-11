@@ -39,6 +39,7 @@ const CartPage = () => {
                         );
 
                     const id = variant ? variant._id : item.productDetails._id; // Variant ID or product ID
+                    const variantId = variant ? variant._id : null; 
                     const productId = item.productDetails.productId;
                     const category = item.productDetails.category; // Category
                     const name = variant
@@ -54,6 +55,7 @@ const CartPage = () => {
 
                     return {
                         id,
+                        variantId,
                         productId,
                         name,
                         category,

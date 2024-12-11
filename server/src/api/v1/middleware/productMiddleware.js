@@ -1,10 +1,10 @@
 const validator = require("validator");
 
 const checkProductValidation = (req, res, next) => {
-	const { name, price, category, stock, variants } = req.body;
+	const { name, price, category, stock, variants, image } = req.body;
 
 	// Ensure that req.files exists before accessing fields like 'image' and 'images'
-	const hasMainImage = req.files?.some((file) => file.fieldname === "image");
+	const hasMainImage = req.files?.some((file) => file.fieldname === "image") || image;
 
 	// Check if all required fields are provided, including the main image
 	const isAllFieldsProvided =

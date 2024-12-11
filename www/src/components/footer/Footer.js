@@ -14,7 +14,7 @@ const Footer = () => {
         >
             <Container>
                 <Typography variant="body1" align="center">
-                    &copy; {new Date().getFullYear()} My company
+                    &copy; {new Date().getFullYear()} KKP Phone Store
                 </Typography>
                 <Typography variant="body2" align="center">
                     <Link href="#" color="inherit" underline="hover">

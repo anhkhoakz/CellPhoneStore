@@ -2,72 +2,13 @@
 
 const mongoose = require("mongoose");
 const client = require("../config/elasticsearch");
-// const mongooseSequence = require("mongoose-sequence")(mongoose);
-// const Schema = mongoose.Schema;
 
-// const categoryValues = ["phone", "laptop", "tablet", "headphone"];
-
-// const productSchema = new Schema({
-// 	name: { type: String, maxLength: 255, required: true, trim: true },
-// 	price: { type: Number, required: true },
-// 	description: { type: String, maxLength: 600 },
-// 	category: {
-// 		type: String,
-// 		enum: categoryValues,
-// 		required: true,
-// 	},
-// 	productId: { type: Number, unique: true },
-// 	stock: { type: Number, required: true },
-
-// 	sold: { type: Number, default: 0 },
-
-// 	variants: [
-// 		{
-// 			name: String,
-// 			stock: Number,
-// 			price: Number,
-// 			image: String,
-// 		},
-// 	],
-
-// 	ratings: [
-// 		{
-// 			userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-// 			rating: Number,
-// 		},
-// 	],
-
-// 	comments: [
-// 		{
-// 			username: { type: String, required: true },
-// 			comment: String,
-// 			createAt: { type: Date, default: Date.now },
-// 		},
-// 	],
-
-// 	image: { type: String, required: true },
-// 	images: [{ type: String }],
-
-// 	createAt: { type: Date, default: Date.now, immutable: true },
-// 	updateAt: { type: Date, default: Date.now },
-// });
-
-// productSchema.pre("save", function (next) {
-// 	this.updateAt = Date.now();
-// 	next();
-// });
-
-// productSchema.plugin(mongooseSequence, {
-// 	inc_field: "productId",
-// 	start_seq: 1,
-// });
-
-// const Product = mongoose.model("Product", productSchema);
 
 const Product = require("../api/v1/models/Product");
 
 const addProductToIndex = async (product) =>{
     try {
+		console.log("🚀 ~ addProductToIndex ~ productId:", product.productId)
         await client.index({
             index: "products",
             id: product._id.toString(),

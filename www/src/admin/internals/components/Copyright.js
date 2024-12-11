@@ -17,7 +17,7 @@ export default function Copyright(props) {
         >
             {"Copyright © "}
             <Link color="inherit" href="/admin">
-                CellPhoneStore
+                KKP Phone Store
             </Link>{" "}
             {new Date().getFullYear()}
             {"."}

@@ -12,10 +12,9 @@ const hashPassword = require("~v1/helpers/hashPassword");
 const sendEmail = require("~v1/services/sendEmail");
 
 const {
-	SendPassword_Email_Template,
-	Checkout_Email_Template,
+    SendPassword_Email_Template,
+    Checkout_Email_Template,
 } = require("~/public/templates/emailTemplate");
-
 
 function extractAddressComponents(text) {
     const communeMatch = text.match(/([\w\s]+ Commune)/);
@@ -30,274 +29,353 @@ function extractAddressComponents(text) {
 }
 
 module.exports = {
-	async checkout(req, res) {
-		try {
-			const {
-				couponCode,
-				pointsRedeemed,
-				shippingAddress,
-				items,
-				email,
-				shippingOption,
-				total,
-			} = req.body;
+    async checkout(req, res) {
+        try {
+            const {
+                couponCode,
+                pointsRedeemed,
+                shippingAddress,
+                items,
+                email,
+                shippingOption,
+                total,
+            } = req.body;
 
-			if (!email || !shippingAddress || !items || !shippingOption || !total) {
+            if (
+                !email ||
+                !shippingAddress ||
+                !items ||
+                !shippingOption ||
+                !total
+            ) {
+                console.log("Missing fields:", {
+                    email,
+                    shippingAddress,
+                    items,
+                    shippingOption,
+                    total,
+                });
+                return res.status(400).json({
+                    success: false,
+                    message: "Please provide all required fields",
+                });
+            }
 
-				console.log("Missing fields:", { email, shippingAddress, items, shippingOption, total });
-				return res.status(400).json({
-					success: false,
-					message: "Please provide all required fields",
-				});
-			}
+            const isLogin = !!req.user;
 
+            let user = await User.findOne({ email: email });
 
-			const isLogin = !!req.user;
+            if (!user) {
+                const password = generatePassword();
+                const extractedComponents = extractAddressComponents(
+                    shippingAddress.detail
+                );
 
-			let user = await User.findOne({ email: email });
+                user = await User.create({
+                    username: shippingAddress.name,
+                    email: email,
+                    password: await hashPassword(password),
+                    phone: shippingAddress.phone,
+                    addresses: [
+                        {
+                            village: extractedComponents.village,
+                            district: extractedComponents.district,
+                            city: extractedComponents.city,
+                            detail: shippingAddress.detail,
+                            receiver: shippingAddress.name,
+                            phone: shippingAddress.phone,
+                            isDefault: true,
+                        },
+                    ],
+                });
 
-			if (!user) {
-				const password = generatePassword();
-				const extractedComponents = extractAddressComponents(shippingAddress.detail);
+                const emailTemplate = SendPassword_Email_Template.replace(
+                    "{verificationCode}",
+                    password
+                ).replace("{email}", user.email);
+                await sendEmail(
+                    user.email,
+                    "Your Account Details",
+                    emailTemplate
+                );
+            }
 
-				user = await User.create({
-					username: shippingAddress.name,
-					email: email,
-					password: await hashPassword(password),
-					phone: shippingAddress.phone,
-					addresses: [
-						{
+            const userId = user._id;
 
-							village: extractedComponents.village,
-							district: extractedComponents.district,
-							city: extractedComponents.city,
-							detail: shippingAddress.detail,
-							receiver: shippingAddress.name,
-							phone: shippingAddress.phone,
-							isDefault: true,
-						},
-					],
-				});
+            let coupon;
+            if (couponCode && isLogin && couponCode.trim() !== "") {
+                coupon = await Coupon.findOne({
+                    code: couponCode,
+                    quantity: { $gt: 0 },
+                    usedBy: { $ne: userId },
+                });
+                if (!coupon) {
+                    return res.status(400).json({
+                        success: false,
+                        message: "Invalid coupon code",
+                    });
+                }
+            }
 
-				const emailTemplate = SendPassword_Email_Template.replace(
-					"{verificationCode}",
-					password,
-				).replace("{email}", user.email);
-				await sendEmail(user.email, "Your Account Details", emailTemplate);
-			}
+            const orderData = {
+                userId,
+                items,
+                shippingAddress,
+                shippingOption,
+                totalAmount: total,
+                coupon: coupon ? coupon._id : null,
+            };
+            const order = await Order.create(orderData);
 
-			const userId = user._id;
+            if (req.user) {
+                await Cart.deleteOne({ userId });
+            } else {
+                res.clearCookie("cart");
+            }
 
-			let coupon;
-			if (couponCode && isLogin && couponCode.trim() !== "") {
-				coupon = await Coupon.findOne({
-					code: couponCode,
-					quantity: { $gt: 0 },
-					usedBy: { $ne: userId },
-				});
-				if (!coupon) {
-					return res.status(400).json({
-						success: false,
-						message: "Invalid coupon code",
-					});
-				}
-			}
+            for (const item of items) {
+                if (item.variantId) {
+                    await Product.findOneAndUpdate(
+                        {
+                            productId: item.productId,
+                            "variants._id": item.variantId,
+                        },
+                        {
+                            $inc: {
+								stock: -item.quantity, // Decrease stock
+                                sold: item.quantity, // Increase sold
+                                "variants.$.stock": -item.quantity, // Decrease stock
+                                "variants.$.sold": item.quantity, // Increase sold count
+                            },
+                            $set: { updateAt: new Date() }, // Update `updateAt` to current date
+                        },
+                        { new: true } // Return the updated document
+                    );
+                } else {
+                    await Product.findOneAndUpdate(
+                        { productId: item.productId },
+                        {
+                            $inc: {
+                                stock: -item.quantity, // Decrease stock
+                                sold: item.quantity, // Increase sold
+                            },
+                        },
+                        { new: true }
+                    );
+                }
+            }
 
-			const orderData = {
-				userId,
-				items,
-				shippingAddress,
-				shippingOption,
-				totalAmount: total,
-				coupon: coupon ? coupon._id : null,
-			};
-			const order = await Order.create(orderData);
+            if (pointsRedeemed && isLogin) {
+                const loyalty = await Loyalty.findOne({ userId });
+                loyalty.pointsRedeemed += pointsRedeemed;
+                loyalty.pointsEarned -= pointsRedeemed;
+                await loyalty.save();
+            }
 
-			if (req.user) {
-				await Cart.deleteOne({ userId });
-			} else {
-				res.clearCookie("cart");
-			}
+            if (coupon) {
+                coupon.quantity -= 1;
+                coupon.usedBy.push(userId);
+                coupon.quantityUsed += 1;
+                await coupon.save();
+            }
 
-			for (const item of items) {
-				await Product.findOneAndUpdate(
-					{ productId: item.productId },
-					{
-						$inc: {
-							stock: -item.quantity, // Decrease stock
-							sold: item.quantity, // Increase sold
-						},
-					},
-					{ new: true },
-				);
-			}
-
-			if (pointsRedeemed && isLogin) {
-				const loyalty = await Loyalty.findOne({ userId });
-				loyalty.pointsRedeemed += pointsRedeemed;
-				loyalty.pointsEarned -= pointsRedeemed;
-				await loyalty.save();
-			}
-
-			if (coupon) {
-				coupon.quantity -= 1;
-				coupon.usedBy.push(userId);
-				coupon.quantityUsed += 1;
-				await coupon.save();
-			}
-
-			const itemsRows = items.map(item => `
+            const itemsRows = items
+                .map(
+                    (item) => `
 				<tr>
 					<td>${item.name}</td>
 					<td>${item.price}</td>
 					<td>${item.quantity}</td>
-					<td>${item.color || "N/A"}</td>
+					<td>${item.variants ?? "default"}</td>
 				</tr>
-			`).join("");
-	
-			const emailTemplate = Checkout_Email_Template
-				.replace("{name}", user.username)
-				.replace("{email}", user.email)
-				.replace("{phone}", shippingAddress.phone)
-				.replace("{shippingAddress}", shippingAddress.detail)
-				.replace("{shippingOption}", shippingOption)
-				.replace("{total}", total)
-				.replace("{itemsRows}", itemsRows);
+			`
+                )
+                .join("");
 
+            const emailTemplate = Checkout_Email_Template.replace(
+                "{name}",
+                user.username
+            )
+                .replace("{email}", user.email)
+                .replace("{receiver name}", shippingAddress.name)
+                .replace("{phone}", shippingAddress.phone)
+                .replace("{shippingAddress}", shippingAddress.detail)
+                .replace("{shippingOption}", shippingOption)
+                .replace("{total}", total)
+                .replace("{itemsRows}", itemsRows);
 
-			await sendEmail(user.email, "Order Confirmation", emailTemplate);
+            await sendEmail(user.email, "Order Confirmation", emailTemplate);
 
-			res.status(201).json({
-				success: true,
-				message: "Order placed successfully",
-				order,
-			});
-		} catch (error) {
-			res.status(500).json({ success: false, message: error.message });
-		}
-	},
+            res.status(201).json({
+                success: true,
+                message: "Order placed successfully",
+                order,
+            });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    },
 
-	async cancelOrder(req, res) {
-		try {
-			const { orderId } = req.params;
+    async cancelOrder(req, res) {
+        try {
+            const { orderId } = req.params;
 
-			const { noted } = req.body;
+            const { noted } = req.body;
 
-			const order = await Order.findById(orderId);
-			if (!order) {
-				return res.status(400).json({
-					success: false,
-					message: "Order not found",
-				});
-			}
+            const order = await Order.findById(orderId);
+            if (!order) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Order not found",
+                });
+            }
 
-			if (order.status !== "pending" || order.status !== "confirmed") {
-				return res.status(400).json({
-					success: false,
-					message: "Order cannot be cancelled",
-				});
-			}
+            if (order.status !== "pending" || order.status !== "confirmed") {
+                return res.status(400).json({
+                    success: false,
+                    message: "Order cannot be cancelled",
+                });
+            }
 
-			const { items, coupon, pointsRedeemed } = order;
+            const { items, coupon, pointsRedeemed } = order;
+
 
 			for (const item of items) {
-				const product = await Product.findOne({ productId: item.productId });
-				if (!product) {
-					continue;
-				}
+				if (item.variantId) {
+					await Product.findOneAndUpdate( // Find and update the product
+						{
+							productId: item.productId, // Find by productId
+							"variants._id": item.variantId, // Find by variantId
+						},
+						{
+							$inc: {
+								stock: item.quantity, // Increase stock
+								sold: -item.quantity, // Decrease sold
+								"variants.$.stock": item.quantity, // Increase stock
+								"variants.$.sold": -item.quantity, // Decrease sold count
+							},
+							$set: { updateAt: new Date() }, // Update `updateAt` to current date
+						},
+						{ new: true } // Return the updated document
+					);
 
-				product.stock += item.quantity;
-				product.sold -= item.quantity;
-
-				await product.save();
-			}
-
-			if (coupon) {
-				const coupon = await Coupon.findById(order.coupon);
-				coupon.quantity += 1;
-				coupon.usedBy = coupon.usedBy.filter(
-					(id) => id.toString() !== order.userId.toString(),
-				);
-				coupon.quantityUsed -= 1;
-				await coupon.save();
-			}
-
-			if (pointsRedeemed) {
-				const loyalty = await Loyalty.findOne({ userId });
-				loyalty.pointsRedeemed -= pointsRedeemed;
-				loyalty.pointsEarned += pointsRedeemed;
-				await loyalty.save();
-			}
-
-			order.status = "cancelled";
-			order.noted = noted;
-
-			await order.save();
-
-			res.json({
-				success: true,
-				message: "Order cancelled successfully",
-			});
-		} catch (error) {
-			res.status(500).json({ success: false, message: error.message });
-		}
-	},
-
-	async updateOrderStatus(req, res) {
-		try {
-			const { orderId } = req.params;
-			const { status } = req.body;
-
-			const order = await Order.findById(orderId);
-			if (!order) {
-				return res.status(400).json({
-					success: false,
-					message: "Order not found",
-				});
-			}
-
-			if (order.status === "cancelled") {
-				return res.status(400).json({
-					success: false,
-					message: "Order is already cancelled",
-				});
-			}
-
-			if (order.status === "delivered") {
-				return res.status(400).json({
-					success: false,
-					message: "Order is already delivered",
-				});
-			}
-
-			if (status === "delivered") {
-				const userId = order.userId.toString();
-
-				const loyalty = await Loyalty.findOne({ userId });
-
-				if (!loyalty) {
-					await Loyalty.create({
-						userId,
-						pointsEarned: Math.floor(order.totalAmount * 0.05),
-						pointsRedeemed: 0,
-					});
 				} else {
-					loyalty.pointsEarned += Math.floor(order.totalAmount * 0.05);
-					await loyalty.save();
+					await
+					Product.findOneAndUpdate(
+						{ productId: item.productId },
+						{
+							$inc: {
+								stock: item.quantity, // Increase stock
+								sold: -item.quantity, // Decrease sold
+							},
+						},
+						{ new: true }
+					);
 				}
-
-				order.paymentConfirmed = true;
 			}
 
-			order.status = status;
-			await order.save();
+            // for (const item of items) {
+            //     const product = await Product.findOne({
+            //         productId: item.productId,
+            //     });
+            //     if (!product) {
+            //         continue;
+            //     }
 
-			res.json({
-				success: true,
-				message: "Order status updated successfully",
-			});
-		} catch (error) {
-			res.status(500).json({ success: false, message: error.message });
-		}
-	},
+            //     product.stock += item.quantity;
+            //     product.sold -= item.quantity;
+
+            //     await product.save();
+            // }
+
+            if (coupon) {
+                const coupon = await Coupon.findById(order.coupon);
+                coupon.quantity += 1;
+                coupon.usedBy = coupon.usedBy.filter(
+                    (id) => id.toString() !== order.userId.toString()
+                );
+                coupon.quantityUsed -= 1;
+                await coupon.save();
+            }
+
+            if (pointsRedeemed) {
+                const loyalty = await Loyalty.findOne({ userId });
+                loyalty.pointsRedeemed -= pointsRedeemed;
+                loyalty.pointsEarned += pointsRedeemed;
+                await loyalty.save();
+            }
+
+            order.status = "cancelled";
+            order.noted = noted;
+
+            await order.save();
+
+            res.json({
+                success: true,
+                message: "Order cancelled successfully",
+            });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    },
+
+    async updateOrderStatus(req, res) {
+        try {
+            const { orderId } = req.params;
+            const { status } = req.body;
+
+            const order = await Order.findById(orderId);
+            if (!order) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Order not found",
+                });
+            }
+
+            if (order.status === "cancelled") {
+                return res.status(400).json({
+                    success: false,
+                    message: "Order is already cancelled",
+                });
+            }
+
+            if (order.status === "delivered") {
+                return res.status(400).json({
+                    success: false,
+                    message: "Order is already delivered",
+                });
+            }
+
+            if (status === "delivered") {
+                const userId = order.userId.toString();
+
+                const loyalty = await Loyalty.findOne({ userId });
+
+                if (!loyalty) {
+                    await Loyalty.create({
+                        userId,
+                        pointsEarned: Math.floor(order.totalAmount * 0.05),
+                        pointsRedeemed: 0,
+                    });
+                } else {
+                    loyalty.pointsEarned += Math.floor(
+                        order.totalAmount * 0.05
+                    );
+                    await loyalty.save();
+                }
+
+                order.paymentConfirmed = true;
+            }
+
+            order.status = status;
+            await order.save();
+
+            res.json({
+                success: true,
+                message: "Order status updated successfully",
+            });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    },
 };

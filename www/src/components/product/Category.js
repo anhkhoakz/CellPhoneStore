@@ -1,6 +1,18 @@
 import { Box, Button, Divider, Typography } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
+import LaptopMacIcon from '@mui/icons-material/LaptopMac';
+import TabletMacIcon from '@mui/icons-material/TabletMac';
+import HeadphonesIcon from '@mui/icons-material/Headphones';
+import CategoryIcon from '@mui/icons-material/Category';
+
+const categoryIcons = {
+    phone: <PhoneAndroidIcon sx={{ fontSize: "1.5em" }} />,
+    tablet: <TabletMacIcon sx={{ fontSize: "1.5em" }} />,
+    laptop: <LaptopMacIcon sx={{ fontSize: "1.5em" }} />,
+    headphone: <HeadphonesIcon sx={{ fontSize: "1.5em" }} />,
+};
 
 const Category = ({ categories }) => {
 	return (
@@ -53,7 +65,8 @@ const Category = ({ categories }) => {
 								},
 							}}
 						>
-							{category.name}
+							{categoryIcons[category.name.toLowerCase()] || <CategoryIcon sx={{ fontSize: "1.5em" }} />}
+                            {category.name}
 						</Button>
 					</Link>
 				))}
