@@ -179,4 +179,4 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImtoYW5ob
 
 
 ###
-GET http://localhost:8080/api/v1/products/search
+GET http://localhost:8080/api/v1/products/hot
