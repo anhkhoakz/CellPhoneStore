@@ -17,8 +17,8 @@ jobs:
 
         # Frontend code quality
       - name: Move to the project directory
-        run: cd www && biome ci src/ --fix --unsafe
+        run: cd www && biome ci --formatter-enabled=true --linter-enabled=true --organize-imports-enabled=true src/
 
         # Backend code quality
       - name: Move to the project directory
-        run: cd ../server && biome ci src/ --fix --unsafe
+        run: cd ../server && biome ci --formatter-enabled=true --linter-enabled=true --organize-imports-enabled=true src/
