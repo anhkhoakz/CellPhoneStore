@@ -3,12 +3,72 @@
 const mongoose = require("mongoose");
 const client = require("../config/elasticsearch");
 
+const mongooseSequence = require("mongoose-sequence")(mongoose);
+const Schema = mongoose.Schema;
 
-const Product = require("../api/v1/models/Product");
+const categoryValues = ["phone", "laptop", "tablet", "headphone"];
+
+const productSchema = new Schema({
+	name: { type: String, maxLength: 255, required: true, trim: true },
+	price: { type: Number, required: true },
+	description: { type: String, maxLength: 600 },
+	category: {
+		type: String,
+		enum: categoryValues,
+		required: true,
+	},
+	productId: { type: Number, unique: true },
+	stock: { type: Number, required: true },
+
+	sold: { type: Number, default: 0 },
+
+	variants: [
+		{
+			name: String,
+			stock: Number,
+			price: Number,
+			image: String,
+		},
+	],
+
+	ratings: [
+		{
+			userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+			rating: Number,
+		},
+	],
+
+	comments: [
+		{
+			username: { type: String, required: true },
+			comment: String,
+			createAt: { type: Date, default: Date.now },
+		},
+	],
+
+	image: { type: String, required: true },
+	images: [{ type: String }],
+
+	createAt: { type: Date, default: Date.now, immutable: true },
+	updateAt: { type: Date, default: Date.now },
+});
+
+productSchema.plugin(mongooseSequence, {
+	inc_field: "productId",
+	start_seq: 1,
+});
+
+const Product = mongoose.model("Product", productSchema);
+
+
+
 
 const addProductToIndex = async (product) =>{
     try {
 		console.log("🚀 ~ addProductToIndex ~ productId:", product.productId)
+		if (!product.productId) {
+			throw new Error("productId is undefined");
+		}
         await client.index({
             index: "products",
             id: product._id.toString(),
@@ -25,7 +85,7 @@ const addProductToIndex = async (product) =>{
                     userId: rating.userId,
                     rating: rating.rating,
                 })),
-				productId: product.productId,
+				productId: product.productId ?? "khong co productId",
                 comments: product.comments.map((comment) => ({
                     username: comment.username,
                     comment: comment.comment,
@@ -48,7 +108,7 @@ const seedProducts = async () => {
 
 	const products = [
 		{
-			name: "ipad air 6 M2",
+			name: "Ipad air 6 M2",
 			description: "Description for ipad air 6 M2",
 			price: 18000000,
 			stock: 100,
@@ -56,7 +116,7 @@ const seedProducts = async () => {
 			image: "ipadair6m2.jpg",
 		},
 		{
-			name: "galaxy tab s6",
+			name: "Galaxy tab s6",
 			description: "Description for galaxy tab s6",
 			price: 15599000,
 			stock: 50,
@@ -65,7 +125,7 @@ const seedProducts = async () => {
 		},
 
 		{
-			name: "airpods 3",
+			name: "Girpods 3",
 			description: "Description for airpods 3",
 			price: 5999000,
 			stock: 40,
@@ -81,7 +141,7 @@ const seedProducts = async () => {
 			image: "WH-CH720N.jpg",
 		},
 		{
-			name: "galaxy A25",
+			name: "Galaxy A25",
 			description: "Description for galaxy A25",
 			price: 4999000,
 			stock: 30,
@@ -90,7 +150,7 @@ const seedProducts = async () => {
 		},
 
 		{
-			name: "galaxy A53",
+			name: "Galaxy A53",
 			description: "Description for galaxy A53",
 			price: 4999000,
 			stock: 30,
@@ -99,7 +159,7 @@ const seedProducts = async () => {
 		},
 
 		{
-			name: "galaxy S24",
+			name: "Galaxy S24",
 			description: "Description for galaxy S24",
 			price: 4999000,
 			stock: 10,
@@ -108,7 +168,7 @@ const seedProducts = async () => {
 		},
 
 		{
-			name: "macbook air 2020 m1",
+			name: "Macbook air 2020 m1",
 			description: "Description for macbook air 2020 m1",
 			price: 19999000,
 			stock: 4,
@@ -117,7 +177,7 @@ const seedProducts = async () => {
 		},
 
 		{
-			name: "macbook pro 13",
+			name: "Macbook pro 13",
 			description: "Description for macbook pro 13",
 			price: 29999000,
 			stock: 18,
@@ -126,7 +186,7 @@ const seedProducts = async () => {
 		},
 
 		{
-			name: "laptop Idea pag Slim 3",
+			name: "Laptop Idea pag Slim 3",
 			description: "Description for laptop Idea pag Slim 3",
 			price: 16999000,
 			stock: 0,
@@ -135,7 +195,7 @@ const seedProducts = async () => {
 		},
 
 		{
-			name: "iphone 15",
+			name: "Iphone 15",
 			description: "Description for iphone 15",
 			price: 20999000,
 			stock: 20,
@@ -144,7 +204,7 @@ const seedProducts = async () => {
 		},
 
 		{
-			name: "iphone Xs",
+			name: "Iphone Xs",
 			description: "Description for iphoneXs",
 			price: 11999000,
 			stock: 10,
@@ -290,7 +350,7 @@ const seedProducts = async () => {
 		},
 
 		{
-			name: "SamsungGalaxyTabS6 ite202",
+			name: "Samsung Galaxy Tab S6 ite202",
 			description: "Description for SamsungGalaxyTabS6 ite202",
 			price: 7999000,
 			stock: 10,
@@ -299,7 +359,7 @@ const seedProducts = async () => {
 		},
 
 		{
-			name: "iphone 13",
+			name: "Iphone 13",
 			description: "Description for iphone 13",
 			price: 11999000,
 			stock: 10,
@@ -307,19 +367,19 @@ const seedProducts = async () => {
 			image: "iphone13hong.jpg",
 			variants: [
 				{
-					name: "hồng",
+					name: "Pink",
 					stock: 5,
 					price: 11999000,
 					image: "iphone13hong.jpg",
 				},
 				{
-					name: "xanh",
+					name: "Xanh",
 					stock: 2,
 					price: 12555000,
 					image: "iphone13xanh.jpg",
 				},
 				{
-					name: "đen",
+					name: "Black",
 					stock: 3,
 					price: 12399000,
 					image: "iphone13den.jpg",
@@ -328,7 +388,7 @@ const seedProducts = async () => {
 		},
 
 		{
-			name: "sam sung galaxy s22 ultra",
+			name: "SamSung galaxy s22 ultra",
 			description: "Description for sam sung galaxy s22 ultra",
 			price: 12999000,
 			stock: 19,
@@ -336,13 +396,13 @@ const seedProducts = async () => {
 			image: "samsunggalaxyS22ultratrang.jpg",
 			variants: [
 				{
-					name: "trắng",
+					name: "White",
 					stock: 12,
 					price: 12999000,
 					image: "samsunggalaxyS22ultratrang.jpg",
 				},
 				{
-					name: "đen",
+					name: "Black",
 					stock: 7,
 					price: 13200000,
 					image: "samsungS22ultra.jpg",
@@ -351,7 +411,7 @@ const seedProducts = async () => {
 		},
 
 		{
-			name: "iphone 12 pro max",
+			name: "Iphone 12 pro max",
 			description: "Description for iphone 12 pro max",
 			price: 10999000,
 			stock: 15,
@@ -359,19 +419,19 @@ const seedProducts = async () => {
 			image: "iphone12prothanchi.jpg",
 			variants: [
 				{
-					name: "than chì",
+					name: "Charcaol",
 					stock: 5,
 					price: 10999000,
 					image: "iphone12prothanchi.jpg",
 				},
 				{
-					name: "vàng",
+					name: "Yellow",
 					stock: 7,
 					price: 10990000,
 					image: "iphone12promaxvangf.jpg",
 				},
 				{
-					name: "xanh",
+					name: "Blue",
 					stock: 3,
 					price: 10999000,
 					image: "iphone12proxanh.jpg",
@@ -380,7 +440,7 @@ const seedProducts = async () => {
 		},
 
 		{
-			name: "iphone 11 (cũ)",
+			name: "Iphone 11 (old)",
 			description: "Description for iphone 11",
 			price: 8999000,
 			stock: 18,
@@ -388,19 +448,19 @@ const seedProducts = async () => {
 			image: "iphone11white.jpg",
 			variants: [
 				{
-					name: "đen",
+					name: "Black",
 					stock: 5,
 					price: 8999000,
 					image: "iphone11black.jpg",
 				},
 				{
-					name: "trắng",
+					name: "White",
 					stock: 8,
 					price: 8990000,
 					image: "iphone11white.jpg",
 				},
 				{
-					name: "xanh dương",
+					name: "Blue",
 					stock: 5,
 					price: 7799000,
 					image: "iphone11blue.jpg",
@@ -409,7 +469,7 @@ const seedProducts = async () => {
 		},
 
 		{
-			name: "iphone 8 (cũ)",
+			name: "iphone 8 (old)",
 			description: "Description for iphone 8",
 			price: 2399000,
 			stock: 12,
@@ -418,17 +478,7 @@ const seedProducts = async () => {
 		},
 
         {
-			name: "iphone 8 plus (cũ)",
-			description: "Description for iphone 8 plus",
-			price: 3999000,
-			stock: 10,
-			category: "phone",
-			image: "iphone8plus.jpg",
-		},
-
-
-        {
-			name: "iphone 8 plus (cũ)",
+			name: "iphone 8 plus (old)",
 			description: "Description for iphone 8 plus",
 			price: 3999000,
 			stock: 10,
@@ -437,8 +487,8 @@ const seedProducts = async () => {
 		},
 
 		{
-			name: "Điện Thoại OPPO A18 128GB Xanh",
-			description: "Description for Điện Thoại OPPO A18 128GB Xanh",
+			name: "OPPO A18 128GB Blue",
+			description: "Description for OPPO A18 128GB Blue",
 			price: 5999000,
 			stock: 10,
 			category: "phone",
@@ -446,8 +496,8 @@ const seedProducts = async () => {
 		},
 
 		{
-			name: "Điện Thoại OPPO A57 64GB Đen",
-			description: "Description for Điện Thoại OPPO A57 64GB Đen",
+			name: "OPPO A57 64GB Black",
+			description: "Description for  OPPO A57 64GB Black",
 			price: 4999000,
 			stock: 20,
 			category: "phone",

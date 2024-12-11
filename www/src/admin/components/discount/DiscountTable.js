@@ -41,35 +41,7 @@ const columns = [
     { id: "actions", label: "Actions", minWidth: 150 },
 ];
 
-const createData = (
-    code,
-    description,
-    discount,
-    condition,
-    expiryDate,
-    quantity,
-    quantityUsed,
-) => ({
-    code,
-    description,
-    discount,
-    condition,
-    expiryDate,
-    quantity,
-    quantityUsed,
-});
 
-const _initialRows = [
-    createData(
-        "DISC10",
-        "10% off on orders over $50",
-        "10%",
-        "Order > $50",
-        "2024-12-31",
-        100,
-        25,
-    ),
-];
 
 export default function DiscountsTable() {
     const [rows, setRows] = React.useState([]);

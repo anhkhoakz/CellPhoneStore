@@ -51,7 +51,7 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
         const newCategories = checked
             ? [...formData.condition.applicableCategories, value]
             : formData.condition.applicableCategories.filter(
-                  (category) => category !== value,
+                  (category) => category !== value
               );
 
         setFormData({
@@ -73,6 +73,7 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
             condition: {
                 minOrderValue: "",
                 applicableCategories: [],
+                maxDiscount: "",
             },
             expiryDate: null,
             quantity: "",
@@ -148,6 +149,19 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
                     onChange={handleChange}
                 />
 
+                {formData.type === "percentage" && (
+                    <TextField
+                        margin="dense"
+                        label="Max Discount"
+                        type="number"
+                        name="maxDiscount"
+                        fullWidth
+                        variant="standard"
+                        value={formData.condition.maxDiscount}
+                        onChange={handleChange}
+                    />
+                )}
+
                 <Box sx={{ marginTop: "16px" }}>
                     <label>Discounted Product Type</label>
                     <Box
@@ -161,7 +175,7 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
                             control={
                                 <Checkbox
                                     checked={formData.condition.applicableCategories.includes(
-                                        "phone",
+                                        "phone"
                                     )}
                                     onChange={handleCategoryChange}
                                     value="phone"
@@ -173,7 +187,7 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
                             control={
                                 <Checkbox
                                     checked={formData.condition.applicableCategories.includes(
-                                        "laptop",
+                                        "laptop"
                                     )}
                                     onChange={handleCategoryChange}
                                     value="laptop"
@@ -185,7 +199,7 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
                             control={
                                 <Checkbox
                                     checked={formData.condition.applicableCategories.includes(
-                                        "tablet",
+                                        "tablet"
                                     )}
                                     onChange={handleCategoryChange}
                                     value="tablet"
@@ -198,7 +212,7 @@ export default function AddDiscountDialog({ open, onClose, onSave }) {
                             control={
                                 <Checkbox
                                     checked={formData.condition.applicableCategories.includes(
-                                        "headphone",
+                                        "headphone"
                                     )}
                                     onChange={handleCategoryChange}
                                     value="headphone"

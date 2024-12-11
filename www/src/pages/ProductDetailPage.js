@@ -45,7 +45,7 @@ const ProductDetailPage = () => {
         const fetchRating = async () => {
             try {
                 const res = await fetch(
-                    `${process.env.REACT_APP_BACKEND_URL}/api/v1/products/${id}/rating`,
+                    `${process.env.REACT_APP_BACKEND_URL}/api/v1/products/${id}/rating`
                 );
                 if (res.status !== 200) {
                     setError(true);
@@ -69,7 +69,7 @@ const ProductDetailPage = () => {
             try {
                 setLoading(true);
                 const res = await fetch(
-                    `${process.env.REACT_APP_BACKEND_URL}/api/v1/products/${id}`,
+                    `${process.env.REACT_APP_BACKEND_URL}/api/v1/products/${id}`
                 );
 
                 if (res.status !== 200) {
@@ -94,7 +94,7 @@ const ProductDetailPage = () => {
 
     const handleColorChange = (event) => {
         const color = product.variants.find(
-            (c) => c.name === event.target.value,
+            (c) => c.name === event.target.value
         );
         setSelectedColor(color);
     };
@@ -162,10 +162,15 @@ const ProductDetailPage = () => {
                                     maxWidth: "90%",
                                     maxHeight: "100%",
                                     objectFit: "contain",
-                                    margin: "auto",
                                 }}
-                                src={`${process.env.REACT_APP_BACKEND_URL}/images/${selectedColor?.image || product.image}`}
-                                alt={`${product?.name} - ${selectedColor?.name || ""}`}
+                                src={`${
+                                    process.env.REACT_APP_BACKEND_URL
+                                }/images/${
+                                    selectedColor?.image || product.image
+                                }`}
+                                alt={`${product?.name} - ${
+                                    selectedColor?.name || ""
+                                }`}
                             />
                         </Box>
                     </Grid>
@@ -212,34 +217,39 @@ const ProductDetailPage = () => {
                                 </Typography>
                             </Box>
 
-                            <Box sx={{ my: 2 }}>
-                                <Typography variant="body1" mb={1}>
-                                    Color
-                                </Typography>
-                                <TextField
-                                    select
-                                    variant="outlined"
-                                    fullWidth
-                                    value={selectedColor?.name}
-                                    onChange={handleColorChange}
-                                    sx={{
-                                        maxWidth: "150px",
-                                        height: "35px",
-                                        "& .MuiOutlinedInput-root": {
+                            {product?.variants &&
+                            Array.isArray(product.variants) &&
+                            product.variants.length > 0 ? (
+                                <Box sx={{ my: 2 }}>
+                                    <Typography variant="body1" mb={1}>
+                                        Color
+                                    </Typography>
+                                    <TextField
+                                        select
+                                        variant="outlined"
+                                        fullWidth
+                                        value={selectedColor?.name}
+                                        onChange={handleColorChange}
+                                        sx={{
+                                            maxWidth: "150px",
                                             height: "35px",
-                                        },
-                                    }}
-                                >
-                                    {product.variants.map((color) => (
-                                        <MenuItem
-                                            key={color.name}
-                                            value={color.name}
-                                        >
-                                            {color.name}
-                                        </MenuItem>
-                                    ))}
-                                </TextField>
-                            </Box>
+                                            "& .MuiOutlinedInput-root": {
+                                                height: "35px",
+                                            },
+                                        }}
+                                    >
+                                        {product.variants.map((color) => (
+                                            <MenuItem
+                                                key={color.name}
+                                                value={color.name}
+                                            >
+                                                {color.name}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
+                                </Box>
+                            ) : null}
+
                             <Button
                                 variant="contained"
                                 color="success"

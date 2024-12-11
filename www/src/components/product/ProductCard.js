@@ -107,7 +107,7 @@ const ProductCard = ({ product, isHot, isNew }) => {
                         image={`${process.env.REACT_APP_BACKEND_URL}/images/${product.image}`}
                         alt={product.name}
                         sx={{
-                            objectFit: "cover",
+                            objectFit: "contain",
                             borderRadius: 1,
                             transition: "all 0.3s ease-in-out",
                             "&:hover": {

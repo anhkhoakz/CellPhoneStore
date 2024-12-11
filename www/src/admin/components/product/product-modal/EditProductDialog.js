@@ -205,11 +205,11 @@ export default function EditProductDialog({
                 </Button>
 
                 
-                {editedProductData.image ? (
+                {/* {editedProductData.image ? (
                     <p>{editedProductData.image || productData.image}</p> 
                 ) : productData.image ? (
                     <p>{productData.image}</p>
-                ) : null}
+                ) : null} */}
 
 
                 <div style={{ marginTop: "1.25em" }}>

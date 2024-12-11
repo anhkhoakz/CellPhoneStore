@@ -230,7 +230,8 @@ module.exports = {
                 });
             }
 
-            if (order.status !== "pending" || order.status !== "confirmed") {
+
+            if (order.status !== "pending" && order.status !== "confirmed") {
                 return res.status(400).json({
                     success: false,
                     message: "Order cannot be cancelled",

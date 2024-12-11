@@ -47,9 +47,6 @@ const OrderCard = ({ order }) => {
             return;
         }
 
-        setToastMessage("Order canceled successfully!");
-        setToastType("success");
-
         // Gửi yêu cầu huỷ đơn hàng với lý do
         fetch(
             `${process.env.REACT_APP_BACKEND_URL}/api/v1/orders/cancel/${orderToCancel._id}`,
@@ -63,13 +60,16 @@ const OrderCard = ({ order }) => {
                     noted:
                         cancelReason === "Other" ? customReason : cancelReason,
                 }),
-            },
+            }
         )
             .then((res) => res.json())
             .then((data) => {
                 console.log(data.message);
                 if (data.success) {
                     orderToCancel.status = "cancelled";
+
+                    setToastMessage("Order canceled successfully!");
+                    setToastType("success");
                     console.log("Order Cancelled");
                 }
             })
@@ -109,7 +109,6 @@ const OrderCard = ({ order }) => {
     const handleViewBill = () => {
         navigate(`/bill/${order._id}`, { state: { order } });
     };
-    
 
     return (
         <>
@@ -187,7 +186,6 @@ const OrderCard = ({ order }) => {
                                 </Button>
                             )}
                         </Box>
-
 
                         {/* Nút "Cancel" chỉ hiển thị nếu trạng thái là "pending" */}
                         {(order.status === "pending" ||

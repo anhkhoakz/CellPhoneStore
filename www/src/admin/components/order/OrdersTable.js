@@ -277,6 +277,12 @@ export default function OrdersTable() {
         customEndDate,
     );
 
+    const formatDate = (isoString) => {
+        const date = new Date(isoString);
+        const options = { day: "2-digit", month: "2-digit", year: "numeric" };
+        return date.toLocaleDateString("vi-VN", options);
+    };
+
     return (
         <Paper sx={{ width: "100%", overflow: "hidden", padding: 2 }}>
             <OrderBar

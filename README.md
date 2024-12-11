@@ -2,17 +2,29 @@
 
 ## Key Features
 
+- Separate back end and front end
+- Using CI/CD pipeline
+- Integrate a CDN
+- Integrate ElasticSearch for Product Search
+
+
 ## Installation
 
-```
+```sh
+git clone https://github.com/this-is-duykhanh/CellPhoneStore.git
 
+cd CellPhoneStore
 ```
 
 ## Usage
 
+```sh
+docker-compose down
+docker-compose up --build
 ```
 
-```
+Access the application via http://localhost:3000
+API will be available at http://localhost:8080/
 
 ## To do list
 

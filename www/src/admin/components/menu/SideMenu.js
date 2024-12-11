@@ -8,21 +8,51 @@ import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom"; // Thêm import này
 
-const drawerWidth = 240;
 
-const Drawer = styled(MuiDrawer)({
-    width: drawerWidth,
-    flexShrink: 0,
-    boxSizing: "border-box",
-    mt: 10,
-    [`& .${drawerClasses.paper}`]: {
-        width: drawerWidth,
-        boxSizing: "border-box",
-    },
-});
 
 export default function SideMenu() {
+    const [cookies, removeCookie] = useCookies(); // Hook quản lý cookie
+    const navigate = useNavigate(); // Hook điều hướng
+
+
+    const drawerWidth = 240;
+
+    const Drawer = styled(MuiDrawer)(() => ({
+        width: drawerWidth,
+        flexShrink: 0,
+        boxSizing: "border-box",
+        mt: 10,
+        [`& .${drawerClasses.paper}`]: {
+            width: drawerWidth,
+            boxSizing: "border-box",
+        },
+    }));
+
+    const handleLogout = () => {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users/logout`, {
+            method: "DELETE",
+            credentials: "include", // Đảm bảo cookie được gửi cùng request
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data.message); // In ra thông báo từ server
+
+                // Xóa cookies sau khi logout
+                removeCookie("accessToken");
+                removeCookie("_ga_QM7W25Wv18");
+                removeCookie("userId");
+
+                // Chuyển hướng về trang đăng nhập
+                navigate("/"); // Điều hướng về trang login
+            })
+            .catch((err) => {
+                console.error("Logout failed", err); // Xử lý lỗi nếu có
+            });
+    };
+
     return (
         <Drawer
             variant="permanent"
@@ -61,6 +91,7 @@ export default function SideMenu() {
                     variant="contained"
                     color="error"
                     fullWidth
+                    onClick={handleLogout}
                 >
                     Logout
                 </Button>

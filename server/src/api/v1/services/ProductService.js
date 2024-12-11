@@ -202,6 +202,8 @@ class ProductService {
 		// 	},
 		// });
 
+		await this.addProductToIndex(updatedProduct);
+
 		if (!updatedProduct) {
 			return { code: 500, message: "Failed to update product" };
 		}

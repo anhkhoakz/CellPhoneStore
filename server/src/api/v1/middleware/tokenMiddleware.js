@@ -21,6 +21,7 @@ const verifyAccessToken = async (req, res, next) => {
 
 		// Check if the Authorization token is missing
 		if (!authToken) {
+			
 			console.log("No auth token");
 			return next(CreateError.Unauthorized("Access token not found 2"));
 		}

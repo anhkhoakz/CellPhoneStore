@@ -6,7 +6,6 @@ import {
 } from "@mui/icons-material";
 import {
     AppBar,
-    Badge,
     Box,
     Drawer,
     IconButton,
@@ -31,15 +30,11 @@ const Navigation = () => {
     const navigate = useNavigate();
     const [cookies, removeCookie] = useCookies([]);
 
-    // Số lượng sản phẩm trong giỏ hàng
-    const [cartCount, _setCartCount] = useState(5); // Mock số lượng sản phẩm là 5
-
-    // Kiểm tra xem người dùng đã đăng nhập hay chưa
     useEffect(() => {
         if (cookies.userId) {
             setIsLoggedIn(true);
         }
-    }, [cookies.userId]); // Chỉ cập nhật khi userId thay đổi
+    }, [cookies.userId]);
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -153,9 +148,7 @@ const Navigation = () => {
                     )}
 
                     <IconButton component={Link} to="/cart" color="inherit">
-                        <Badge badgeContent={cartCount} color="error">
-                            <i className="bi bi-cart"></i>
-                        </Badge>
+                        <i className="bi bi-cart2"></i>
                         <Typography variant="body2" sx={{ ml: 1 }}>
                             Cart
                         </Typography>
