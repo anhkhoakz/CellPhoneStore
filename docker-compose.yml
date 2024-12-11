@@ -31,6 +31,7 @@ services:
         condition: on-failure
     ports:
       - "8080:8080"
+    command: ["sh", "-c", "node src/seeders/product.js && node src/seeders/administrator.js && node src/seeders/coupon.js && pnpm start"]
 
   frontend:
     build:

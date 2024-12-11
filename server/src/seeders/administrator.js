@@ -74,7 +74,7 @@ const User = mongoose.model("Account", userSchema);
 
 const seedAdminUser = async () => {
 	try {
-		await mongoose.connect("mongodb://localhost:27017/CellPhoneStore");
+		await mongoose.connect("mongodb://mongo:27017/CellPhoneStore");
 
 		// Check if an admin already exists
 		const adminExists = await User.findOne({ role: userRoles.ADMIN });

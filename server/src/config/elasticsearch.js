@@ -14,32 +14,32 @@ const client = new Client({
 	},
 });
 
-// const connectToElastic = async () => {
-// 	let attempts = 0;
-// 	const maxAttempts = 5;
-// 	const delay = 5000;
+const connectToElastic = async () => {
+	let attempts = 0;
+	const maxAttempts = 5;
+	const delay = 5000;
 
-// 	while (attempts < maxAttempts) {
-// 		try {
-// 			await client.ping();
-// 			console.info("Elasticsearch connected");
-// 			return;
-// 		} catch (err) {
-// 			attempts += 1;
-// 			console.error(
-// 				`Attempt ${attempts}: Elasticsearch connection failed`,
-// 				err.message,
-// 			);
-// 			if (attempts >= maxAttempts) {
-// 				console.error("Max attempts reached. Exiting...");
-// 				process.exit(1);
-// 			}
-// 			console.info(`Retrying in ${delay / 1000} seconds...`);
-// 			await new Promise((resolve) => setTimeout(resolve, delay));
-// 		}
-// 	}
-// };
+	while (attempts < maxAttempts) {
+		try {
+			await client.ping();
+			console.info("Elasticsearch connected");
+			return;
+		} catch (err) {
+			attempts += 1;
+			console.error(
+				`Attempt ${attempts}: Elasticsearch connection failed`,
+				err.message,
+			);
+			if (attempts >= maxAttempts) {
+				console.error("Max attempts reached. Exiting...");
+				process.exit(1);
+			}
+			console.info(`Retrying in ${delay / 1000} seconds...`);
+			await new Promise((resolve) => setTimeout(resolve, delay));
+		}
+	}
+};
 
-// connectToElastic();
+connectToElastic();
 
 module.exports = client;

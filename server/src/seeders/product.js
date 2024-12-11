@@ -99,7 +99,7 @@ const addProductToIndex = async (product) =>{
 }
 
 const seedProducts = async () => {
-	await mongoose.connect("mongodb://localhost:27017/CellPhoneStore");
+	await mongoose.connect("mongodb://mongo:27017/CellPhoneStore");
 	await Product.deleteMany({}); // Clear existing data
 
 	const products = [
@@ -489,16 +489,6 @@ const seedProducts = async () => {
 			image: "iphone8plus.jpg",
 		},
 
-
-		{
-			name: "iphone 8 plus (cũ)",
-			description: "Description for iphone 8 plus",
-			price: 3999000,
-			stock: 10,
-			category: "phone",
-			image: "iphone8plus.jpg",
-		},
-
 		{
 			name: "Điện Thoại OPPO A18 128GB Xanh",
 			description: "Description for Điện Thoại OPPO A18 128GB Xanh",
@@ -532,9 +522,6 @@ const seedProducts = async () => {
 			"with productId:",
 			newProduct.productId,
 		);
-
-
-        
 	}
 
 	console.log("Products seeded!");

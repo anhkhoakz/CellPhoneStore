@@ -100,7 +100,7 @@ const Coupon = mongoose.model("Coupon", couponSchema);
 const seedCoupons = async () => {
     try {
 
-        await mongoose.connect("mongodb://localhost:27017/CellPhoneStore"
+        await mongoose.connect("mongodb://mongo:27017/CellPhoneStore"
         );
 
         // Clear existing coupons
