@@ -17,12 +17,8 @@ jobs:
 
         # Frontend code quality
       - name: Move to the project directory
-        run: cd www
-      - name: Run Biome
-        run: biome ci src/
+        run: cd www && biome ci src/
 
         # Backend code quality
       - name: Move to the project directory
-        run: cd ../server
-      - name: Run Biome
-        run: biome ci src/
+        run: cd ../server && biome ci src/
