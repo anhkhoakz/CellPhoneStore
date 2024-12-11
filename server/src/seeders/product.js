@@ -84,14 +84,15 @@ const addProductToIndex = async (product) =>{
                     userId: rating.userId,
                     rating: rating.rating,
                 })),
+				productId: product.productId,
                 comments: product.comments.map((comment) => ({
                     username: comment.username,
                     comment: comment.comment,
                     createAt: comment.createAt,
                 })),
-				productId: product.productId,
                 createAt: product.createAt,
                 updateAt: product.updateAt,
+
             },
         });
         console.log("Product indexed in Elasticsearch");
@@ -475,7 +476,7 @@ const seedProducts = async () => {
 			image: "iphone8.jpg",
 		},
 
-		{
+        {
 			name: "iphone 8 plus (cũ)",
 			description: "Description for iphone 8 plus",
 			price: 3999000,
@@ -484,9 +485,8 @@ const seedProducts = async () => {
 			image: "iphone8plus.jpg",
 		},
 
-<<<<<<< HEAD
-=======
-		{
+
+        {
 			name: "iphone 8 plus (cũ)",
 			description: "Description for iphone 8 plus",
 			price: 3999000,
@@ -495,7 +495,6 @@ const seedProducts = async () => {
 			image: "iphone8plus.jpg",
 		},
 
->>>>>>> accd81a2a6dac5bc837c3de8b6d20f4638e7a030
 		{
 			name: "Điện Thoại OPPO A18 128GB Xanh",
 			description: "Description for Điện Thoại OPPO A18 128GB Xanh",
